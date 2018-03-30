@@ -14,7 +14,7 @@ export default new Router({
             component: HelloWorld,
         },
         {
-            path: '/files',
+            path: '/files*',
             name: 'FileBrowse',
             component: FileBrowse,
         },

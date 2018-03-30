@@ -11,7 +11,7 @@
                     </small>
                 </footer>
             </blockquote>
-            <router-link to="/files">Files</router-link> 
+            <router-link to="/files">Files</router-link>
         </v-layout>
     </v-slide-y-transition>
   </v-container>

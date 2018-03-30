@@ -2,17 +2,21 @@
 
 module.exports = {
   root: true,
-  parser: 'babel-eslint',
   parserOptions: {
+    parser: 'babel-eslint',
+    ecmaVersion: 2018,
     sourceType: 'module'
   },
   env: {
     browser: true,
   },
-  extends: 'airbnb-base',
+  extends: [
+    'airbnb-base',
+    'plugin:vue/essential'
+  ],
   // required to lint *.vue files
   plugins: [
-    'html'
+    'vue',
   ],
   // check if imports actually resolve
   settings: {
@@ -26,6 +30,7 @@ module.exports = {
   rules: {
     'indent': ['warn', 4],
     'semi': ['error', 'never'],
+    'arrow-parens': ['warn', 'as-needed'],
     // don't require .vue extension when importing
     'import/extensions': ['error', 'always', {
       js: 'never',

@@ -37,26 +37,26 @@
 
 <script>
 export default {
-  data() {
-    return {
-      drawer: false,
-      items: [
-        {
-          icon: 'bubble_chart',
-          title: 'Inspire',
-        },
-        {
-          icon: 'assignment',
-          title: 'Machine Learning',
-        },
-        {
-          icon: 'settings',
-          title: 'Settings',
+    data() {
+        return {
+            drawer: false,
+            items: [
+                {
+                    icon: 'bubble_chart',
+                    title: 'Inspire',
+                },
+                {
+                    icon: 'assignment',
+                    title: 'Machine Learning',
+                },
+                {
+                    icon: 'settings',
+                    title: 'Settings',
+                },
+            ],
+            title: 'Digital Pathology Viewer',
         }
-      ],
-      title: 'Digital Pathology Viewer',
-    };
-  },
-  name: 'App',
-};
+    },
+    name: 'App',
+}
 </script>

@@ -35,28 +35,28 @@
 </template>
 
 <script>
-import * as axios from 'axios'
-import * as path from 'path'
+// import * as axios from 'axios'
+// import * as path from 'path'
 
-const BE_ENDPOINT = 'http://127.0.0.1:3000/'
+// const BE_ENDPOINT = 'http://127.0.0.1:3000/'
 
-const attachIcon = (entry) => {
-    const res = Object.assign({}, entry)
-    switch (res.type) {
-    case 'directory':
-        res.icon = 'folder'
-        return res
-    case 'tabular':
-        res.icon = 'database'
-        return res
-    case 'scalable_image':
-        res.icon = 'image'
-        return res
-    default:
-        res.icon = 'file'
-        return res
-    }
-}
+// const attachIcon = (entry) => {
+//     const res = Object.assign({}, entry)
+//     switch (res.type) {
+//     case 'directory':
+//         res.icon = 'folder'
+//         return res
+//     case 'tabular':
+//         res.icon = 'database'
+//         return res
+//     case 'scalable_image':
+//         res.icon = 'image'
+//         return res
+//     default:
+//         res.icon = 'file'
+//         return res
+//     }
+// }
 
 export default {
     data() {
@@ -72,17 +72,17 @@ export default {
             ],
         }
     },
-    computed() {
-        async () => axios.get(path.join(BE_ENDPOINT, 'files'), {
-            params: {
-                view: 'meta',
-                include_children: true,
-            },
-        }).then((res) => {
-            res.data.children.forEach(attachIcon)
-            return res.data
-        })
-    },
+    // computed() {
+    //     async () => axios.get(path.join(BE_ENDPOINT, 'files'), {
+    //         params: {
+    //             view: 'meta',
+    //             include_children: true,
+    //         },
+    //     }).then((res) => {
+    //         res.data.children.forEach(attachIcon)
+    //         return res.data
+    //     })
+    // },
     name: 'Files',
 }
 </script>

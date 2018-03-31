@@ -3,11 +3,8 @@
         <v-layout row justify-start>
             <v-flex xs8 offset-xs2>
                 <h1>Admin Console</h1>
-                <!-- <v-divider></v-divider> -->
             </v-flex>
         </v-layout>
-
-        
 
         <v-layout row justify-center>
             <v-flex xs4>

@@ -1,7 +1,6 @@
 <template>
     <v-container xs10 offset-xs1>
         <v-list two-line>
-
             <!-- List of directories in current path -->
             <v-subheader v-if="dirs.length > 0" inset>Folders</v-subheader>
             <v-list-tile avatar v-for="dir in dirs" :key="dir.id"

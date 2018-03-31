@@ -2,9 +2,9 @@
     <v-container xs10 offset-xs1>
         <v-list two-line>
             <!-- List of directories in current path -->
-            <v-subheader v-if="dirs.length > 0" inset>Folders</v-subheader>
+            <v-subheader v-show="dirs.length > 0" inset>Folders</v-subheader>
             <v-list-tile avatar v-for="dir in dirs" :key="dir.id"
-                v-on:click="$router.push(dir.file_path)" @click="">
+                @click="$router.push(dir.file_path)">
                 <v-list-tile-avatar>
                     <v-icon :class="[dir.iconClass]">{{ dir.icon }}</v-icon>
                 </v-list-tile-avatar>
@@ -19,11 +19,12 @@
             </v-list-tile>
 
             <!-- Divider -->
-            <v-divider inset v-if="dirs.length > 0"></v-divider>
+            <v-divider inset v-show="dirs.length > 0"></v-divider>
 
             <!-- List of files in current path -->
             <v-subheader inset>Files</v-subheader>
-            <v-list-tile avatar v-for="file in files" :key="file.id" @click="">
+            <v-list-tile avatar v-for="file in files" :key="file.id"
+                @click="$router.push(dir.file_path)">
                 <v-list-tile-avatar>
                     <v-icon :class="[file.iconClass]">{{ file.icon }}</v-icon>
                 </v-list-tile-avatar>

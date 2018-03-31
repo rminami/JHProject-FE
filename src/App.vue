@@ -1,20 +1,26 @@
 <template>
     <v-app>
-        <v-navigation-drawer persistent v-model="drawer" disable-resize-watcher fixed app>
+        <v-navigation-drawer persistent v-model="sidebar" disable-resize-watcher fixed app>
             <v-list>
-                <v-list-tile value="true" v-for="(item, i) in items" :key="i" @click="" v-on:click="[this.$router.push('/')]">
+                <v-list-tile
+                    v-for="(item, i) in items"
+                    :key="i"
+                    :to="item.path"
+                >
                     <v-list-tile-action>
-                        <v-icon v-html="item.icon"></v-icon>
+                        <v-icon>{{ item.icon }}</v-icon>
                     </v-list-tile-action>
-                    <v-list-tile-content>
-                        <v-list-tile-title v-text="item.title"></v-list-tile-title>
-                    </v-list-tile-content>
+                    <v-list-tile-content>{{ item.title }}</v-list-tile-content>
                 </v-list-tile>
             </v-list>
         </v-navigation-drawer>
         <v-toolbar app>
-            <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-            <v-toolbar-title v-text="title"></v-toolbar-title>
+            <v-toolbar-side-icon @click.stop="sidebar = !sidebar"></v-toolbar-side-icon>
+            <v-toolbar-title>
+                <router-link to="/files" tag="span" style="cursor: pointer">
+                    {{ title }}
+                </router-link>
+            </v-toolbar-title>
             <v-spacer></v-spacer>
         </v-toolbar>
         <v-content>
@@ -27,15 +33,27 @@
 export default {
     data() {
         return {
-            drawer: false,
+            sidebar: false,
             items: [
+                {
+                    icon: 'home',
+                    title: 'Files',
+                    path: '/files',
+                },
                 {
                     icon: 'assignment',
                     title: 'Machine Learning',
+                    path: '/ml',
+                },
+                {
+                    icon: 'dashboard',
+                    title: 'Admin Console',
+                    path: '/admin',
                 },
                 {
                     icon: 'settings',
                     title: 'Settings',
+                    path: '/settings',
                 },
             ],
             title: 'Digital Pathology Viewer',

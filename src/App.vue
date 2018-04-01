@@ -1,7 +1,14 @@
 <template>
     <v-app>
-        <v-navigation-drawer persistent v-model="sidebar" disable-resize-watcher fixed app>
+        <v-navigation-drawer persistent v-model="sidebar" :mini-variant.sync="mini" disable-resize-watcher fixed app>
             <v-list>
+                <!-- <v-list-tile>
+                    <v-list-tile-action>
+                        <v-btn icon @click.native.stop="mini = !mini">
+                            <v-icon>chevron_left</v-icon>
+                        </v-btn>
+                    </v-list-tile-action>
+                </v-list-tile> -->
                 <v-list-tile
                     v-for="(item, i) in items"
                     :key="i"
@@ -12,6 +19,25 @@
                     </v-list-tile-action>
                     <v-list-tile-content>{{ item.title }}</v-list-tile-content>
                 </v-list-tile>
+                <v-expansion-panel expand>
+                    <v-expansion-panel-content>
+                        <div slot="header">
+                            Admin Items
+                        </div>
+                        <v-card>
+                            <v-list-tile
+                                v-for="(adminItem, i) in adminItems"
+                                :key="i"
+                                :to="adminItem.path"
+                            >
+                                <v-list-tile-action>
+                                    <v-icon>{{ adminItem.icon }}</v-icon>
+                                </v-list-tile-action>
+                                <v-list-tile-content>{{ adminItem.title }}</v-list-tile-content>
+                            </v-list-tile>
+                        </v-card>
+                    </v-expansion-panel-content>
+                </v-expansion-panel>
             </v-list>
         </v-navigation-drawer>
         <v-toolbar app>
@@ -34,6 +60,7 @@ export default {
     data() {
         return {
             sidebar: false,
+            mini: false,
             items: [
                 {
                     icon: 'home',
@@ -46,14 +73,36 @@ export default {
                     path: '/ml',
                 },
                 {
-                    icon: 'dashboard',
-                    title: 'Admin Console',
-                    path: '/admin',
-                },
-                {
                     icon: 'settings',
                     title: 'Settings',
                     path: '/settings',
+                },
+                {
+                    icon: 'verified_user',
+                    title: 'Admin Console',
+                    path: '/admin/console',
+                },
+            ],
+            adminItems: [
+                {
+                    icon: 'dashboard',
+                    title: 'Dashboard',
+                    path: '/admin/dashboard',
+                },
+                {
+                    icon: 'people',
+                    title: 'User Permissions',
+                    path: '/admin/users',
+                },
+                {
+                    icon: 'swap_vertical_circle',
+                    title: 'Server Settings',
+                    path: '/admin/server-settings',
+                },
+                {
+                    icon: 'security',
+                    title: 'Project Controls',
+                    path: '/admin/project-controls',
                 },
             ],
             title: 'Digital Pathology Viewer',

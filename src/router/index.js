@@ -3,6 +3,10 @@ import Router from 'vue-router'
 
 const routerOptions = [
     {
+        path: '/',
+        redirect: '/files',
+    },
+    {
         path: '/files*',
         component: 'FileBrowse',
     },
@@ -11,7 +15,7 @@ const routerOptions = [
         component: 'MachineLearning',
     },
     {
-        path: '/admin',
+        path: '/admin/console',
         component: 'Admin',
     },
     {

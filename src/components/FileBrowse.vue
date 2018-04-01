@@ -24,7 +24,7 @@
             <!-- List of files in current path -->
             <v-subheader inset>Files</v-subheader>
             <v-list-tile avatar v-for="file in files" :key="file.id"
-                @click="$router.push(dir.file_path)">
+                @click="$router.push(file.file_path)">
                 <v-list-tile-avatar>
                     <v-icon :class="[file.iconClass]">{{ file.icon }}</v-icon>
                 </v-list-tile-avatar>
@@ -46,7 +46,7 @@
 import * as axios from 'axios'
 import * as url from 'url'
 
-const SERVER_URL = 'http://127.0.0.1:3000/'
+const SERVER_URL = 'http://127.0.0.1:4000/'
 
 export default {
     data: () => ({

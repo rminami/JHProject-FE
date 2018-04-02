@@ -28,8 +28,12 @@ module.exports = {
   },
   // add your custom rules here
   rules: {
-    'indent': ['warn', 4],
+    'indent': ['warn', 2, {
+      SwitchCase: 1,
+      MemberExpression: 0
+    }],
     'semi': ['error', 'never'],
+    'comma-dangle': ['error', 'never'],
     'arrow-parens': ['warn', 'as-needed'],
     // don't require .vue extension when importing
     'import/extensions': ['error', 'always', {
@@ -50,7 +54,8 @@ module.exports = {
     'import/no-extraneous-dependencies': ['error', {
       optionalDependencies: ['test/unit/index.js']
     }],
-    // allow debugger during development
+    // allow console and debugger during development
+    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
   }
 }

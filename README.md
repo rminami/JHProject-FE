@@ -1,27 +1,32 @@
-# jhproject-fe
+# JHProject-FE
 
-> Frontend for Junior Honours project
+The front-end portion of the Junior Honours project. \
+Written for CS3099 at the University of St Andrews, 2017-2018. 
 
-## Build Setup
+## Installation
 
-``` bash
-# install dependencies
-npm install
+All dependencies can be installed with 
 
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-
-# run unit tests
-npm run unit
-
-# run all tests
-npm test
+```sh
+$ yarn install # or npm
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+## Usage
+
+Run the development build with
+
+```sh
+$ yarn run dev
+```
+
+Or, to build and run the production build, run 
+
+```sh
+$ yarn build
+$ yarn start
+```
+
+## License
+
+MIT License (c) 2017-2018 Ryosuke Minami. \
+For further information, click [here](./LICENSE).

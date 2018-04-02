@@ -25,9 +25,9 @@ const routerOptions = [
 
 const routes = routerOptions.map(route => ({
   ...route,
-  component: () => import (`@/components/${route.component}.vue`)
+  component: () => import(`@/components/${route.component}.vue`)
 }))
 
 Vue.use(Router)
 
-export default new Router({mode: 'history', routes})
+export default new Router({ mode: 'history', routes })

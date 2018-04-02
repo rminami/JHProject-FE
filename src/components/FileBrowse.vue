@@ -35,7 +35,6 @@
         </v-btn>
       </v-list-tile-action>
     </v-list-tile>
-
   </v-list>
 </v-container>
 </template>
@@ -49,36 +48,35 @@ const SERVER_URL = 'http://127.0.0.1:4000/'
 export default {
   data: () => ({
     dirs: [],
-    files: [],
+    files: []
   }),
 
   created() {
-    console.log(this.$route.path)
     this.getFiles()
   },
 
   watch: {
-    $route: 'getFiles',
+    $route: 'getFiles'
   },
 
   methods: {
     getFiles() {
       axios({
-          url: url.resolve(SERVER_URL, this.$route.path),
-          responseType: 'json',
-          params: {
-            view: 'meta',
-            include_children: true,
-          },
-        })
-        .then(res => {
-          const processed = this.attachIcons(res.data.children)
-          this.dirs = processed.filter(item => item.type === 'directory')
-          this.files = processed.filter(item => item.type !== 'directory')
-        })
-        .catch(err => {
-          console.log(err)
-        })
+        url: url.resolve(SERVER_URL, this.$route.path),
+        responseType: 'json',
+        params: {
+          view: 'meta',
+          include_children: true
+        }
+      })
+      .then(res => {
+        const processed = this.attachIcons(res.data.children)
+        this.dirs = processed.filter(item => item.type === 'directory')
+        this.files = processed.filter(item => item.type !== 'directory')
+      })
+      .catch(err => {
+        console.log(err)
+      })
     },
     attachIcons(items) {
       return items.map(item => {
@@ -102,9 +100,9 @@ export default {
             return res
         }
       })
-    },
+    }
   },
-  name: 'Files',
+  name: 'Files'
 }
 </script>
 

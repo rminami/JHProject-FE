@@ -1,3 +1,6 @@
+# Extras
+tmp/
+
 # Logs
 logs
 *.log

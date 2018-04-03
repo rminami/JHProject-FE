@@ -16,6 +16,7 @@ module.exports = {
   ],
   // required to lint *.vue files
   plugins: [
+    'json',
     'vue',
   ],
   // check if imports actually resolve

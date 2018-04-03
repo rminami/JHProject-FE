@@ -42,6 +42,7 @@
     "eslint-loader": "^1.7.1",
     "eslint-plugin-html": "^3.0.0",
     "eslint-plugin-import": "^2.10.0",
+    "eslint-plugin-json": "^1.2.0",
     "eslint-plugin-vue": "^4.4.0",
     "extract-text-webpack-plugin": "^3.0.0",
     "file-loader": "^1.1.4",
@@ -90,5 +91,8 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "optionalDependencies": {
+    "fsevents": "^1.1.3"
+  }
 }

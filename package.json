@@ -11,6 +11,7 @@
     "e2e:open": "vue-cli-service e2e:open"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "vue": "^2.5.13",
     "vue-class-component": "^6.0.0",
     "vue-property-decorator": "^6.0.0",
@@ -38,5 +39,8 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "optionalDependencies": {
+    "fsevents": "^1.1.3"
+  }
 }

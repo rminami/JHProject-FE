@@ -1,0 +1,127 @@
+{
+    "data": {
+        "jobs": [
+            {
+                "algorithm_name": "Gaussian naive bayes",
+                "data_type": "tabular",
+                "job_description": "Training a Gaussian naive bayes model for predictions in the future.",
+                "job_id": "201871",
+                "parameters": [
+                    {
+                        "description": "Used in k-fold cross validation.",
+                        "id": "k",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "partial_training_support": false
+            },
+            {
+                "algorithm_name": "Bernoulli naive bayes",
+                "data_type": "tabular",
+                "job_description": "Training a Bernoulli naive bayes model for predictions in the future.",
+                "job_id": "201871",
+                "parameters": [
+                    {
+                        "description": "Used in k-fold cross validation.",
+                        "id": "k",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "partial_training_support": false
+            },
+            {
+                "algorithm_name": "Multinomial naive bayes",
+                "data_type": "tabular",
+                "job_description": "Training a Multinomial naive bayes model for predictions in the future.",
+                "job_id": "201871",
+                "parameters": [
+                    {
+                        "description": "Used in k-fold cross validation.",
+                        "id": "k",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "partial_training_support": false
+            },
+            {
+                "algorithm_name": "random forest classifier",
+                "data_type": "tabular",
+                "job_description": "Training a random forest classifier model for predictions in the future.",
+                "job_id": "201872",
+                "parameters": [
+                    {
+                        "description": "Used in k-fold cross validation.",
+                        "id": "k",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "partial_training_support": false
+            },
+            {
+                "algorithm_name": "random forest regressor",
+                "data_type": "tabular",
+                "job_description": "Training a random forest regressor model for predictions in the future.",
+                "job_id": "201873",
+                "parameters": [
+                    {
+                        "description": "Used in k-fold cross validation.",
+                        "id": "k",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "partial_training_support": false
+            },
+            {
+                "algorithm_name": "svc",
+                "data_type": "tabular",
+                "job_description": "Training a svc model for predictions in the future.",
+                "job_id": "201874",
+                "parameters": [
+                    {
+                        "description": "Used in k-fold cross validation.",
+                        "id": "k",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "partial_training_support": false
+            },
+            {
+                "algorithm_name": "svr",
+                "data_type": "tabular",
+                "job_description": "Training a svr model for predictions in the future.",
+                "job_id": "201875",
+                "parameters": [
+                    {
+                        "description": "Used in k-fold cross validation.",
+                        "id": "k",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "partial_training_support": false
+            },
+            {
+                "algorithm_name": "cox regression",
+                "data_type": "tabular",
+                "job_description": "Training a cox regression model for predictions in the future.",
+                "job_id": "201876",
+                "parameters": [],
+                "partial_training_support": false
+            },
+            {
+                "algorithm_name": "kaplan meier",
+                "data_type": "tabular",
+                "job_description": "Training a kaplan meier model for predictions in the future",
+                "job_id": "201877",
+                "parameters": [],
+                "partial_training_support": false
+            }
+        ]
+    }
+}

@@ -1,21 +1,33 @@
-import Vue from 'vue';
-import Router from 'vue-router';
-import Home from './views/Home.vue';
-import About from './views/About.vue';
+import Vue from 'vue'
+import Router from 'vue-router'
 
-Vue.use(Router);
+const routerOptions = [
+  {
+    path: '/',
+    redirect: '/files'
+  }, {
+    path: '/files*',
+    component: 'FileBrowse'
+  }, {
+    path: '/ml',
+    component: 'MachineLearning'
+  }, {
+    path: '/admin/console',
+    component: 'Admin'
+  }, {
+    path: '/settings',
+    component: 'Settings'
+  }, {
+    path: '/hello',
+    component: 'HelloWorld'
+  }
+]
 
-export default new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: Home,
-    },
-    {
-      path: '/about',
-      name: 'about',
-      component: About,
-    },
-  ],
-});
+const routes = routerOptions.map(route => ({
+  ...route,
+  component: () => import(`@/components/${route.component}.vue`)
+}))
+
+Vue.use(Router)
+
+export default new Router({ mode: 'history', routes })

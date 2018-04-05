@@ -10,10 +10,17 @@
       <v-list-tile-content>
         <v-list-tile-title>{{ dir.file_name }}</v-list-tile-title>
       </v-list-tile-content>
-      <v-list-tile-action>
-        <v-btn icon ripple>
-          <v-icon color="grey lighten-1">more_vert</v-icon>
-        </v-btn>
+      <v-list-tile-action @click.stop>
+        <v-menu bottom left>
+          <v-btn icon slot="activator" dark ripple>
+            <v-icon color="grey lighten-1">more_vert</v-icon>
+          </v-btn>
+          <v-list>
+            <v-list-tile v-for="(menuItem, i) in menuItems" :key="i" @click.stop="">
+              <v-list-tile-title>{{ menuItem.title }}</v-list-tile-title>
+            </v-list-tile>
+          </v-list>
+        </v-menu>
       </v-list-tile-action>
     </v-list-tile>
 
@@ -29,13 +36,40 @@
       <v-list-tile-content>
         <v-list-tile-title>{{ file.file_name }}</v-list-tile-title>
       </v-list-tile-content>
-      <v-list-tile-action>
-        <v-btn icon ripple>
-          <v-icon color="grey lighten-1">more_vert</v-icon>
-        </v-btn>
+      <v-list-tile-action @click.stop>
+        <v-menu bottom left>
+          <v-btn icon slot="activator" dark ripple>
+            <v-icon color="grey lighten-1">more_vert</v-icon>
+          </v-btn>
+          <v-list>
+            <v-list-tile v-for="(menuItem, i) in menuItems" :key="i" @click.stop="textDialog=true">
+              <v-list-tile-title>{{ menuItem.title }}</v-list-tile-title>
+            </v-list-tile>
+          </v-list>
+        </v-menu>
       </v-list-tile-action>
     </v-list-tile>
   </v-list>
+
+  <v-dialog v-model="textDialog" max-width="500px">
+    <v-card>
+      <v-card-title class="blue white--text">
+        <span class="headline">Rename File/Directory</span>
+      </v-card-title>
+      <v-card-text>
+        <v-text-field
+          label="New name"
+          v-model="newFileName"
+          :rules="newFileNameRules"
+          :counter="255"
+        ></v-text-field>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn color="secondary" flat @click.stop="textDialog=false">Cancel</v-btn>
+        <v-btn color="primary" flat @click.stop="textDialog=false">Rename</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </v-container>
 </template>
 
@@ -47,8 +81,56 @@ const SERVER_URL = 'http://127.0.0.1:4000/'
 
 export default {
   data: () => ({
+    textDialog: false,
+    newFileName: '',
     dirs: [],
-    files: []
+    files: [],
+    menuItems: [
+      {
+        title: 'Download',
+        onClick: '',
+        fn: 'toggleDialog'
+        // path: url.resolve(SERVER_URL, this.$route.path, '?action=move')
+      },
+      {
+        title: 'Rename',
+        fn: 'toggleDialog'
+        // onClick: () => {
+        //   console.log('hi there')
+        //   console.log(this.dirs)
+        //   this.toggleDialog()
+        // }
+        // path: url.resolve(SERVER_URL, this.$route.path, '?action=move')
+      },
+      {
+        title: 'Copy',
+        onClick: '',
+        fn: 'this.toggleDialog()'
+        // path: url.resolve(SERVER_URL, this.$route.path, '?action=copy')
+      },
+      {
+        title: 'Move',
+        onClick: '',
+        fn: 'toggleDialog'
+        // path: url.resolve(SERVER_URL, this.$route.path, '?action=move')
+      },
+      {
+        title: 'Delete',
+        onClick: '',
+        fn: 'toggleDialog'
+        // path: url.resolve(SERVER_URL, this.$route.path, '?action=delete')
+      }
+    ]
+  }),
+  computed: ({
+    newFileNameRules: [
+      v => (v && v.length <= 255) || 'File name must be less than 255 characters',
+      v => {
+        const cmb = [...this.dirs, ...this.files]
+        console.log(cmb)
+        return (v && ![...this.dirs, ...this.files].map(d => d.file_name).includes(v)) || 'File name is already taken'
+      }
+    ]
   }),
 
   created() {
@@ -60,6 +142,9 @@ export default {
   },
 
   methods: {
+    toggleDialog() {
+      this.textDialog = !this.textDialog
+    },
     getFiles() {
       axios({
         url: url.resolve(SERVER_URL, this.$route.path),

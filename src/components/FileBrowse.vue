@@ -16,7 +16,7 @@
             <v-icon color="grey lighten-1">more_vert</v-icon>
           </v-btn>
           <v-list>
-            <v-list-tile v-for="(menuItem, i) in menuItems" :key="i" @click.stop="">
+            <v-list-tile v-for="(menuItem, i) in menuItems" :key="i" @click="() => 0">
               <v-list-tile-title>{{ menuItem.title }}</v-list-tile-title>
             </v-list-tile>
           </v-list>
@@ -93,7 +93,7 @@ export default {
       { title: 'Delete' }
     ]
   }),
-  computed: ({
+  computed: {
     newFileNameRules: [
       v => (v && v.length <= 255) || 'File name must be less than 255 characters',
       v => {
@@ -103,7 +103,7 @@ export default {
           || 'File name is already taken'
       }
     ]
-  }),
+  },
 
   created() {
     this.getFiles()
@@ -140,21 +140,13 @@ export default {
         const res = item
         switch (res.type) {
           case 'directory':
-            res.icon = 'folder'
-            res.iconClass = 'grey lighten-1 white--text'
-            return res
+            return { ...res, icon: 'folder', iconClass: 'grey lighten-1 white--text' }
           case 'tabular':
-            res.icon = 'storage'
-            res.iconClass = 'blue white--text'
-            return res
+            return { ...res, icon: 'storage', iconClass: 'blue white--text' }
           case 'scalable_image':
-            res.icon = 'image'
-            res.iconClass = 'amber white--text'
-            return res
+            return { ...res, icon: 'image', iconClass: 'amber white--text' }
           default:
-            res.icon = 'note'
-            res.iconClass = 'teal white--text'
-            return res
+            return { ...res, icon: 'note', iconClass: 'teal white--text' }
         }
       })
     }

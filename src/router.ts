@@ -5,19 +5,36 @@ const routerOptions = [
   {
     path: '/',
     redirect: '/files'
-  }, {
+  },
+  {
+    path: '/files*.csv',
+    component: 'DataView'
+  },
+  {
+    path: '/files*.(png|jpg|dzi)',
+    component: 'ImageView'
+  },
+  {
+    path: '/files*.*',
+    component: 'RawFileView'
+  },
+  {
     path: '/files*',
     component: 'FileBrowse'
-  }, {
+  },
+  {
     path: '/ml',
     component: 'MachineLearning'
-  }, {
+  },
+  {
     path: '/admin/console',
     component: 'Admin'
-  }, {
+  },
+  {
     path: '/settings',
     component: 'Settings'
-  }, {
+  },
+  {
     path: '/hello',
     component: 'HelloWorld'
   }
@@ -25,7 +42,7 @@ const routerOptions = [
 
 const routes = routerOptions.map(route => ({
   ...route,
-  component: () => import(`@/components/${route.component}.vue`)
+  component: () => import(`@/components/${route.component}.vue`) // tslint:disable-line
 }))
 
 Vue.use(Router)

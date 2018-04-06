@@ -93,17 +93,17 @@ export default {
       { title: 'Delete' }
     ]
   }),
-  computed: {
-    newFileNameRules: [
-      v => (v && v.length <= 255) || 'File name must be less than 255 characters',
-      v => {
-        const cmb = [...this.dirs, ...this.files]
-        console.log(cmb)
-        return (v && ![...this.dirs, ...this.files].map(d => d.file_name).includes(v))
-          || 'File name is already taken'
-      }
-    ]
-  },
+  // computed: {
+  //   newFileNameRules: [
+  //     v => (v && v.length <= 255) || 'File name must be less than 255 characters',
+  //     v => {
+  //       const cmb = [...this.dirs, ...this.files]
+  //       console.log(cmb)
+  //       return (v && ![...this.dirs, ...this.files].map(d => d.file_name).includes(v))
+  //         || 'File name is already taken'
+  //     }
+  //   ]
+  // },
 
   created() {
     this.getFiles()

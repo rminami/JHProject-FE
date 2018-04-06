@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-navigation-drawer persistent v-model="sidebar" :mini-variant.sync="mini"
+    <v-navigation-drawer dark persistent v-model="sidebar" :mini-variant.sync="mini"
     disable-resize-watcher fixed app>
       <v-list>
         <v-list-tile v-for="(item, i) in items" :key="i" :to="item.path">
@@ -9,7 +9,7 @@
           </v-list-tile-action>
           <v-list-tile-content>{{ item.title }}</v-list-tile-content>
         </v-list-tile>
-        <v-expansion-panel expand>
+        <v-expansion-panel expand flat>
           <v-expansion-panel-content>
             <div slot="header">
               Admin Tools
@@ -35,7 +35,7 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
     </v-toolbar>
-    <v-content>
+    <v-content >
       <router-view/>
     </v-content>
   </v-app>

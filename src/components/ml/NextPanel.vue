@@ -1,0 +1,43 @@
+<template>
+  <v-flex xs2>
+    <v-card>
+      <v-card-title primary-title>
+        <div>
+          <h3 class="headline">Next</h3>
+        </div>
+      </v-card-title>
+      <v-card-text>
+        <div>
+          <v-btn color="primary" @click.stop="jobSubmitted = true">Run Job</v-btn>
+          <v-progress-circular v-if="jobSubmitted" indeterminate :size="26" :width="3" color="primary"></v-progress-circular>
+        </div>
+        <div>
+          <v-btn color="normal" :disabled="!jobSubmitted" @click.stop="jobSubmitted = false">Cancel</v-btn>
+        </div>
+        <div>
+          <v-btn color="normal" :disabled="jobSubmitted">Add Step</v-btn>
+        </div>
+      </v-card-text>
+    </v-card>
+  </v-flex>
+</template>
+
+<script>
+import FileInputModal from '../FileInputModal'
+
+export default {
+  components: {
+    'file-input-modal': FileInputModal
+  },
+  data() {
+    return {
+      jobSubmitted: false,
+    }
+  },
+  methods: {
+    toggleFileModal() {
+      this.fileModalOpen = !this.fileModalOpen
+    }
+  }
+}
+</script>

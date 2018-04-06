@@ -31,13 +31,17 @@ const routerOptions = [
     component: 'Admin'
   },
   {
+    path: '/login',
+    component: 'Login'
+  },
+  {
+    path: '/signup',
+    component: 'Signup'
+  },
+  {
     path: '/settings',
     component: 'Settings'
   },
-  {
-    path: '/hello',
-    component: 'HelloWorld'
-  }
 ]
 
 const routes = routerOptions.map(route => ({

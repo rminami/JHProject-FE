@@ -1,5 +1,5 @@
 <template>
-  <v-flex xs4>
+  <v-flex xs3>
     <v-card>
       <v-card-title primary-title>
         <div>
@@ -10,15 +10,15 @@
         <v-form>
           <v-select
             label="Select Algorithm"
-            :items="algorithms"
-            v-model="algorithm"
+            :items="algos.map(algo => algo.algorithm_name)"
+            v-model="algoName"
             max-height="400"
             style="white-space:nowrap; text-overflow:ellipsis;"
           ></v-select>
           <v-select
             label="Select Columns"
-            :items="options"
-            v-model="selected"
+            :items="cols"
+            v-model="selectedCols"
             multiple
             autocomplete
             chips
@@ -27,6 +27,10 @@
             color="blue"
             max-height="400"
           ></v-select>
+          <h3>Parameters</h3>
+          <div>
+
+          </div>
           <v-switch
             label="k fold validation?"
             v-model="kfold"
@@ -43,27 +47,77 @@
 
       </v-card-text>
       <v-card-actions>
-        <v-btn flat color="orange">Share</v-btn>
+        <v-btn flat color="orange">Close</v-btn>
+        <v-btn flat color="orange">Options</v-btn>
       </v-card-actions>
     </v-card>
   </v-flex>
 </template>
 
 <script>
+import axios from 'axios'
+import url from 'url'
+
+const BE_ENDPOINT = 'http://127.0.0.1:4000'
+const ML_ENDPOINT = 'http://127.0.0.1:7000'
 
 export default {
   props: ['boxTitle'],
   data() {
     return {
-      selected: [],
+      selectedCols: [],
       kfold: true,
       kValue: 0,
       speed: 20,
-      options: ['Linux', 'macOS', 'Windows'],
-      algorithms: ['Gaussian naive bayes', 'Bernoulli naive bayes', 'Multinomial naive bayes'], 
+      cols: [],
+      algoName: '',
+      algos: [{algorithm_name: 'error'}], 
     }
+  },
+  watch() {
+    
+  },
+  computed: {
+    algo: (this.algos && this.algoName) ? this.algos.filter(a => a.algorithm_name === this.algoName) : {}
   },
   components: {
   },
+  created() {
+    this.getColumns()
+    this.getAlgos()
+  },
+  methods: {
+    getColumns() {
+      axios({
+        url: url.resolve(BE_ENDPOINT, '/files/processed-data.csv'),
+        responseType: 'json',
+        params: {
+          view: 'headers',
+        }
+      })
+      .then(res => {
+        this.cols = res.data.columns
+          .filter(col => col.type === 'number')
+          .map(col => col.header)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    },
+    getAlgos() {
+      axios({
+        url: url.resolve(ML_ENDPOINT, '/jobs'), 
+        responseType: 'json',
+      })
+      .then(res => {
+        const jobs = res.data.jobs
+        this.algos = jobs
+        console.log(res.data.jobs.map(job => job.algorithm_name))
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    }
+  }
 }
 </script>

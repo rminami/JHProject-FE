@@ -15,18 +15,6 @@
             max-height="400"
             style="white-space:nowrap; text-overflow:ellipsis;"
           ></v-select>
-          <v-select
-            label="Select Columns"
-            :items="cols"
-            v-model="selectedCols"
-            multiple
-            autocomplete
-            chips
-            deletable-chips
-            clearable
-            color="blue"
-            max-height="400"
-          ></v-select>
           <h3>Parameters</h3>
           <div>
 
@@ -71,11 +59,11 @@ export default {
       speed: 20,
       cols: [],
       algoName: '',
-      algos: [{algorithm_name: 'error'}], 
+      algos: [{algorithm_name: 'error'}],
     }
   },
   watch() {
-    
+
   },
   computed: {
     algo: (this.algos && this.algoName) ? this.algos.filter(a => a.algorithm_name === this.algoName) : {}
@@ -87,26 +75,9 @@ export default {
     this.getAlgos()
   },
   methods: {
-    getColumns() {
-      axios({
-        url: url.resolve(BE_ENDPOINT, '/files/processed-data.csv'),
-        responseType: 'json',
-        params: {
-          view: 'headers',
-        }
-      })
-      .then(res => {
-        this.cols = res.data.columns
-          .filter(col => col.type === 'number')
-          .map(col => col.header)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-    },
     getAlgos() {
       axios({
-        url: url.resolve(ML_ENDPOINT, '/jobs'), 
+        url: url.resolve(ML_ENDPOINT, '/jobs'),
         responseType: 'json',
       })
       .then(res => {

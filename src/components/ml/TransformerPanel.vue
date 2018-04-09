@@ -1,42 +1,47 @@
 <template>
-  <v-flex xs3>
-    <v-card>
+  <v-flex style="width: 300px;">
+    <v-card :id="'card-' + stepNumber">
       <v-card-title primary-title>
-        <div>
-          <h3 class="headline">Transformer Step {{ stepNumber }}</h3>
-        </div>
+        <h3 class="headline">Transformer Step {{ stepNumber }}</h3>
+        <v-spacer></v-spacer>
+        <v-btn icon>
+          <v-icon>close</v-icon>
+        </v-btn>
       </v-card-title>
       <v-card-text>
         <v-form>
-          <!-- <v-select
+          <p>{{ selectedAlgo.job_description }}</p>
+          <v-select
             label="Select Algorithm"
-            :items="algos.map(algo => algo.algorithm_name)"
-            v-model="algoName"
+            :items="algoNames"
+            v-model="selectedAlgoName"
             max-height="400"
             style="white-space:nowrap; text-overflow:ellipsis;"
-          ></v-select> -->
-          <h3>Parameters</h3>
-          <div>
-
+          ></v-select>
+          
+          <h4 v-show="showParams" class="headline">Parameters</h4>
+          <div v-for="(parameter, i) in selectedAlgo.parameters" :key="i">
+            <h3>{{ parameter.id }}</h3>
+            <p>{{ parameter.description }}</p>
+            <v-switch
+              :label="parameter.required ? parameter.id + ' is required.' : 'Use ' + parameter.id + '?'"
+              v-model="paramInputs[i].enabled"
+              color="orange"
+              v-if="!parameter.required"
+            ></v-switch>
+            <v-text-field
+              :label="parameter.id"
+              :type="paramTypeToInputType(parameter.type)"
+              v-model="paramInputs[i].input"
+              :hint="parameter.required ? '*required' : undefined"
+              :disabled="!kfold"
+            ></v-text-field>
           </div>
-          <v-switch
-            label="k fold validation?"
-            v-model="kfold"
-            color="orange"
-          ></v-switch>
-          <v-text-field
-            label="k Value"
-            :rules="[(v) => parseInt(v) <= 25 || 'k cannot be greater than 25']"
-            type="number"
-            v-model="kValue"
-            :disabled="!kfold"
-          ></v-text-field>
         </v-form>
-
       </v-card-text>
       <v-card-actions>
-        <v-btn flat color="orange">Close</v-btn>
-        <v-btn flat color="orange">Options</v-btn>
+        <v-btn flat color="primary">Append</v-btn>
+        <v-btn flat color="secondary">Close</v-btn>
       </v-card-actions>
     </v-card>
   </v-flex>
@@ -53,47 +58,51 @@ export default {
   props: ['stepNumber', 'algos'],
   data() {
     return {
-      selectedCols: [],
       kfold: true,
       kValue: 0,
       speed: 20,
       cols: [],
-      algoName: '',
-
-      // algos: [{algorithm_name: 'error'}],
+      paramInputs: [],
+      selectedAlgoName: '',
     }
   },
-  propsData() {
-    algosCopy: 'algos'
+  watch: {
+    selectedAlgo: function() {
+      const paramCount = this.selectedAlgo.parameters ? this.selectedAlgo.parameters.length : 0
+      let arr = []
+      for (let i = 0; i < paramCount; i++) {
+        arr.push({ input: '', enabled: false })
+      }
+      this.paramInputs = arr
+    }
   },
-  // watch() {
-  //
-  // },
-  // computed: {
-  //   algo: (this.algos && this.algoName) ? this.algos.filter(a => a.algorithm_name === this.algoName) : {}
-  // },
-  // components: {
-  // },
-  created() {
-
-    console.log(this.algosCopy)
-
+  computed: {
+    algoNames: function() {
+      return this.algos ? this.algos.map(a => a.algorithm_name) : []
+    },
+    selectedAlgo: function() {
+      if (this.algos && this.selectedAlgoName.length > 0) {
+        return this.algos.filter(a => a.algorithm_name === this.selectedAlgoName)[0]
+      }
+      return {}
+    },
+    showParams: function() {
+      const params = this.selectedAlgo.parameters
+      return params && params.length > 0
+    },
+    parameters: function() {
+      return this.algos
+    }
   },
-  // methods: {
-  //   getAlgos() {
-  //     axios({
-  //       url: url.resolve(ML_ENDPOINT, '/jobs'),
-  //       responseType: 'json',
-  //     })
-  //     .then(res => {
-  //       const jobs = res.data.jobs
-  //       this.algos = jobs
-  //       console.log(res.data.jobs.map(job => job.algorithm_name))
-  //     })
-  //     .catch(err => {
-  //       console.log(err)
-  //     })
-  //   }
-  // }
+  methods: {
+    paramTypeToInputType(paramType) {
+      switch(paramType) {
+        case 'integer': 
+          return 'number'
+        default:
+          return 'text'
+      }
+    },
+  }
 }
 </script>

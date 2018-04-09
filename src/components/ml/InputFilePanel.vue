@@ -1,5 +1,5 @@
 <template>
-  <v-flex xs4>
+  <v-flex xs3>
     <v-card>
       <v-card-title primary-title>
         <div>
@@ -9,10 +9,14 @@
       <v-card-text>
         <v-form>
           <v-text-field
+            name="inputFile"
             label="Input file"
             type="text"
             v-model="inputFile"
+            append-icon="create"
+            :append-icon-cb="() => { fileDialogOpen = true }"
           ></v-text-field>
+          
           <v-select
             label="Select Input Columns"
             :items="cols"
@@ -44,13 +48,15 @@
         <v-btn flat color="orange">Edit</v-btn>
       </v-card-actions>
     </v-card>
+    <input-file-dialog :is-open="fileDialogOpen"/>
   </v-flex>
 </template>
 
 <script>
 import axios from 'axios'
 import url from 'url'
-import FileInputModal from '../FileInputModal'
+
+import InputFileDialog from '../dialogs/InputFileDialog'
 
 const BE_ENDPOINT = 'http://127.0.0.1:4000'
 const ML_ENDPOINT = 'http://127.0.0.1:7000'
@@ -58,15 +64,15 @@ const ML_ENDPOINT = 'http://127.0.0.1:7000'
 export default {
   props: ['boxTitle'],
   components: {
-    'file-input-modal': FileInputModal
+    'input-file-dialog': InputFileDialog
   },
   data() {
     return {
       cols: [],
       inputCols: [],
       outputCols: [],
-      inputFile: 'processed-data.csv',
-      fileModalOpen: false
+      inputFile: '',
+      fileDialogOpen: false
     }
   },
   created() {
@@ -74,7 +80,7 @@ export default {
   },
   methods: {
     toggleFileModal() {
-      this.fileModalOpen = !this.fileModalOpen
+      this.fileDialogOpen = !this.fileDialogOpen
     },
     getColumns() {
       axios({

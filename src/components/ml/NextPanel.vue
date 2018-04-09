@@ -23,21 +23,14 @@
 </template>
 
 <script>
-import FileInputModal from '../FileInputModal'
 
 export default {
-  components: {
-    'file-input-modal': FileInputModal
-  },
   data() {
     return {
       jobSubmitted: false,
     }
   },
   methods: {
-    toggleFileModal() {
-      this.fileModalOpen = !this.fileModalOpen
-    }
   }
 }
 </script>

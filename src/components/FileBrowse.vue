@@ -70,6 +70,8 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
+
+  <backend-snackbar :is-displayed="backendSnackbar"/>
 </v-container>
 </template>
 
@@ -77,9 +79,14 @@
 import * as axios from 'axios'
 import * as url from 'url'
 
+import BackendSnackbar from './snackbars/BackendSnackbar'
+
 const SERVER_URL = 'http://127.0.0.1:4000/'
 
 export default {
+  components: {
+    'backend-snackbar': BackendSnackbar
+  },
   data: () => ({
     textDialog: false,
     newFileName: '',
@@ -91,19 +98,9 @@ export default {
       { title: 'Copy' },
       { title: 'Move' },
       { title: 'Delete' }
-    ]
+    ],
+    backendSnackbar: false
   }),
-  // computed: {
-  //   newFileNameRules: [
-  //     v => (v && v.length <= 255) || 'File name must be less than 255 characters',
-  //     v => {
-  //       const cmb = [...this.dirs, ...this.files]
-  //       console.log(cmb)
-  //       return (v && ![...this.dirs, ...this.files].map(d => d.file_name).includes(v))
-  //         || 'File name is already taken'
-  //     }
-  //   ]
-  // },
 
   created() {
     this.getFiles()
@@ -133,6 +130,7 @@ export default {
       })
       .catch(err => {
         console.log(err)
+        this.backendSnackbar = true
       })
     },
     attachIcons(items) {

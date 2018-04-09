@@ -4,14 +4,17 @@
     <v-layout row>
       <v-container fluid grid-list-md>
         <v-layout row>
-          <input-file-panel box-title="Select input file" />
-          <transformer-panel step-number="1" :algos="algos"/>
+          <input-file-panel :box-title="inputTitle"/>
+          <transformer-panel step-number="1" :algos="tabularAlgos"/>
+          <transformer-panel step-number="2" :algos="tabularAlgos"/>
+          <v-btn color="primary" fab dark style="margin-top: 80px;">
+            <v-icon>add</v-icon>
+          </v-btn>
           <next-panel/>
         </v-layout>
       </v-container>
     </v-layout>
   </v-container>
-
 </div>
 </template>
 
@@ -25,6 +28,7 @@ import EstimatorPanel from './ml/EstimatorPanel'
 import TransformerPanel from './ml/TransformerPanel'
 import NextPanel from './ml/NextPanel'
 
+
 const BE_ENDPOINT = 'http://127.0.0.1:4000'
 const ML_ENDPOINT = 'http://127.0.0.1:7000'
 
@@ -34,10 +38,15 @@ export default {
     'input-file-panel': InputFilePanel,
     'next-panel': NextPanel,
     'estimator-panel': EstimatorPanel,
-    'transformer-panel': TransformerPanel
+    'transformer-panel': TransformerPanel,
+
+  },
+  computed: {
+    
   },
   data() {
     return {
+      algos: [],
       currentJobSteps: [
         {
           type: 'InputFile'
@@ -47,7 +56,13 @@ export default {
         { title: 'Dashboard', icon: 'dashboard' },
         { title: 'Account', icon: 'account_box' },
         { title: 'Admin', icon: 'gavel' }
-      ]
+      ],
+      inputTitle: 'Select input file'
+    }
+  },
+  computed: {
+    tabularAlgos: function() {
+      return this.algos.filter(a => a.data_type === 'tabular')
     }
   },
   methods: {
@@ -59,7 +74,6 @@ export default {
       .then(res => {
         const jobs = res.data.jobs
         this.algos = jobs
-        console.log(res.data.jobs.map(job => job.algorithm_name))
       })
       .catch(err => {
         console.log(err)
@@ -67,7 +81,7 @@ export default {
     }
   },
   created() {
-    this.getColumns()
+    this.getAlgos()
   },
 }
 </script>

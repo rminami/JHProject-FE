@@ -79,8 +79,7 @@ export default {
   computed: {
     // Put other stuff here
     ...mapState({
-      beEndpoint: s => s.beEndpoint,
-      mlEndpoint: s => s.mlEndpoint
+      beEndpoint: s => s.beEndpoint
     })
   },
   created() {

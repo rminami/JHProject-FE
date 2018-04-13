@@ -1,14 +1,13 @@
 <template>
-<v-dialog v-model="isOpen" max-width="500px" scrollable>
   <v-card style="height: 600px;">
     <v-toolbar>
       <v-toolbar-title>Files</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn icon>
+      <v-btn icon @click="$emit('close')">
         <v-icon>close</v-icon>
       </v-btn>
     </v-toolbar>
-    <v-card-text style="min-height: 482px;">    
+    <v-card-text style="min-height: 482px;">
       <v-list two-line>
         <!-- List of directories in current path -->
         <v-subheader v-show="dirs.length > 0" inset>Folders</v-subheader>
@@ -26,7 +25,8 @@
 
         <!-- List of files in current path -->
         <v-subheader inset>Files</v-subheader>
-        <v-list-tile avatar v-for="file in files" :key="file.id" @click="currentPath = file.file_path">
+        <v-list-tile avatar v-for="file in files" :key="file.id"
+                     @click="currentPath = file.file_path">
           <v-list-tile-avatar>
             <v-icon :class="[file.iconClass]">{{ file.icon }}</v-icon>
           </v-list-tile-avatar>
@@ -38,26 +38,26 @@
     </v-card-text>
     <v-divider></v-divider>
     <v-card-actions>
-      <v-btn color="secondary" flat @click.native="dialog = false">Close</v-btn>
+      <v-btn color="secondary" flat @click="$emit('close')">Close</v-btn>
       <v-btn color="primary" flat @click.native="dialog = false">Select</v-btn>
     </v-card-actions>
   </v-card>
-</v-dialog>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import axios from 'axios'
 import url from 'url'
-import path from 'path'
-
-const SERVER_URL = 'http://127.0.0.1:4000/'
 
 export default {
-  props: ['isOpen'],
   data: () => ({
     dirs: [],
     files: [],
     currentPath: '/files'
+  }),
+
+  computed: mapState({
+    beEndpoint: s => s.beEndpoint
   }),
 
   created() {
@@ -66,12 +66,13 @@ export default {
 
   watch: {
     currentPath: 'getFiles'
+
   },
 
   methods: {
     getFiles() {
       axios({
-        url: url.resolve(SERVER_URL, this.currentPath),
+        url: url.resolve(this.beEndpoint, this.currentPath),
         responseType: 'json',
         params: {
           view: 'meta',
@@ -85,7 +86,6 @@ export default {
       })
       .catch(err => {
         console.log(err)
-        this.backendSnackbar = true
       })
     },
     attachIcons(items) {

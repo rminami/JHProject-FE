@@ -1,5 +1,5 @@
 <template>
-  <v-flex xs2>
+  <v-flex>
     <v-card>
       <v-card-title primary-title>
         <div>
@@ -13,9 +13,6 @@
         </div>
         <div>
           <v-btn color="normal" :disabled="!jobSubmitted" @click.stop="jobSubmitted = false">Cancel</v-btn>
-        </div>
-        <div>
-          <v-btn color="normal" :disabled="jobSubmitted">Add Step</v-btn>
         </div>
       </v-card-text>
     </v-card>

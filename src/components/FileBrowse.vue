@@ -30,8 +30,25 @@
             <v-icon color="grey lighten-1">more_vert</v-icon>
           </v-btn>
           <v-list>
-            <v-list-tile v-for="(menuItem, i) in menuItems" :key="i" @click="() => 0">
-              <v-list-tile-title>{{ menuItem.title }}</v-list-tile-title>
+            <v-list-tile
+            >
+              <v-list-tile-title>Download</v-list-tile-title>
+            </v-list-tile>
+            <v-list-tile
+            >
+              <v-list-tile-title>Rename</v-list-tile-title>
+            </v-list-tile>
+            <v-list-tile
+            >
+              <v-list-tile-title>Copy</v-list-tile-title>
+            </v-list-tile>
+            <v-list-tile
+            >
+              <v-list-tile-title>Move</v-list-tile-title>
+            </v-list-tile>
+            <v-list-tile
+            >
+              <v-list-tile-title>Delete</v-list-tile-title>
             </v-list-tile>
           </v-list>
         </v-menu>
@@ -56,9 +73,28 @@
             <v-icon color="grey lighten-1">more_vert</v-icon>
           </v-btn>
           <v-list>
-            <v-list-tile v-for="(menuItem, i) in menuItems" :key="i"
-            @click.stop="textDialog=true">
-              <v-list-tile-title>{{ menuItem.title }}</v-list-tile-title>
+            <v-list-tile
+              :href="file.file_path + '?action=download'"
+              download
+            >
+              <v-list-tile-title>Download</v-list-tile-title>
+            </v-list-tile>
+            <v-list-tile
+              @click.stop="selectedFileName = file.file_name; textDialog = true"
+            >
+              <v-list-tile-title>Rename</v-list-tile-title>
+            </v-list-tile>
+            <v-list-tile
+            >
+              <v-list-tile-title>Copy</v-list-tile-title>
+            </v-list-tile>
+            <v-list-tile
+            >
+              <v-list-tile-title>Move</v-list-tile-title>
+            </v-list-tile>
+            <v-list-tile
+            >
+              <v-list-tile-title>Delete</v-list-tile-title>
             </v-list-tile>
           </v-list>
         </v-menu>
@@ -67,34 +103,22 @@
   </v-list>
 
   <v-dialog v-model="textDialog" max-width="500px">
-    <v-card>
-      <v-card-title class="blue white--text">
-        <span class="headline">Rename File/Directory</span>
-      </v-card-title>
-      <v-card-text>
-        <!-- <v-text-field
-          label="New name"
-          v-model="newFileName"
-          :rules="newFileNameRules"
-          :counter="255"
-        ></v-text-field> -->
-        <v-text-field
-          label="New name"
-          v-model="newFileName"
-        ></v-text-field>
-      </v-card-text>
-      <v-card-actions>
-        <v-btn color="secondary" flat @click.stop="textDialog=false">
-          Cancel
-        </v-btn>
-        <v-btn color="primary" flat @click.stop="textDialog=false">
-          Rename
-        </v-btn>
-      </v-card-actions>
-    </v-card>
+    <rename-dialog
+      :prevFileName="selectedFileName"
+      @submit="renameFile"
+      @close="textDialog = false"
+    />
   </v-dialog>
 
-  <backend-snackbar :is-displayed="backendSnackbar"/>
+  <!-- Snackbar is displayed when connection to backend fails -->
+  <v-snackbar
+    :timeout="3000"
+    color="error"
+    v-model="backendSnackbar"
+  >
+    Could not connect to back-end server.
+    <v-btn dark flat @click.native="backendSnackbar = false">Close</v-btn>
+  </v-snackbar>
 </v-container>
 </template>
 
@@ -102,25 +126,20 @@
 import { mapState } from 'vuex'
 import axios from 'axios'
 import url from 'url'
+import path from 'path'
 
-import BackendSnackbar from './snackbars/BackendSnackbar'
+import RenameDialog from './dialogs/RenameDialog'
 
 export default {
   components: {
-    'backend-snackbar': BackendSnackbar
+    'backend-snackbar': BackendSnackbar,
+    'rename-dialog': RenameDialog
   },
   data: () => ({
     textDialog: false,
-    newFileName: '',
+    selectedFileName: '',
     dirs: [],
     files: [],
-    menuItems: [
-      { title: 'Download' },
-      { title: 'Rename' },
-      { title: 'Copy' },
-      { title: 'Move' },
-      { title: 'Delete' }
-    ],
     backendSnackbar: false
   }),
 
@@ -146,12 +165,47 @@ export default {
   },
 
   methods: {
+    deleteFile() {
+
+    },
+    renameFile(prevFileName, newFileName) {
+      console.log('Renaming file')
+      axios({
+        method: 'post',
+        url: url.resolve(this.beEndpoint, path.join(this.$route.path, prevFileName)),
+        data: {
+          action: 'rename',
+          newname: newFileName
+        }
+      })
+      .then(res => {
+        this.dirs = this.dirs.map(item => {
+            if (item.file_name === prevFileName) {
+              item.file_name = newFileName
+            }
+            return item
+          })
+        this.files = this.dirs.map(item => {
+            if (item.file_name === prevFileName) {
+              item.file_name = newFileName
+            }
+            return item
+          })
+        console.log('Successfully renamed file.')
+      })
+      .catch(err => {
+        console.log(err)
+        console.log('Rename failed.')
+      })
+      this.textDialog = true
+    },
     toggleDialog() {
       this.textDialog = !this.textDialog
     },
     getFiles() {
       axios({
-        url: url.resolve(this.beEndpoint, this.$route.path),
+        baseURL: this.beEndpoint,
+        url: this.$route.path,
         responseType: 'json',
         params: {
           view: 'meta',

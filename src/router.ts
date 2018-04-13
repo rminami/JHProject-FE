@@ -3,6 +3,10 @@ import Router from 'vue-router'
 
 const routerOptions = [
   {
+    path: '/test',
+    component: 'Test'
+  },
+  {
     path: '/',
     redirect: '/files'
   },

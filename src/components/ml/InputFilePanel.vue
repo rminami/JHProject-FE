@@ -1,6 +1,6 @@
 <template>
-  <v-flex xs3>
-    <v-card>
+  <v-flex id="input-flex">
+    <v-card id="input-card">
       <v-card-title primary-title>
         <div>
           <h3 class="headline">{{ boxTitle }}</h3>
@@ -8,15 +8,16 @@
       </v-card-title>
       <v-card-text>
         <v-form>
-          <v-text-field
-            name="inputFile"
-            label="Input file"
-            type="text"
-            v-model="inputFile"
-          ></v-text-field>
-          <v-btn flat icon @click.prevent.stop="fileDialogOpen = !fileDialogOpen">
-            <v-icon @click.self="fileDialogOpen = !fileDialogOpen">create</v-icon>
-          </v-btn>
+          <div>
+            <v-text-field
+              name="inputFile"
+              label="Input file"
+              type="text"
+              v-model="inputFile"
+              append-icon="create"
+              :append-icon-cb="() => { fileDialogOpen = !fileDialogOpen }"
+            ></v-text-field>
+          </div>
           <v-select
             label="Select Input Columns"
             :items="cols"
@@ -27,7 +28,7 @@
             deletable-chips
             clearable
             color="blue"
-            max-height="400"
+            max-height="300"
           ></v-select>
           <v-select
             label="Select Output Columns"
@@ -39,7 +40,7 @@
             deletable-chips
             clearable
             color="blue"
-            max-height="400"
+            max-height="300"
           ></v-select>
         </v-form>
       </v-card-text>
@@ -48,18 +49,18 @@
         <v-btn flat color="orange">Edit</v-btn>
       </v-card-actions>
     </v-card>
-    <input-file-dialog :is-open="fileDialogOpen"/>
+    <v-dialog v-model="fileDialogOpen" max-width="500px" scrollable>
+      <input-file-dialog @close="fileDialogOpen = false"/>
+    </v-dialog>
   </v-flex>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import axios from 'axios'
 import url from 'url'
 
 import InputFileDialog from '../dialogs/InputFileDialog'
-
-const BE_ENDPOINT = 'http://127.0.0.1:4000'
-const ML_ENDPOINT = 'http://127.0.0.1:7000'
 
 export default {
   props: ['boxTitle'],
@@ -75,6 +76,13 @@ export default {
       fileDialogOpen: false
     }
   },
+  computed: {
+    // Put other stuff here
+    ...mapState({
+      beEndpoint: s => s.beEndpoint,
+      mlEndpoint: s => s.mlEndpoint
+    })
+  },
   created() {
     this.getColumns()
   },
@@ -84,16 +92,16 @@ export default {
     },
     getColumns() {
       axios({
-        url: url.resolve(BE_ENDPOINT, '/files/processed-data.csv'),
+        url: url.resolve(this.beEndpoint, '/files/processed-data.csv'),
         responseType: 'json',
         params: {
-          view: 'headers',
+          view: 'headers'
         }
       })
       .then(res => {
         this.cols = res.data.columns
-          .filter(col => col.type === 'number')
-          .map(col => col.header)
+        .filter(col => col.type === 'number')
+        .map(col => col.header)
       })
       .catch(err => {
         console.log(err)
@@ -102,3 +110,14 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+
+#input-flex {
+  width: 328px;
+}
+
+#input-card {
+  width: 320px;
+}
+</style>

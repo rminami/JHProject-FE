@@ -1,5 +1,19 @@
 <template>
 <v-container xs10 offset-xs1>
+
+  <!-- Path to current directory -->
+  <v-breadcrumbs>
+    <v-icon slot="divider">chevron_right</v-icon>
+    <v-breadcrumbs-item
+      v-for="(parentDir, index) in parentDirs"
+      :key="index"
+      :to="parentDir.path"
+      :exact="true"
+    >
+      {{ parentDir.text }}
+    </v-breadcrumbs-item>
+  </v-breadcrumbs>
+
   <v-list two-line>
     <!-- List of directories in current path -->
     <v-subheader v-show="dirs.length > 0" inset>Folders</v-subheader>
@@ -42,7 +56,8 @@
             <v-icon color="grey lighten-1">more_vert</v-icon>
           </v-btn>
           <v-list>
-            <v-list-tile v-for="(menuItem, i) in menuItems" :key="i" @click.stop="textDialog=true">
+            <v-list-tile v-for="(menuItem, i) in menuItems" :key="i"
+            @click.stop="textDialog=true">
               <v-list-tile-title>{{ menuItem.title }}</v-list-tile-title>
             </v-list-tile>
           </v-list>
@@ -57,16 +72,24 @@
         <span class="headline">Rename File/Directory</span>
       </v-card-title>
       <v-card-text>
-        <v-text-field
+        <!-- <v-text-field
           label="New name"
           v-model="newFileName"
           :rules="newFileNameRules"
           :counter="255"
+        ></v-text-field> -->
+        <v-text-field
+          label="New name"
+          v-model="newFileName"
         ></v-text-field>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="secondary" flat @click.stop="textDialog=false">Cancel</v-btn>
-        <v-btn color="primary" flat @click.stop="textDialog=false">Rename</v-btn>
+        <v-btn color="secondary" flat @click.stop="textDialog=false">
+          Cancel
+        </v-btn>
+        <v-btn color="primary" flat @click.stop="textDialog=false">
+          Rename
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -76,12 +99,11 @@
 </template>
 
 <script>
-import * as axios from 'axios'
-import * as url from 'url'
+import { mapState } from 'vuex'
+import axios from 'axios'
+import url from 'url'
 
 import BackendSnackbar from './snackbars/BackendSnackbar'
-
-const SERVER_URL = 'http://127.0.0.1:4000/'
 
 export default {
   components: {
@@ -102,6 +124,19 @@ export default {
     backendSnackbar: false
   }),
 
+  computed: {
+    parentDirs: function() {
+      const routeEls = this.$route.path.split('/').slice(1)
+      return routeEls.map((routeEl, index) => ({
+        text: routeEl,
+        path: '/' + routeEls.slice(0, index + 1).join('/')
+      }))
+    },
+    ...mapState({
+      beEndpoint: s => s.beEndpoint
+    })
+  },
+
   created() {
     this.getFiles()
   },
@@ -116,7 +151,7 @@ export default {
     },
     getFiles() {
       axios({
-        url: url.resolve(SERVER_URL, this.$route.path),
+        url: url.resolve(this.beEndpoint, this.$route.path),
         responseType: 'json',
         params: {
           view: 'meta',

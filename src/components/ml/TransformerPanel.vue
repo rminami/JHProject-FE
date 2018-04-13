@@ -18,7 +18,7 @@
             max-height="400"
             style="white-space:nowrap; text-overflow:ellipsis;"
           ></v-select>
-          
+
           <h4 v-show="showParams" class="headline">Parameters</h4>
           <div v-for="(parameter, i) in selectedAlgo.parameters" :key="i">
             <h3>{{ parameter.id }}</h3>
@@ -33,6 +33,7 @@
               :label="parameter.id"
               :type="paramTypeToInputType(parameter.type)"
               v-model="paramInputs[i].input"
+              :rules="[() => paramInputs[i].input <= 999 || 'Value too large']"
               :hint="parameter.required ? '*required' : undefined"
               :disabled="!kfold"
             ></v-text-field>
@@ -52,7 +53,7 @@ import axios from 'axios'
 import url from 'url'
 
 const BE_ENDPOINT = 'http://127.0.0.1:4000'
-const ML_ENDPOINT = 'http://127.0.0.1:7000'
+const ML_ENDPOINT = 'https://to26.host.cs.st-andrews.ac.uk/JH-Project/machine-learning-api/1.0'
 
 export default {
   props: ['stepNumber', 'algos'],
@@ -97,7 +98,7 @@ export default {
   methods: {
     paramTypeToInputType(paramType) {
       switch(paramType) {
-        case 'integer': 
+        case 'integer':
           return 'number'
         default:
           return 'text'

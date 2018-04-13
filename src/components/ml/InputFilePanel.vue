@@ -13,10 +13,10 @@
             label="Input file"
             type="text"
             v-model="inputFile"
-            append-icon="create"
-            :append-icon-cb="() => { fileDialogOpen = true }"
           ></v-text-field>
-          
+          <v-btn flat icon @click.prevent.stop="fileDialogOpen = !fileDialogOpen">
+            <v-icon @click.self="fileDialogOpen = !fileDialogOpen">create</v-icon>
+          </v-btn>
           <v-select
             label="Select Input Columns"
             :items="cols"

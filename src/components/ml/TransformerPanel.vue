@@ -63,12 +63,15 @@ export default {
   },
   watch: {
     selectedAlgo: function() {
+      // Generates parameter form
       const paramCount = this.selectedAlgo.parameters ? this.selectedAlgo.parameters.length : 0
       let arr = []
       for (let i = 0; i < paramCount; i++) {
         arr.push({ input: '', enabled: false })
       }
       this.paramInputs = arr
+      // Sends event to parent
+      this.$emit('change', this.selectedAlgoName, this.index)
     }
   },
   computed: {

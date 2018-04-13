@@ -1,16 +1,16 @@
 <template>
-  <v-flex style="width: 300px;">
-    <v-card :id="'card-' + stepNumber">
+  <v-flex id="transformer-flex">
+    <v-card id="transformer-card">
       <v-card-title primary-title>
-        <h3 class="headline">Transformer Step {{ stepNumber }}</h3>
+        <h3 class="headline">Transformer Step {{ index + 1 }}</h3>
         <v-spacer></v-spacer>
-        <v-btn icon>
+        <v-btn icon @click="$emit('remove', index)">
           <v-icon>close</v-icon>
         </v-btn>
       </v-card-title>
       <v-card-text>
         <v-form>
-          <p>{{ selectedAlgo.job_description }}</p>
+          <p class="desc">{{ selectedAlgo.job_description }}</p>
           <v-select
             label="Select Algorithm"
             :items="algoNames"
@@ -22,7 +22,7 @@
           <h4 v-show="showParams" class="headline">Parameters</h4>
           <div v-for="(parameter, i) in selectedAlgo.parameters" :key="i">
             <h3>{{ parameter.id }}</h3>
-            <p>{{ parameter.description }}</p>
+            <p class="desc">{{ parameter.description }}</p>
             <v-switch
               :label="parameter.required ? parameter.id + ' is required.' : 'Use ' + parameter.id + '?'"
               v-model="paramInputs[i].enabled"
@@ -41,22 +41,16 @@
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <v-btn flat color="primary">Append</v-btn>
-        <v-btn flat color="secondary">Close</v-btn>
+        <v-btn flat color="primary" @click="$emit('append', index)">Append</v-btn>
+        <v-btn flat color="secondary" @click="$emit('remove', index)">Close</v-btn>
       </v-card-actions>
     </v-card>
   </v-flex>
 </template>
 
 <script>
-import axios from 'axios'
-import url from 'url'
-
-const BE_ENDPOINT = 'http://127.0.0.1:4000'
-const ML_ENDPOINT = 'https://to26.host.cs.st-andrews.ac.uk/JH-Project/machine-learning-api/1.0'
-
 export default {
-  props: ['stepNumber', 'algos'],
+  props: ['index', 'algos'],
   data() {
     return {
       kfold: true,
@@ -107,3 +101,17 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+#transformer-flex {
+  width: 328px;
+}
+
+#transformer-card {
+  width: 320px;
+}
+
+.desc {
+  white-space: normal;
+}
+</style>

@@ -3,7 +3,10 @@
     <v-layout row>
       <v-container fluid grid-list-md id="inner-container">
         <v-layout row>
-          <input-file-panel :box-title="inputTitle"/>
+          <input-file-panel
+            :box-title="inputTitle"
+            @error="handleBackendConnectionError"
+          />
           <transformer-panel
             v-for="(transformStep, index) in transformSteps"
             :key="index"
@@ -19,6 +22,25 @@
         </v-layout>
       </v-container>
     </v-layout>
+     <!-- Snackbar is displayed when connection to backend fails -->
+    <v-snackbar
+      :timeout="3000"
+      color="error"
+      v-model="snackbarIsOpen"
+    >
+      {{ snackbarMsg }}
+      <v-btn dark flat @click.native="snackbarIsOpen = false">Close</v-btn>
+    </v-snackbar>
+    
+    <!-- Snackbar is displayed when connection to machine learning fails -->
+    <!-- <v-snackbar
+      :timeout="3000"
+      color="error"
+      v-model="mlSnackbar"
+    >
+      Could not connect to machine learning server.
+      <v-btn dark flat @click.native="mlSnackbar = false">Close</v-btn>
+    </v-snackbar> -->
   </v-container>
 </template>
 
@@ -52,12 +74,30 @@ export default {
           type: 'transformer'
         }
       ],
-      inputTitle: 'Select input file'
+      inputTitle: 'Select input file',
+      beSnackbar: false,
+      mlSnackbar: false,
+      snackbarIsOpen: false,
+    }
+  },
+  watch: {
+    beSnackbar: function() {
+      this.snackbarIsOpen = this.beSnackbar || this.mlSnackbar
+    },
+    mlSnackbar: function() {
+      this.snackbarIsOpen = this.beSnackbar || this.mlSnackbar
     }
   },
   computed: {
     tabularAlgos() {
       return this.algos.filter(a => a.data_type === 'tabular')
+    },
+    snackbarMsg() {
+      return ('Could not connect to '
+        + (this.beSnackbar ? 'back-end' : '')
+        + ((this.beSnackbar && this.mlSnackbar) ? ' or ' : '')
+        + (this.mlSnackbar ? 'machine learning' : '')
+        + '.')
     },
     ...mapState({
       beEndpoint: s => s.beEndpoint,
@@ -77,6 +117,7 @@ export default {
         this.algos = jobs
       })
       .catch(err => {
+        this.mlSnackbar = true 
         console.log(err)
       })
     },
@@ -101,6 +142,10 @@ export default {
       this.transformSteps = this.transformSteps.filter((step, index) => (
         index !== idToRemove
       ))
+    },
+    handleBackendConnectionError() {
+      console.log('Backend error event emitted.')
+      this.beSnackbar = true
     }
   },
   created() {

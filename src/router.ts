@@ -35,6 +35,10 @@ const routerOptions = [
     component: 'Admin'
   },
   {
+    path: '/admin/server-settings',
+    component: 'settings/ServerSettings'
+  },
+  {
     path: '/login',
     component: 'Login'
   },

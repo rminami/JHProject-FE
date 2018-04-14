@@ -27,7 +27,6 @@ import { mapState } from 'vuex'
 import axios from 'axios'
 import url from 'url'
 
-import MLBox from './ml/MLBox'
 import InputFilePanel from './ml/InputFilePanel'
 import EstimatorPanel from './ml/EstimatorPanel'
 import TransformerPanel from './ml/TransformerPanel'

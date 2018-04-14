@@ -132,7 +132,6 @@ import RenameDialog from './dialogs/RenameDialog'
 
 export default {
   components: {
-    'backend-snackbar': BackendSnackbar,
     'rename-dialog': RenameDialog
   },
   data: () => ({

@@ -1,5 +1,5 @@
 <template>
-  <v-flex id="transformer-flex">
+  <div id="transformer-flex">
     <v-card id="transformer-card">
       <v-card-title primary-title>
         <h3 class="headline">Transformer Step {{ index + 1 }}</h3>
@@ -45,7 +45,7 @@
         <v-btn flat color="secondary" @click="$emit('remove', index)">Close</v-btn>
       </v-card-actions>
     </v-card>
-  </v-flex>
+  </div>
 </template>
 
 <script>
@@ -108,6 +108,7 @@ export default {
 <style scoped>
 #transformer-flex {
   width: 328px;
+  padding: 4px 4px 4px 4px;
 }
 
 #transformer-card {

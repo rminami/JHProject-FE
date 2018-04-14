@@ -1,5 +1,5 @@
 <template>
-  <v-flex id="input-flex">
+  <div id="input-flex">
     <v-card id="input-card">
       <v-card-title primary-title>
         <div>
@@ -52,7 +52,7 @@
     <v-dialog v-model="fileDialogOpen" max-width="500px" scrollable>
       <input-file-dialog @close="fileDialogOpen = false"/>
     </v-dialog>
-  </v-flex>
+  </div>
 </template>
 
 <script>
@@ -72,7 +72,7 @@ export default {
       cols: [],
       inputCols: [],
       outputCols: [],
-      inputFile: '',
+      inputFile: 'processed-data.csv', // Change later
       fileDialogOpen: false
     }
   },
@@ -103,6 +103,7 @@ export default {
         .map(col => col.header)
       })
       .catch(err => {
+        this.$emit('error')
         console.log(err)
       })
     }
@@ -114,6 +115,7 @@ export default {
 
 #input-flex {
   width: 328px;
+  padding: 4px 4px 4px 4px;
 }
 
 #input-card {

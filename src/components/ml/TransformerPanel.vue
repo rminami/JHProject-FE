@@ -14,28 +14,27 @@
           <v-select
             label="Select Algorithm"
             :items="algoNames"
-            v-model="selectedAlgoName"
+            v-model="tvalues.name"
             max-height="400"
             style="white-space:nowrap; text-overflow:ellipsis;"
           ></v-select>
 
           <h4 v-show="showParams" class="headline">Parameters</h4>
-          <div v-for="(parameter, i) in selectedAlgo.parameters" :key="i">
-            <h3>{{ parameter.id }}</h3>
+          <div v-for="(parameter, i) in tvalues.parameters" :key="i">
+            <h3>{{ parameter.name }}</h3>
             <p class="desc">{{ parameter.description }}</p>
             <v-switch
-              :label="parameter.required ? parameter.id + ' is required.' : 'Use ' + parameter.id + '?'"
-              v-model="paramInputs[i].enabled"
+              :label="parameter.required ? parameter.name + ' is required.' : 'Use ' + parameter.name + '?'"
+              v-model="parameter.enabled"
               color="orange"
               v-if="!parameter.required"
             ></v-switch>
             <v-text-field
-              :label="parameter.id"
+              :label="parameter.name"
               :type="paramTypeToInputType(parameter.type)"
-              v-model="paramInputs[i].input"
-              :rules="[() => paramInputs[i].input <= 999 || 'Value too large']"
+              v-model="parameter.value"
               :hint="parameter.required ? '*required' : undefined"
-              :disabled="!kfold"
+              :disabled="!parameter.enabled"
             ></v-text-field>
           </div>
         </v-form>
@@ -50,52 +49,63 @@
 
 <script>
 export default {
-  props: ['index', 'algos'],
+  props: ['index', 'algos', 'values'],
   data() {
     return {
-      kfold: true,
-      kValue: 0,
-      speed: 20,
-      cols: [],
-      paramInputs: [],
-      selectedAlgoName: '',
+      tvalues: {
+        name: '',
+        parameters: []
+      },
     }
   },
-  watch: {
-    selectedAlgo: function() {
-      // Generates parameter form
-      const paramCount = this.selectedAlgo.parameters ? this.selectedAlgo.parameters.length : 0
-      let arr = []
-      for (let i = 0; i < paramCount; i++) {
-        arr.push({ input: '', enabled: false })
-      }
-      this.paramInputs = arr
-      // Sends event to parent
-      this.$emit('change', this.selectedAlgoName, this.index)
-    }
-  },
+  
   computed: {
     algoNames: function() {
       return this.algos ? this.algos.map(a => a.algorithm_name) : []
     },
     selectedAlgo: function() {
-      if (this.algos && this.selectedAlgoName.length > 0) {
-        return this.algos.filter(a => a.algorithm_name === this.selectedAlgoName)[0]
+      if (!this.algos || this.tvalues.name.length === 0) {
+        this.tvalues.parameters = []
+        return {}
       }
-      return {}
+      const newSelectedAlgo = this.algos.filter(a => a.algorithm_name === this.tvalues.name)[0]
+      this.tvalues.parameters = newSelectedAlgo.parameters
+        .map(param => ({
+          name: param.id,
+          type: param.type,
+          description: param.description,
+          value: '',
+          required: param.required,
+          enabled: true
+        }))
+      return newSelectedAlgo
     },
     showParams: function() {
-      const params = this.selectedAlgo.parameters
+      const params = this.tvalues.parameters
       return params && params.length > 0
     },
-    parameters: function() {
-      return this.algos
+  },
+  
+  watch: {
+    values: {
+      handler: function() {
+        this.tvalues = this.values
+      },
+      deep: true
+    },
+    tvalues: {
+      handler: function() {
+        this.$emit('change', this.tvalues, this.index)
+      },
+      deep: true
     }
   },
+
   methods: {
     paramTypeToInputType(paramType) {
       switch(paramType) {
         case 'integer':
+        case 'float':
           return 'number'
         default:
           return 'text'

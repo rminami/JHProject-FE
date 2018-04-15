@@ -1,6 +1,6 @@
 <template>
-  <v-flex>
-    <v-card>
+  <div id="next-wrapper">
+    <v-card id="next-card">
       <v-card-title primary-title>
         <div>
           <h3 class="headline">Next</h3>
@@ -16,7 +16,7 @@
         </div>
       </v-card-text>
     </v-card>
-  </v-flex>
+  </div>
 </template>
 
 <script>
@@ -31,3 +31,15 @@ export default {
   }
 }
 </script>
+
+<style lang="stylus" scoped>
+
+
+#next-wrapper
+  width: 228px
+  padding: 4px 4px 4px 4px
+
+#next-card
+  width: 220px
+
+</style>

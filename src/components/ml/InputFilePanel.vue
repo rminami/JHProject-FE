@@ -3,7 +3,7 @@
     <v-card id="input-card">
       <v-card-title primary-title>
         <div>
-          <h3 class="headline">{{ boxTitle }}</h3>
+          <h3 class="headline">Select input file</h3>
         </div>
       </v-card-title>
       <v-card-text>
@@ -42,6 +42,12 @@
             color="blue"
             max-height="300"
           ></v-select>
+          <div class="spacing"></div>
+          <v-switch
+            label="Enable advanced options?"
+            v-model="advEnabledAlias"
+            color="orange"
+          ></v-switch>
         </v-form>
       </v-card-text>
       <v-card-actions>
@@ -63,7 +69,7 @@ import url from 'url'
 import InputFileDialog from '../dialogs/InputFileDialog'
 
 export default {
-  props: ['boxTitle'],
+  props: ['advEnabled'],
   components: {
     'input-file-dialog': InputFileDialog
   },
@@ -73,7 +79,8 @@ export default {
       inputCols: [],
       outputCols: [],
       inputFile: 'processed-data.csv', // Change later
-      fileDialogOpen: false
+      fileDialogOpen: false,
+      advEnabledAlias: false
     }
   },
   computed: {
@@ -82,7 +89,13 @@ export default {
       beEndpoint: s => s.beEndpoint
     })
   },
+  watch: {
+    advEnabledAlias: function() {
+      this.$emit('adv-toggle', this.advEnabledAlias)
+    }
+  },
   created() {
+    this.advEnabledAlias = this.advEnabled
     this.getColumns()
   },
   methods: {
@@ -111,14 +124,15 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="stylus" scoped>
 
-#input-flex {
-  width: 328px;
-  padding: 4px 4px 4px 4px;
-}
+#input-flex
+  width: 328px
+  padding: 4px 4px 4px 4px
 
-#input-card {
-  width: 320px;
-}
+#input-card
+  width: 320px
+
+.spacing
+  height: 20px
 </style>

@@ -4,25 +4,41 @@
       <v-container fluid grid-list-md id="inner-container">
         <v-layout row>
           <input-file-panel
-            :box-title="inputTitle"
-            @error="handleBackendConnectionError"
+            :adv-enabled="advEnabled"
+            @adv-toggle="toggleAdvOptions"
+            @error="beConnected = true"
           />
           <transformer-panel
-            v-for="(transformStep, index) in transformSteps"
+            v-show="advEnabled"
+            v-for="(transformer, index) in transformers"
             :key="index"
             :index="index"
             :algos="tabularAlgos"
-            @append="appendTransformStep"
-            @remove="removeTransformStep"
+            :values="transformer"
+            @change="handleTransformChange"
+            @append="appendTransformer"
+            @remove="removeTransformer"
           />
-          <v-btn id="add-step-btn" color="primary" fab dark @click="addTransformStep">
+          <v-btn
+            v-show="advEnabled"
+            id="add-step-btn"
+            color="primary"
+            fab
+            dark
+            @click="addTransformStep"
+          >
             <v-icon>add</v-icon>
           </v-btn>
+          <estimator-panel
+            :adv-enabled="advEnabled"
+            :index="transformers.length"
+            :algos="tabularAlgos"
+          />
           <next-panel/>
         </v-layout>
       </v-container>
     </v-layout>
-     <!-- Snackbar is displayed when connection to backend fails -->
+    <!-- Snackbar is displayed when connection to backend or ML fails -->
     <v-snackbar
       :timeout="3000"
       color="error"
@@ -31,16 +47,6 @@
       {{ snackbarMsg }}
       <v-btn dark flat @click.native="snackbarIsOpen = false">Close</v-btn>
     </v-snackbar>
-    
-    <!-- Snackbar is displayed when connection to machine learning fails -->
-    <!-- <v-snackbar
-      :timeout="3000"
-      color="error"
-      v-model="mlSnackbar"
-    >
-      Could not connect to machine learning server.
-      <v-btn dark flat @click.native="mlSnackbar = false">Close</v-btn>
-    </v-snackbar> -->
   </v-container>
 </template>
 
@@ -69,23 +75,29 @@ export default {
   data() {
     return {
       algos: [],
-      transformSteps: [
+      transformers: [
         {
-          type: 'transformer'
+          name: '',
+          parameters: []
         }
       ],
-      inputTitle: 'Select input file',
-      beSnackbar: false,
-      mlSnackbar: false,
+      estimator: {
+        selected: '',
+        parameters: {},
+        hyperparams: {}
+      },
+      beConnected: false,
+      mlConnected: false,
       snackbarIsOpen: false,
+      advEnabled: true
     }
   },
   watch: {
-    beSnackbar: function() {
-      this.snackbarIsOpen = this.beSnackbar || this.mlSnackbar
+    beConnected: function() {
+      this.snackbarIsOpen = this.beConnected || this.mlConnected
     },
-    mlSnackbar: function() {
-      this.snackbarIsOpen = this.beSnackbar || this.mlSnackbar
+    mlConnected: function() {
+      this.snackbarIsOpen = this.beConnected || this.mlConnected
     }
   },
   computed: {
@@ -94,9 +106,9 @@ export default {
     },
     snackbarMsg() {
       return ('Could not connect to '
-        + (this.beSnackbar ? 'back-end' : '')
-        + ((this.beSnackbar && this.mlSnackbar) ? ' or ' : '')
-        + (this.mlSnackbar ? 'machine learning' : '')
+        + (this.beConnected ? 'backend' : '')
+        + ((this.beConnected && this.mlConnected) ? ' or ' : '')
+        + (this.mlConnected ? 'machine learning server' : '')
         + '.')
     },
     ...mapState({
@@ -106,10 +118,12 @@ export default {
   },
   methods: {
     getAlgos() {
+      // url: 'https://to26.host.cs.st-andrews.ac.uk/JH-Project/machine-learning-api/1.0/jobs',
       axios({
-        // url: 'https://to26.host.cs.st-andrews.ac.uk/JH-Project/machine-learning-api/1.0/jobs',
-        url: url.resolve(this.mlEndpoint, '/jobs'),
-        responseType: 'json'
+        method: 'get',
+        baseURL: this.mlEndpoint,
+        url: '/jobs',
+        responseType: 'json',
       })
       .then(res => {
         // const jobs = res.data.data.jobs
@@ -117,35 +131,35 @@ export default {
         this.algos = jobs
       })
       .catch(err => {
-        this.mlSnackbar = true 
+        this.mlConnected = true 
         console.log(err)
       })
     },
     addTransformStep() {
-      this.transformSteps.push({ type: 'transformer' })
+      this.transformers.push({ selected: '', parameters: {} })
     },
-    appendTransformStep(indexToAppendTo) {
-      const tmp = [
-        ...this.transformSteps.slice(0, indexToAppendTo),
-        { type: 'transformer' },
-        ...this.transformSteps.slice(indexToAppendTo + 1)
-      ]
-      console.log(tmp)
-
-      this.transformSteps = [
-        ...this.transformSteps.slice(0, indexToAppendTo),
-        { type: 'transformer' },
-        ...this.transformSteps.slice(indexToAppendTo)
+    appendTransformer(indexToAppendTo) {
+      this.transformers = [
+        ...this.transformers.slice(0, indexToAppendTo),
+        { name: '', parameters: {} },
+        ...this.transformers.slice(indexToAppendTo)
       ]
     },
-    removeTransformStep(idToRemove) {
-      this.transformSteps = this.transformSteps.filter((step, index) => (
+    handleTransformChange(newTransformer, index) {
+      const prevStep = this.transformers[index]
+      this.transformers = [
+        ...this.transformers.slice(0, index),
+        newTransformer,
+        ...this.transformers.slice(index + 1)
+      ]
+    },
+    removeTransformer(idToRemove) {
+      this.transformers = this.transformers.filter((step, index) => (
         index !== idToRemove
       ))
     },
-    handleBackendConnectionError() {
-      console.log('Backend error event emitted.')
-      this.beSnackbar = true
+    toggleAdvOptions(toggleTo) {
+      this.advEnabled = toggleTo
     }
   },
   created() {

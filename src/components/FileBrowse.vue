@@ -116,7 +116,7 @@
     color="error"
     v-model="backendSnackbar"
   >
-    Could not connect to back-end server.
+    Could not connect to backend.
     <v-btn dark flat @click.native="backendSnackbar = false">Close</v-btn>
   </v-snackbar>
 </v-container>

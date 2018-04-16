@@ -1,6 +1,6 @@
 <template>
   <div id="particles-js">
-    <v-container>
+    <v-container class="inside">
       <v-layout row justify-space-around>
         <v-flex xs5>
           <v-card>
@@ -25,8 +25,8 @@
               </v-form>
             </v-card-text>
             <v-card-actions>
-              <v-btn primary>Login</v-btn>
-              <v-btn secondary>Sign up</v-btn>
+              <v-btn color="primary">Login</v-btn>
+              <v-btn color="secondary">Sign up</v-btn>
             </v-card-actions>
           </v-card>
         </v-flex>
@@ -42,8 +42,8 @@ export default {
       email: '',
       pwdHidden: true,
       rules: {
-        required: (value) => !!value || 'Required.',
-        email: (value) => {
+        required: value => !!value || 'Required.',
+        email: value => {
           const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
           return pattern.test(value) || 'Invalid e-mail.'
         }
@@ -58,109 +58,83 @@ export default {
   methods: {
     initParticleJS() {
       particlesJS('particles-js', {
-        "particles": {
-            "number": {
-              "value": 380,
-              "density": {
-                "enable": true,
-                "value_area": 800
-              }
-            },
-            "color": {
-              "value": "#ff0000"
-            },
-            "shape": {
-              "type": "circle",
-              "stroke": {
-                "width": 0,
-                "color": "#000000"
-              },
-              "polygon": {
-                "nb_sides": 5
-              }
-            },
-            "opacity": {
-              "value": 0.5,
-              "random": false,
-              "anim": {
-                "enable": false,
-                "speed": 1,
-                "opacity_min": 0.1,
-                "sync": false
-              }
-            },
-            "size": {
-              "value": 3,
-              "random": true,
-              "anim": {
-                "enable": false,
-                "speed": 40,
-                "size_min": 0.1,
-                "sync": false
-              }
-            },
-            "line_linked": {
-              "enable": true,
-              "distance": 150,
-              "color": "#ff0000",
-              "opacity": 0.4,
-              "width": 1
-            },
-            "move": {
-              "enable": true,
-              "speed": 6,
-              "direction": "none",
-              "random": false,
-              "straight": false,
-              "out_mode": "out",
-              "bounce": false,
-              "attract": {
-                "enable": false,
-                "rotateX": 600,
-                "rotateY": 1200
-              }
-            }
-              },
-              "interactivity": {
-            "detect_on": "canvas",
-            "events": {
-              "onhover": {
-                "enable": true,
-                "mode": "grab"
-              },
-              "onclick": {
-                "enable": true,
-                "mode": "push"
-              },
-              "resize": true
-            },
-            "modes": {
-              "grab": {
-                "distance": 140,
-                "line_linked": {
-                  "opacity": 1
-                }
-              },
-              "bubble": {
-                "distance": 400,
-                "size": 40,
-                "duration": 2,
-                "opacity": 8,
-                "speed": 3
-              },
-              "repulse": {
-                "distance": 200,
-                "duration": 0.4
-              },
-              "push": {
-                "particles_nb": 4
-              },
-              "remove": {
-                "particles_nb": 2
-              }
+        particles: {
+          number: {
+            value: 200
+          },
+          color: {
+            value: '#191970'
+          },
+          shape: {
+            type: 'square',
+            stroke: {
+              width: 1,
+              color: '#cccccc'
             }
           },
-          "retina_detect": true
+          opacity: {
+            value: 0.5,
+            random: true,
+            anim: {
+              enable: true,
+              speed: 1
+            }
+          },
+          size: {
+            value: 50
+          },
+          line_linked: {
+            enable: true,
+            distance: 100,
+            color: '#ffffff',
+            opacity: 0.4,
+            width: 2
+          },
+          move: {
+            enable: true,
+            speed: 3
+          }
+        },
+        interactivity: {
+          detect_on: 'canvas',
+          events: {
+            onhover: {
+              enable: false,
+              mode: 'repulse'
+            },
+            onclick: {
+              enable: true,
+              mode: 'push'
+            },
+            resize: true
+          },
+          modes: {
+            grab: {
+              distance: 100,
+              line_linked: {
+                opacity: 5,
+                color: '#d45b0b',
+                size: {
+                  value: 20
+                }
+              }
+            },
+            bubble: {
+              distance: 50,
+              size: 20,
+              duration: 2,
+              opacity: 8,
+              speed: 3
+            },
+            repulse: {
+              distance: 10,
+              duration: 0.4
+            },
+            push: {
+              particles_nb: 4
+            }
+          }
+        }
       })
     }
   }
@@ -177,5 +151,17 @@ export default {
   position: fixed;
   width: 100%;
   height: 100%;
+  background: #00356B;
+	background-size: cover;
+}
+
+.inside {
+  position: fixed;
+  top: 50%;
+  right: 50%;
+  transform: translate(50%, -50%);
+  max-width: 90%;
+  min-width: 40%;
+  padding: 2em 3em;
 }
 </style>

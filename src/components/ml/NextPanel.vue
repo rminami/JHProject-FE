@@ -8,7 +8,7 @@
       </v-card-title>
       <v-card-text>
         <div v-if="advEnabled">
-          <h3>k Value</h3>
+          <h3 class="param-name">k Value</h3>
           <p class="desc">Value of k for k-fold cross validation</p>
           <v-text-field
             label="k"
@@ -17,6 +17,20 @@
             :rules="[() => k <= 999 || 'Value too large']"
             hint="*required"
           ></v-text-field>
+        </div>
+        <div>
+          <h3 class="param-name">Output path</h3>
+          <v-text-field
+            label="Output Path"
+            type="text"
+            v-model="outputPath"
+            hint="*required"
+            append-icon="create"
+            :append-icon-cb="() => { fileDialogOpen = !fileDialogOpen }"
+            :rules="[rules.required]"
+          ></v-text-field>
+        </div>
+        <div v-if="advEnabled">
           <v-checkbox
             label="Drop missing values"
             v-model="dropMissing"
@@ -32,27 +46,40 @@
         </div>
       </v-card-text>
     </v-card>
+    <v-dialog v-model="fileDialogOpen" max-width="500px" scrollable>
+      <input-file-dialog @close="fileDialogOpen = false"/>
+    </v-dialog>
   </div>
 </template>
 
 <script>
+import InputFileDialog from '../dialogs/InputFileDialog'
 
 export default {
   props: ['advEnabled'],
+  components: {
+    'input-file-dialog': InputFileDialog
+  },
   data() {
     return {
       jobSubmitted: false,
       k: '',
+      outputPath: 'models/',
       dropMissing: true,
+      fileDialogOpen: false,
+      rules: {
+        required: value => !!value || 'Required.'
+      }
     }
   },
   watch: {
-    
+
   },
   methods: {
   }
 }
 </script>
+
 
 <style lang="stylus" scoped>
 
@@ -63,5 +90,12 @@ export default {
 
 #next-card
   width: 320px
+
+.desc
+  white-space: normal
+
+.param-name
+  margin-top: 10px
+  margin-bottom: 14px
 
 </style>

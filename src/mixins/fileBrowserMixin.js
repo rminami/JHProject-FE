@@ -5,6 +5,7 @@ import url from 'url'
 export default {
   data() {
     return {
+      currentPath: '/files',
       dirs: [],
       files: []
     }
@@ -13,6 +14,22 @@ export default {
     beEndpoint: s => s.beEndpoint
   }),
 
+  watch: {
+    /**
+     * Updates currentPath when the URL path changes, as is necessary for
+     * the file browser to work as expected.
+     */
+    $route() {
+      this.currentPath = this.$route.path
+    },
+    /**
+     * Watcher for currentPath needs to be kept separate because the actual
+     * path does not change when using the dialog.
+     */
+    currentPath() {
+      this.getFiles()
+    }
+  },
   created() {
     this.getFiles()
   },

@@ -92,6 +92,12 @@ export default {
   watch: {
     advEnabledAlias: function() {
       this.$emit('adv-toggle', this.advEnabledAlias)
+    },
+    inputCols: function() {
+      this.$emit('input-change', this.inputCols)
+    },
+    outputCols: function() {
+      this.$emit('output-change', this.outputCols)
     }
   },
   created() {

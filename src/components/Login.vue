@@ -40,6 +40,8 @@
 </template>
 
 <script>
+/* global particlesJS */
+
 export default {
   data() {
     return {

@@ -63,6 +63,8 @@
 </template>
 
 <script>
+/* global particlesJS */
+
 export default {
   data() {
     return {
@@ -72,12 +74,12 @@ export default {
       pwdHidden: true,
       pwdConfHidden: true,
       rules: {
-        required: (value) => !!value || 'Required.',
-        email: (value) => {
+        required: value => !!value || 'Required.',
+        email: value => {
           const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
           return pattern.test(value) || 'Invalid e-mail.'
         },
-        pwdConfMatches: (pwdConf) => this.pwd === pwdConf || 'Passwords do not match',
+        pwdConfMatches: pwdConf => this.pwd === pwdConf || 'Passwords do not match'
       }
     }
   },

@@ -86,7 +86,7 @@ import localValues from '@/mixins/localValues'
 import jobNameList from '@/mixins/jobNameList'
 
 export default {
-  props: ['index', 'jobs'],
+  props: ['index', 'jobs', 'values'],
   mixins: [localValues, jobNameList],
 }
 </script>

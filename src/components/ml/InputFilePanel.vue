@@ -13,15 +13,15 @@
               name="inputFile"
               label="Input file"
               type="text"
-              v-model="inputFile"
+              v-model="localValues.inputFile"
               append-icon="create"
               :append-icon-cb="() => { fileDialogOpen = !fileDialogOpen }"
             ></v-text-field>
           </div>
           <v-select
             label="Select Input Columns"
-            :items="cols"
-            v-model="inputCols"
+            :items="colNames"
+            v-model="inputColNames"
             multiple
             autocomplete
             chips
@@ -32,8 +32,8 @@
           ></v-select>
           <v-select
             label="Select Output Columns"
-            :items="cols"
-            v-model="outputCols"
+            :items="colNames"
+            v-model="outputColNames"
             multiple
             autocomplete
             chips
@@ -46,13 +46,13 @@
           <v-switch
             label="Enable advanced options?"
             v-model="advEnabledAlias"
-            color="orange"
+            color="primary"
           ></v-switch>
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <v-btn flat color="orange">Preview</v-btn>
-        <v-btn flat color="orange">Edit</v-btn>
+        <v-btn flat color="primary">Preview</v-btn>
+        <v-btn flat color="primary">Edit</v-btn>
       </v-card-actions>
     </v-card>
     <v-dialog v-model="fileDialogOpen" max-width="500px" scrollable>
@@ -66,24 +66,29 @@ import { mapState } from 'vuex'
 import axios from 'axios'
 import url from 'url'
 
+import bindMixin from '@/mixins/bindMixin'
 import InputFileDialog from '../dialogs/InputFileDialog'
 
 export default {
-  props: ['advEnabled'],
+  props: ['values', 'advEnabled'],
+  mixins: [bindMixin],
   components: {
     'input-file-dialog': InputFileDialog
   },
   data() {
     return {
+      inputColNames: [],
+      outputColNames: [],
       cols: [],
-      inputCols: [],
-      outputCols: [],
       inputFile: 'processed-data.csv', // Change later
       fileDialogOpen: false,
       advEnabledAlias: false
     }
   },
   computed: {
+    colNames() {
+      return this.cols.map(col => col.header)
+    },
     // Put other stuff here
     ...mapState({
       beEndpoint: s => s.beEndpoint
@@ -93,12 +98,18 @@ export default {
     advEnabledAlias() {
       this.$emit('adv-toggle', this.advEnabledAlias)
     },
-    inputCols() {
-      this.$emit('input-change', this.inputCols)
+    inputColNames() {
+      this.localValues.inputCols = this.inputColNames.map(colName => ({
+        header: colName,
+        index: this.getColumnIndex(colName)
+      }))
     },
-    outputCols() {
-      this.$emit('output-change', this.outputCols)
-    }
+    outputColNames() {
+      this.localValues.outputCols = this.outputColNames.map(colName => ({
+        header: colName,
+        index: this.getColumnIndex(colName)
+      }))
+    },
   },
   created() {
     this.advEnabledAlias = this.advEnabled
@@ -107,6 +118,10 @@ export default {
   methods: {
     toggleFileModal() {
       this.fileDialogOpen = !this.fileDialogOpen
+    },
+    getColumnIndex(colName) {
+      console.log('getcolindex')
+      return this.cols.filter(col => col.header === colName)[0].index
     },
     getColumns() {
       axios({
@@ -118,8 +133,7 @@ export default {
       })
       .then(res => {
         this.cols = res.data.columns
-        .filter(col => col.type === 'number')
-        .map(col => col.header)
+        .map((col, index) => ({ ...col, index }))
       })
       .catch(err => {
         this.$emit('error')

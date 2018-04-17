@@ -13,8 +13,8 @@
           <v-text-field
             label="k"
             type="number"
-            v-model="k"
-            :rules="[() => k <= 999 || 'Value too large']"
+            v-model="localValues.k"
+            :rules="[rules.required]"
             hint="*required"
           ></v-text-field>
         </div>
@@ -23,7 +23,7 @@
           <v-text-field
             label="Output Path"
             type="text"
-            v-model="outputPath"
+            v-model="localValues.outputPath"
             hint="*required"
             append-icon="create"
             :append-icon-cb="() => { fileDialogOpen = !fileDialogOpen }"
@@ -33,7 +33,7 @@
         <div v-if="advEnabled">
           <v-checkbox
             label="Drop missing values"
-            v-model="dropMissing"
+            v-model="localValues.dropMissing"
             color="primary"
           ></v-checkbox>
         </div>
@@ -54,28 +54,22 @@
 
 <script>
 import InputFileDialog from '../dialogs/InputFileDialog'
+import bindMixin from '@/mixins/bindMixin'
 
 export default {
   props: ['advEnabled'],
+  mixins: [bindMixin],
   components: {
     'input-file-dialog': InputFileDialog
   },
   data() {
     return {
       jobSubmitted: false,
-      k: '',
-      outputPath: 'models/',
-      dropMissing: true,
       fileDialogOpen: false,
       rules: {
         required: value => !!value || 'Required.'
       }
     }
-  },
-  watch: {
-
-  },
-  methods: {
   }
 }
 </script>

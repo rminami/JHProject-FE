@@ -49,14 +49,6 @@ import fileBrowserMixin from '@/mixins/fileBrowserMixin'
 
 export default {
   mixins: [fileBrowserMixin],
-  data() {
-    return {
-      currentPath: '/files'
-    }
-  },
-  watch: {
-    currentPath: 'getFiles'
-  },
   name: 'InputFileDialog'
 }
 </script>

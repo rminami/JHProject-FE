@@ -128,39 +128,35 @@ import axios from 'axios'
 import url from 'url'
 import path from 'path'
 
+import fileBrowserMixin from '@/mixins/fileBrowserMixin'
 import RenameDialog from './dialogs/RenameDialog'
 
 export default {
   components: {
     'rename-dialog': RenameDialog
   },
-  data: () => ({
-    textDialog: false,
-    selectedFileName: '',
-    dirs: [],
-    files: [],
-    backendSnackbar: false
-  }),
-
+  mixins: [fileBrowserMixin],
+  data() {
+    return {
+      textDialog: false,
+      selectedFileName: '',
+      backendSnackbar: false
+    }
+  },
+  watch: {
+    $route: 'getFiles'
+  },
   computed: {
-    parentDirs: function() {
+    parentDirs() {
       const routeEls = this.$route.path.split('/').slice(1)
       return routeEls.map((routeEl, index) => ({
         text: routeEl,
-        path: '/' + routeEls.slice(0, index + 1).join('/')
+        path: `/${routeEls.slice(0, index + 1).join('/')}`
       }))
     },
     ...mapState({
       beEndpoint: s => s.beEndpoint
     })
-  },
-
-  created() {
-    this.getFiles()
-  },
-
-  watch: {
-    $route: 'getFiles'
   },
 
   methods: {
@@ -179,17 +175,17 @@ export default {
       })
       .then(res => {
         this.dirs = this.dirs.map(item => {
-            if (item.file_name === prevFileName) {
-              item.file_name = newFileName
-            }
-            return item
-          })
+          if (item.file_name === prevFileName) {
+            item.file_name = newFileName
+          }
+          return item
+        })
         this.files = this.dirs.map(item => {
-            if (item.file_name === prevFileName) {
-              item.file_name = newFileName
-            }
-            return item
-          })
+          if (item.file_name === prevFileName) {
+            item.file_name = newFileName
+          }
+          return item
+        })
         console.log('Successfully renamed file.')
       })
       .catch(err => {
@@ -200,44 +196,9 @@ export default {
     },
     toggleDialog() {
       this.textDialog = !this.textDialog
-    },
-    getFiles() {
-      axios({
-        baseURL: this.beEndpoint,
-        url: this.$route.path,
-        responseType: 'json',
-        params: {
-          view: 'meta',
-          include_children: true
-        }
-      })
-      .then(res => {
-        const processed = this.attachIcons(res.data.children)
-        this.dirs = processed.filter(item => item.type === 'directory')
-        this.files = processed.filter(item => item.type !== 'directory')
-      })
-      .catch(err => {
-        console.log(err)
-        this.backendSnackbar = true
-      })
-    },
-    attachIcons(items) {
-      return items.map(item => {
-        const res = item
-        switch (res.type) {
-          case 'directory':
-            return { ...res, icon: 'folder', iconClass: 'grey lighten-1 white--text' }
-          case 'tabular':
-            return { ...res, icon: 'storage', iconClass: 'blue white--text' }
-          case 'scalable_image':
-            return { ...res, icon: 'image', iconClass: 'amber white--text' }
-          default:
-            return { ...res, icon: 'note', iconClass: 'teal white--text' }
-        }
-      })
     }
   },
-  name: 'Files'
+  name: 'FileBrowse'
 }
 </script>
 

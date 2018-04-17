@@ -53,8 +53,6 @@
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <v-btn flat color="primary" @click="() => 0">Append</v-btn>
-        <v-btn flat color="secondary" @click="() => 0">Close</v-btn>
       </v-card-actions>
     </v-card>
   </div>
@@ -67,6 +65,11 @@ import jobNameList from '@/mixins/jobNameList'
 export default {
   props: ['jobs'],
   mixins: [localValues, jobNameList],
+  data() {
+    return {
+      index: 0
+    }
+  }
 }
 </script>
 

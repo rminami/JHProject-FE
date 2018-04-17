@@ -7,6 +7,22 @@
         </div>
       </v-card-title>
       <v-card-text>
+        <div v-if="advEnabled">
+          <h3>k Value</h3>
+          <p class="desc">Value of k for k-fold cross validation</p>
+          <v-text-field
+            label="k"
+            type="number"
+            v-model="k"
+            :rules="[() => k <= 999 || 'Value too large']"
+            hint="*required"
+          ></v-text-field>
+          <v-checkbox
+            label="Drop missing values"
+            v-model="dropMissing"
+            color="primary"
+          ></v-checkbox>
+        </div>
         <div>
           <v-btn color="primary" @click.stop="jobSubmitted = true">Run Job</v-btn>
           <v-progress-circular v-if="jobSubmitted" indeterminate :size="26" :width="3" color="primary"></v-progress-circular>
@@ -22,10 +38,16 @@
 <script>
 
 export default {
+  props: ['advEnabled'],
   data() {
     return {
       jobSubmitted: false,
+      k: '',
+      dropMissing: true,
     }
+  },
+  watch: {
+    
   },
   methods: {
   }
@@ -36,10 +58,10 @@ export default {
 
 
 #next-wrapper
-  width: 228px
+  width: 328px
   padding: 4px 4px 4px 4px
 
 #next-card
-  width: 220px
+  width: 320px
 
 </style>

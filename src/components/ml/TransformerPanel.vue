@@ -1,6 +1,6 @@
 <template>
-  <div id="transformer-flex">
-    <v-card id="transformer-card">
+  <div id="step-wrapper">
+    <v-card id="step-card">
       <v-card-title primary-title>
         <h3 class="headline">Transformer Step {{ index + 1 }}</h3>
         <v-spacer></v-spacer>
@@ -10,28 +10,35 @@
       </v-card-title>
       <v-card-text>
         <v-form>
-          <p class="desc">{{ selectedAlgo.job_description }}</p>
           <v-select
             label="Select Algorithm"
-            :items="algoNames"
-            v-model="tvalues.name"
+            :items="jobNameList"
+            v-model="localValues.name"
             max-height="400"
             style="white-space:nowrap; text-overflow:ellipsis;"
           ></v-select>
+          <p class="desc">{{ selectedJob.job_description }}</p>
 
           <h4 v-show="showParams" class="headline">Parameters</h4>
-          <div v-for="(parameter, i) in tvalues.parameters" :key="i">
-            <h3>{{ parameter.name }}</h3>
-            <p class="desc">{{ parameter.description }}</p>
+          <v-divider v-show="showParams" class="under-headline"/>
+
+          <div v-for="(parameter, i) in localValues.parameters" :key="i">
+            <h3 class="param-name">{{ parameter.name }}</h3>
+            <p class="desc">{{ parameter.info }}</p>
+  
+            <!-- If the parameter type is a boolean, a switch is shown; otherwise, and input box is shown.  -->
             <v-switch
-              :label="parameter.required ? parameter.name + ' is required.' : 'Use ' + parameter.name + '?'"
-              v-model="parameter.enabled"
-              color="orange"
-              v-if="!parameter.required"
+              v-if="parameter.type === 'boolean'"
+              :label="parameter.name"
+              v-model="parameter.value"
+              :hint="parameter.required ? '*required' : undefined"
+              :disabled="!parameter.enabled"
             ></v-switch>
             <v-text-field
+              v-else
               :label="parameter.name"
-              :type="paramTypeToInputType(parameter.type)"
+              :type="parameter.htmlType"
+              :step="parameter.htmlStep"
               v-model="parameter.value"
               :hint="parameter.required ? '*required' : undefined"
               :disabled="!parameter.enabled"
@@ -48,84 +55,40 @@
 </template>
 
 <script>
-export default {
-  props: ['index', 'algos', 'values'],
-  data() {
-    return {
-      tvalues: {
-        name: '',
-        parameters: []
-      },
-    }
-  },
-  
-  computed: {
-    algoNames: function() {
-      return this.algos ? this.algos.map(a => a.algorithm_name) : []
-    },
-    selectedAlgo: function() {
-      if (!this.algos || this.tvalues.name.length === 0) {
-        this.tvalues.parameters = []
-        return {}
-      }
-      const newSelectedAlgo = this.algos.filter(a => a.algorithm_name === this.tvalues.name)[0]
-      this.tvalues.parameters = newSelectedAlgo.parameters
-        .map(param => ({
-          name: param.id,
-          type: param.type,
-          description: param.description,
-          value: '',
-          required: param.required,
-          enabled: true
-        }))
-      return newSelectedAlgo
-    },
-    showParams: function() {
-      const params = this.tvalues.parameters
-      return params && params.length > 0
-    },
-  },
-  
-  watch: {
-    values: {
-      handler: function() {
-        this.tvalues = this.values
-      },
-      deep: true
-    },
-    tvalues: {
-      handler: function() {
-        this.$emit('change', this.tvalues, this.index)
-      },
-      deep: true
-    }
-  },
+import localValues from '@/mixins/localValues'
+import jobNameList from '@/mixins/jobNameList'
 
-  methods: {
-    paramTypeToInputType(paramType) {
-      switch(paramType) {
-        case 'integer':
-        case 'float':
-          return 'number'
-        default:
-          return 'text'
-      }
-    },
-  }
+export default {
+  props: ['index', 'jobs', 'values'],
+  mixins: [localValues, jobNameList],
+  // data() {
+  //   return {
+  //     localValues: {
+  //       name: '',
+  //       parameters: []
+  //     },
+  //   }
+  // },
 }
 </script>
 
-<style scoped>
-#transformer-flex {
-  width: 328px;
-  padding: 4px 4px 4px 4px;
-}
+<style lang="stylus" scoped>
 
-#transformer-card {
-  width: 320px;
-}
+#step-wrapper
+  width: 328px
+  padding: 4px 4px 4px 4px
 
-.desc {
-  white-space: normal;
-}
+#step-card
+  width: 320px
+
+.desc
+  white-space: normal
+
+.under-headline
+  margin-bottom: 20px
+
+.param-name
+  margin-top: 10px
+  margin-bottom: 14px
+
 </style>

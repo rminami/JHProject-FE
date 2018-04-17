@@ -1,43 +1,57 @@
 <template>
-  <div id="transformer-flex">
-    <v-card id="transformer-card">
+  <div id="step-wrapper">
+    <v-card id="step-card">
       <v-card-title primary-title>
-        <h3 class="headline">{{ advEnabled ? 'Estimator Step' : 'Select algorithm' }}</h3>
+        <h3 class="headline">{{ 'Estimator Step' }}</h3>
       </v-card-title>
       <v-card-text>
         <v-form>
-          <p class="desc">{{ selectedAlgo.job_description }}</p>
           <v-select
             label="Select Algorithm"
-            :items="algoNames"
-            v-model="selectedAlgoName"
+            :items="jobNameList"
+            v-model="localValues.name"
             max-height="400"
             style="white-space:nowrap; text-overflow:ellipsis;"
           ></v-select>
+          <p class="desc">{{ selectedJob.job_description }}</p>
 
-          <div v-if="showParams">
-            <h4 class="headline">Parameters</h4>
-            <div v-for="(parameter, i) in selectedAlgo.parameters" :key="i">
-              <h3>{{ parameter.id }}</h3>
-              <p class="desc">{{ parameter.description }}</p>
-              <v-switch
-                :label="parameter.required ? parameter.id + ' is required.' : 'Use ' + parameter.id + '?'"
-                v-model="paramInputs[i].enabled"
-                color="orange"
-                v-if="!parameter.required"
-              ></v-switch>
-              <v-text-field
-                :label="parameter.id"
-                :type="paramTypeToInputType(parameter.type)"
-                v-model="paramInputs[i].input"
-                :rules="[() => paramInputs[i].input <= 999 || 'Value too large']"
-                :hint="parameter.required ? '*required' : undefined"
-                :disabled="!kfold"
-              ></v-text-field>
-            </div>
+          <h4 v-show="showParams" class="headline">Parameters</h4>
+          <v-divider v-show="showParams" class="under-headline"/>
+
+          <div v-for="(parameter, i) in localValues.parameters" :key="i">
+            <h3 class="param-name">{{ parameter.name }}</h3>
+            <p class="desc">{{ parameter.info }}</p>
+  
+            <!-- Displays a switch, selector, or input box depending on the parameter type. -->
+            <v-switch
+              v-if="parameter.type === 'boolean'"
+              :label="parameter.name"
+              v-model="parameter.value"
+              :hint="parameter.required ? '*required' : undefined"
+              :disabled="!parameter.enabled"
+            ></v-switch>
+            <v-select
+              v-else-if="parameter.type === 'select'"
+              :label="parameter.name"
+              v-model="parameter.value"
+              :items="parameter.default.trim().split('|')"
+              :hint="parameter.required ? '*required' : undefined"
+              :disabled="!parameter.enabled"
+              max-height="400"
+              style="white-space:nowrap; text-overflow:ellipsis;"
+            ></v-select>
+            <v-text-field
+              v-else
+              :label="parameter.name"
+              :type="parameter.htmlType"
+              :step="parameter.htmlStep"
+              v-model="parameter.value"
+              :hint="parameter.required ? '*required' : undefined"
+              :disabled="!parameter.enabled"
+            ></v-text-field>
           </div>
 
-          <div v-if="showHyperParams">
+          <!-- <div v-if="showHyperParams">
             <h4 class="headline">Hyper Parameters</h4>
             <div v-for="(hyperParameter, i) in selectedAlgo.hyper_parameters" :key="i">
               <h3>{{ hyperParameter.id }}</h3>
@@ -56,7 +70,7 @@
                 :disabled="!hyperParamInputs[i].enabled"
               ></v-text-field>
             </div>
-          </div>
+          </div> -->
         </v-form>
       </v-card-text>
       <v-card-actions>
@@ -68,81 +82,32 @@
 </template>
 
 <script>
+import localValues from '@/mixins/localValues'
+import jobNameList from '@/mixins/jobNameList'
+
 export default {
-  props: ['index', 'algos', 'advEnabled'],
-  data() {
-    return {
-      kfold: true,
-      kValue: 0,
-      speed: 20,
-      cols: [],
-      paramInputs: [],
-      hyperParamInputs: [],
-      selectedAlgoName: '',
-    }
-  },
-  watch: {
-    selectedAlgo: function() {
-      // Generates parameter form
-      const paramCount = this.selectedAlgo.parameters ? this.selectedAlgo.parameters.length : 0
-      const hyperParamCount = this.selectedAlgo.hyper_parameters ? this.selectedAlgo.hyper_parameters.length : 0
-      let paramArr = []
-      let hyperParamArr = []
-      for (let i = 0; i < paramCount; i++) {
-        paramArr.push({ input: '', enabled: true })
-      }
-      for (let i = 0; i < hyperParamCount; i++) {
-        hyperParamArr.push({ input: '', enabled: true })
-      }
-      this.paramInputs = paramArr
-      this.hyperParamInputs = hyperParamArr
-      // Sends event to parent
-      this.$emit('change', this.selectedAlgoName, this.index)
-    }
-  },
-  computed: {
-    algoNames: function() {
-      return this.algos ? this.algos.map(a => a.algorithm_name) : []
-    },
-    selectedAlgo: function() {
-      if (this.algos && this.selectedAlgoName.length > 0) {
-        return this.algos.filter(a => a.algorithm_name === this.selectedAlgoName)[0]
-      }
-      return {}
-    },
-    showParams: function() {
-      const params = this.selectedAlgo.parameters
-      return params && params.length > 0
-    },
-    showHyperParams: function() {
-      const hyperParams = this.selectedAlgo.hyper_parameters
-      return hyperParams && hyperParams.length > 0
-    }
-  },
-  methods: {
-    paramTypeToInputType(paramType) {
-      switch(paramType) {
-        case 'integer':
-        case 'float':
-          return 'number'
-        default:
-          return 'text'
-      }
-    },
-  }
+  props: ['index', 'jobs'],
+  mixins: [localValues, jobNameList],
 }
 </script>
 
 <style lang="stylus" scoped>
 
-#transformer-flex
+#step-wrapper
   width: 328px
   padding: 4px 4px 4px 4px
 
-#transformer-card
+#step-card
   width: 320px
 
 .desc
   white-space: normal
+
+.under-headline
+  margin-bottom: 20px
+
+.param-name
+  margin-top: 10px
+  margin-bottom: 14px
 
 </style>

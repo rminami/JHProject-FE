@@ -1,5 +1,5 @@
 <template>
-  <div id="particles-js">
+  <div id="particles">
     <v-container class="inside">
       <v-layout row justify-space-around>
         <v-flex xs5>
@@ -13,14 +13,18 @@
                   name="login"
                   label="Email address"
                   type="email"
+                  autocomplete="username"
                   :rules="[rules.required, rules.email]"
+                  aria-label="Email address"
                 ></v-text-field>
                 <v-text-field
                   name="password"
                   label="Password"
+                  autocomplete="current-password"
                   :append-icon="pwdHidden ? 'visibility' : 'visibility_off'"
                   :append-icon-cb="() => (pwdHidden = !pwdHidden)"
                   :type="pwdHidden ? 'password' : 'text'"
+                  aria-label="Password"
                 ></v-text-field>
               </v-form>
             </v-card-text>
@@ -51,13 +55,11 @@ export default {
     }
   },
   mounted() {
-    this.$nextTick(() => {
-      this.initParticleJS()
-    })
+    this.initParticleJS()
   },
   methods: {
     initParticleJS() {
-      particlesJS('particles-js', {
+      particlesJS('particles', {
         particles: {
           number: {
             value: 200
@@ -142,26 +144,24 @@ export default {
 
 </script>
 
-<style>
-.canvas {
-  display: block;
-}
+<style lang="stylus" scoped>
+.canvas
+  display: block
 
-#particles-js {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background: #00356B;
-	background-size: cover;
-}
+#particles
+  position: fixed
+  width: 100%
+  height: 100%
+  background: #00356B
+  background-size: cover
 
-.inside {
-  position: fixed;
-  top: 50%;
-  right: 50%;
-  transform: translate(50%, -50%);
-  max-width: 90%;
-  min-width: 40%;
-  padding: 2em 3em;
-}
+.inside
+  position: fixed
+  top: 50%
+  right: 50%
+  transform: translate(50%, -50%)
+  max-width: 90%
+  min-width: 40%
+  padding: 2em 3em
+
 </style>

@@ -3,7 +3,7 @@
     <v-card id="input-card">
       <v-card-title primary-title>
         <div>
-          <h3 class="headline">Select input file</h3>
+          <h3 id="input-title" class="headline">Select input file</h3>
         </div>
       </v-card-title>
       <v-card-text>
@@ -90,13 +90,13 @@ export default {
     })
   },
   watch: {
-    advEnabledAlias: function() {
+    advEnabledAlias() {
       this.$emit('adv-toggle', this.advEnabledAlias)
     },
-    inputCols: function() {
+    inputCols() {
       this.$emit('input-change', this.inputCols)
     },
-    outputCols: function() {
+    outputCols() {
       this.$emit('output-change', this.outputCols)
     }
   },

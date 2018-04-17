@@ -1,7 +1,7 @@
 <template>
   <div id="step-wrapper">
     <v-card id="step-card">
-      <v-card-title primary-title>
+      <v-card-title class="step-card-title" primary-title>
         <h3 class="headline">Transformer Step {{ index + 1 }}</h3>
         <v-spacer></v-spacer>
         <v-btn icon @click="$emit('remove', index)">
@@ -25,7 +25,7 @@
           <div v-for="(parameter, i) in localValues.parameters" :key="i">
             <h3 class="param-name">{{ parameter.name }}</h3>
             <p class="desc">{{ parameter.info }}</p>
-  
+
             <!-- If the parameter type is a boolean, a switch is shown; otherwise, and input box is shown.  -->
             <v-switch
               v-if="parameter.type === 'boolean'"
@@ -60,15 +60,7 @@ import jobNameList from '@/mixins/jobNameList'
 
 export default {
   props: ['index', 'jobs', 'values'],
-  mixins: [localValues, jobNameList],
-  // data() {
-  //   return {
-  //     localValues: {
-  //       name: '',
-  //       parameters: []
-  //     },
-  //   }
-  // },
+  mixins: [localValues, jobNameList]
 }
 </script>
 

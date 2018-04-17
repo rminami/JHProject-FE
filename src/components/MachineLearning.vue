@@ -5,7 +5,9 @@
         <v-layout row>
           <input-file-panel
             :adv-enabled="advEnabled"
+            :values="inputs"
             @adv-toggle="toggleAdvOptions"
+            @change="handleInputChange"
             @error="beConnected = false"
           />
 
@@ -26,9 +28,8 @@
           <v-btn
             v-show="advEnabled"
             id="add-step-btn"
-            color="primary"
+            color="primary white--text"
             fab
-            dark
             @click="addTransformStep"
           >
             <v-icon>add</v-icon>
@@ -37,14 +38,18 @@
             v-show="advEnabled"
             :index="transformers.length"
             :jobs="estimatorJobs"
+            @change="handleEstimatorChange"
           />
           <!-- Components for basic mode -->
           <basic-panel
             v-show="!advEnabled"
             :jobs="basicJobs"
+            @change="handleBasicChange"
           />
           <next-panel
+            :values="extras"
             :adv-enabled="advEnabled"
+            @change="handleNextPanelChange"
           />
         </v-layout>
       </v-container>
@@ -85,6 +90,10 @@ export default {
       basicJobs: undefined,
       transformerJobs: undefined,
       estimatorJobs: undefined,
+      basic: {
+        name: '',
+        parameters: []
+      },
       transformers: [
         {
           name: '',
@@ -92,17 +101,87 @@ export default {
         }
       ],
       estimator: {
-        selected: '',
+        name: '',
         parameters: {},
-        hyperparams: {}
+      },
+      inputs: {
+        inputFile: '',
+        inputCols: [],
+        outputCols: []
+      },
+      extras: {
+        k: '',
+        outputPath: '/models',
+        dropMissing: undefined
       },
       beConnected: true,
       mlConnected: true,
-      advEnabled: true,
+      advEnabled: false,
       snackbarIsOpen: false
     }
   },
   computed: {
+    mlRequest() {
+      if (this.advEnabled) {
+        return {
+          transformers: this.transformers.map(transformer => ({
+            name: transformer.name,
+            parameters: transformer.parameters.map(param => ({
+              name: param.name,
+              type: param.type,
+              value: param.enabled ? param.value : param.default
+            }))
+          })),
+          estimator: {
+            name: this.estimator.name,
+            parameters: this.estimator.parameters.map(param => ({
+              name: param.name,
+              type: param.type,
+              value: param.enabled ? param.value : param.default
+            }))
+          },
+          // TODO from here
+          extras: {
+            k: 0,
+            splitRatio: 0.5
+          },
+          // This is done
+          input_columns: this.inputs.inputCols.map(col => ({
+            column_index: col.index,
+            column_type: 'discrete'
+          })),
+          output_columns: this.inputs.outputCols.map(col => ({
+            column_index: col.index,
+            column_type: 'discrete'
+          })),
+        }
+      } else {
+        // Basic mode
+        const basicParameters = {}
+        this.basic.parameters.map(param => {
+          basicParameters[param.name] = param.value
+        })
+        return {
+          refresh_token: 'abc123',
+          job_id: this.basic.job_id,
+          training_data: {
+            id: 'id1234',
+            path: this.inputs.inputFile,
+            project_name: 'project456'
+          },
+          input_columns: this.inputs.inputCols.map(col => ({
+            column_index: col.index,
+            column_type: 'discrete'
+          })),
+          output_columns: this.inputs.outputCols.map(col => ({
+            column_index: col.index,
+            column_type: 'discrete'
+          })),
+          parameters: basicParameters,
+          output_directory_path: this.extras.outputPath
+        }
+      }
+    },
     /**
      * The message shown on the snackbar is changed depending on whether or not
      * the connection to the backend server fails, the connection to the machine
@@ -279,6 +358,18 @@ export default {
         index !== indexToRemove
       ))
     },
+    handleEstimatorChange(newEstimatorJob) {
+      this.estimator = newEstimatorJob
+    },
+    handleBasicChange(newBasicJob) {
+      this.basic = newBasicJob
+    },
+    handleInputChange(newInputs) {
+      this.inputs = newInputs
+    },
+    handleNextPanelChange(newExtras) {
+      this.extras = newExtras
+    },
     /**
      * This function is called whenever the advanced options switch is toggled.
      *
@@ -315,6 +406,7 @@ export default {
 #outer-container {
   overflow: auto;
   white-space: nowrap;
+  background: #a3e2dd;
 }
 
 #inner-container {

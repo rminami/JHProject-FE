@@ -74,8 +74,7 @@
           </v-btn>
           <v-list>
             <v-list-tile
-              :href="file.file_path + '?action=download'"
-              download
+              @click.stop="downloadFile(file.file_name, file.file_path)"
             >
               <v-list-tile-title>Download</v-list-tile-title>
             </v-list-tile>
@@ -93,6 +92,7 @@
               <v-list-tile-title>Move</v-list-tile-title>
             </v-list-tile>
             <v-list-tile
+              @click.stop="deleteFile(file.file_path)"
             >
               <v-list-tile-title>Delete</v-list-tile-title>
             </v-list-tile>
@@ -160,8 +160,45 @@ export default {
   },
 
   methods: {
-    deleteFile() {
-
+    downloadFile(fileName, filePath) {
+      axios({
+        method: 'get',
+        baseURL: this.beEndpoint,
+        url: filePath,
+        params: {
+          view: 'raw'
+        },
+        responseType: 'blob'
+      })
+      .then(res => {
+        const dlUrl = window.URL.createObjectURL(new Blob([res.data]))
+        const link = document.createElement('a')
+        link.href = dlUrl
+        link.setAttribute('download', fileName)
+        document.body.appendChild(link)
+        link.click()
+        link.remove()
+      })
+    },
+    deleteFile(filePath) {
+      axios({
+        method: 'delete',
+        baseURL: this.beEndpoint,
+        url: filePath,
+        params: {
+          view: 'raw'
+        },
+        responseType: 'blob'
+      })
+      .then(res => {
+        const dlUrl = window.URL.createObjectURL(new Blob([res.data]))
+        const link = document.createElement('a')
+        link.href = dlUrl
+        link.setAttribute('download', fileName)
+        document.body.appendChild(link)
+        link.click()
+        link.remove()
+      })
     },
     renameFile(prevFileName, newFileName) {
       console.log('Renaming file')

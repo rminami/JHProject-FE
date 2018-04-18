@@ -15,13 +15,13 @@
           ></v-select>
           <p class="desc">{{ selectedJob.job_description }}</p>
 
-          <h4 v-show="showParams" class="headline">Parameters</h4>
+          <h4 v-show="showParams" class="headline">Hyperparameters</h4>
           <v-divider v-show="showParams" class="under-headline"/>
 
           <div v-for="(parameter, i) in localValues.parameters" :key="i">
             <h3 class="param-name">{{ parameter.name }}</h3>
             <p class="desc">{{ parameter.info }}</p>
-  
+
             <!-- Displays a switch, selector, or input box depending on the parameter type. -->
             <v-switch
               v-if="parameter.type === 'boolean'"
@@ -50,27 +50,6 @@
               :disabled="!parameter.enabled"
             ></v-text-field>
           </div>
-
-          <!-- <div v-if="showHyperParams">
-            <h4 class="headline">Hyper Parameters</h4>
-            <div v-for="(hyperParameter, i) in selectedAlgo.hyper_parameters" :key="i">
-              <h3>{{ hyperParameter.id }}</h3>
-              <p class="desc">{{ hyperParameter.description }}</p>
-              <v-switch
-                :label="hyperParameter.required ? hyperParameter.id + ' is required.' : 'Use ' + hyperParameter.id + '?'"
-                v-model="hyperParamInputs[i].enabled"
-                color="orange"
-                v-if="!hyperParameter.required"
-              ></v-switch>
-              <v-text-field
-                :label="hyperParameter.id"
-                :type="paramTypeToInputType(hyperParameter.type)"
-                v-model="hyperParamInputs[i].input"
-                :hint="hyperParameter.required ? '*required' : undefined"
-                :disabled="!hyperParamInputs[i].enabled"
-              ></v-text-field>
-            </div>
-          </div> -->
         </v-form>
       </v-card-text>
       <v-card-actions>
@@ -87,7 +66,7 @@ import jobNameList from '@/mixins/jobNameList'
 
 export default {
   props: ['index', 'jobs', 'values'],
-  mixins: [localValues, jobNameList],
+  mixins: [localValues, jobNameList]
 }
 </script>
 

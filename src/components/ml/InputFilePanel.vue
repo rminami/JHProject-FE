@@ -109,7 +109,7 @@ export default {
         header: colName,
         index: this.getColumnIndex(colName)
       }))
-    },
+    }
   },
   created() {
     this.advEnabledAlias = this.advEnabled
@@ -120,7 +120,6 @@ export default {
       this.fileDialogOpen = !this.fileDialogOpen
     },
     getColumnIndex(colName) {
-      console.log('getcolindex')
       return this.cols.filter(col => col.header === colName)[0].index
     },
     getColumns() {
@@ -128,11 +127,11 @@ export default {
         url: url.resolve(this.beEndpoint, '/files/processed-data.csv'),
         responseType: 'json',
         params: {
-          view: 'headers'
+          view: 'meta'
         }
       })
       .then(res => {
-        this.cols = res.data.columns
+        this.cols = res.data.supported_views.tabular.columns
         .map((col, index) => ({ ...col, index }))
       })
       .catch(err => {

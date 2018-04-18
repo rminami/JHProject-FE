@@ -31,18 +31,29 @@
           ></v-text-field>
         </div>
         <div v-if="advEnabled">
+          <h3 class="param-name">Split ratio</h3>
+          <v-slider
+            v-model="localValues.splitRatio"
+            thumb-label
+            min="0"
+            max="1"
+            step="0.01"        
+          />
+        </div>
+        <div v-if="advEnabled">
           <v-checkbox
             label="Drop missing values"
             v-model="localValues.dropMissing"
             color="primary"
           ></v-checkbox>
         </div>
+        
         <div>
-          <v-btn color="primary" @click.stop="jobSubmitted = true">Run Job</v-btn>
-          <v-progress-circular v-if="jobSubmitted" indeterminate :size="26" :width="3" color="primary"></v-progress-circular>
+          <v-btn color="primary" @click.stop="localValues.jobSubmitted = true">Run Job</v-btn>
+          <v-progress-circular v-if="localValues.jobSubmitted" indeterminate :size="26" :width="3" color="primary"></v-progress-circular>
         </div>
         <div>
-          <v-btn color="normal" :disabled="!jobSubmitted" @click.stop="jobSubmitted = false">Cancel</v-btn>
+          <v-btn color="normal" :disabled="!localValues.jobSubmitted" @click.stop="localValues.jobSubmitted = false">Cancel</v-btn>
         </div>
       </v-card-text>
     </v-card>
@@ -64,7 +75,6 @@ export default {
   },
   data() {
     return {
-      jobSubmitted: false,
       fileDialogOpen: false,
       rules: {
         required: value => !!value || 'Required.'
@@ -74,9 +84,7 @@ export default {
 }
 </script>
 
-
 <style lang="stylus" scoped>
-
 
 #next-wrapper
   width: 328px

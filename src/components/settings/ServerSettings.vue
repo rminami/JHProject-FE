@@ -41,12 +41,12 @@ export default {
   data() {
     return {
       beEndpoint: '',
-      mlEndpoint: '',
+      mlEndpoint: ''
     }
   },
   watch: {
-    beCurrent: function() { return this.beEndpoint = this.beCurrent },
-    mlCurrent: function() { return this.mlEndpoint = this.mlCurrent }
+    beCurrent() { this.beEndpoint = this.beCurrent },
+    mlCurrent() { this.mlEndpoint = this.mlCurrent }
   },
   computed: mapState({
     beCurrent: s => s.beEndpoint,

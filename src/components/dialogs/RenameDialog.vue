@@ -27,11 +27,11 @@ export default {
   props: ['prevFileName'],
   data() {
     return {
-      newFileName: '',
+      newFileName: ''
     }
   },
   watch: {
-    prevFileName: function() {
+    prevFileName() {
       this.newFileName = this.prevFileName
     }
   }

@@ -2,7 +2,7 @@
 
 </template>
 
-// <script>
+<script>
 // import { select, event } from 'd3-selection';
 // import { scaleLinear } from 'd3-scale';
 // import { extent } from 'd3-array';

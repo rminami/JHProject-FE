@@ -21,7 +21,7 @@
           <div v-for="(parameter, i) in localValues.parameters" :key="i">
             <h3 class="param-name">{{ parameter.name }}</h3>
             <p class="desc">{{ parameter.info }}</p>
-  
+
             <!-- Displays a switch, selector, or input box depending on the parameter type. -->
             <v-switch
               v-if="parameter.type === 'boolean'"

@@ -126,9 +126,9 @@
               deletable-chips
               clearable
             />
-            
+
             <v-select
-              v-if="formSelection.vistype !== 'Heatmap' 
+              v-if="formSelection.vistype !== 'Heatmap'
                 && formSelection.vistype !== 'Histogram'
                 && formSelection.vistype !== 'Table'"
               label="Show on tooltip"
@@ -194,7 +194,7 @@ export default {
       rangeSwitch: false,
       columns: [],
       numerical: [],
-      categorical: [],
+      categorical: []
     }
   },
   created() {
@@ -207,14 +207,14 @@ export default {
     })
     .then(res => {
       this.columns = res.data.columns
-      
+
       this.numerical = this.columns
-        .filter(col => col.type === 'number')
-        .map(col => col.header)
+      .filter(col => col.type === 'number')
+      .map(col => col.header)
 
       this.categorical = this.columns
-        .filter(col => col.type === 'category')
-        .map(col => col.header)
+      .filter(col => col.type === 'category')
+      .map(col => col.header)
     })
     .catch(err => {
       console.log(err)
@@ -228,11 +228,10 @@ export default {
   },
   methods: {
     getColumnIndex(header) {
-      if (header === '') 
-        return undefined
+      if (header === '') { return undefined }
       return this.columns
-        .map((col, index) => ({ header: col.header, index }))
-        .filter(col => col.header === header)[0].index
+      .map((col, index) => ({ header: col.header, index }))
+      .filter(col => col.header === header)[0].index
     },
     submit() {
       const xAxisSelection = this.formSelection.xAxis

@@ -87,22 +87,31 @@ export default {
   },
   data() {
     return {
+      /**
+       * basicJobs, transformerJobs, and estimatorJobs will contain a list of
+       * the available jobs on the machine learning server.
+       */
       basicJobs: undefined,
       transformerJobs: undefined,
       estimatorJobs: undefined,
+      /**
+       * basic, transformers, estimator, inputs, and extra will contain the
+       * input columns, algorithms, and parameter values that the user has 
+       * selected. 
+       */
       basic: {
         name: '',
-        parameters: []
+        parameters: {}
       },
       transformers: [
         {
           name: '',
-          parameters: []
+          parameters: {}
         }
       ],
       estimator: {
         name: '',
-        parameters: {},
+        parameters: {}
       },
       inputs: {
         inputFile: '',
@@ -110,9 +119,11 @@ export default {
         outputCols: []
       },
       extras: {
-        k: '',
+        k: 4,
         outputPath: '/models',
-        dropMissing: undefined
+        dropMissing: true,
+        splitRatio: 0.7,
+        jobSubmitted: false
       },
       beConnected: true,
       mlConnected: true,
@@ -121,65 +132,71 @@ export default {
     }
   },
   computed: {
-    mlRequest() {
+    /**
+     * mlRequest will contain an object with all of the information necessary
+     * to start a machine learning job on the server.
+     * 
+     * Details on how the requests should be structured are detailed at the
+     * following links.
+     * @see https://app.swaggerhub.com/apis/JH-Project/machine-learning-api/1.1#/model/
+     * @see https://app.swaggerhub.com/apis/syzroy/ML7-API/1.1#/model/trainAdvanced
+     */
+    requestData() {
+      // advanced mode
       if (this.advEnabled) {
         return {
           transformers: this.transformers.map(transformer => ({
             name: transformer.name,
-            parameters: transformer.parameters.map(param => ({
-              name: param.name,
-              type: param.type,
-              value: param.enabled ? param.value : param.default
-            }))
+            parameters: transformer.parameters.map(this.parseParam)
           })),
           estimator: {
             name: this.estimator.name,
-            parameters: this.estimator.parameters.map(param => ({
-              name: param.name,
-              type: param.type,
-              value: param.enabled ? param.value : param.default
-            }))
+            parameters: this.estimator.parameters.map(this.parseParam)
           },
-          // TODO from here
           extras: {
-            k: 0,
-            splitRatio: 0.5
+            k: parseInt(this.extras.k),
+            splitRatio: this.extras.splitRatio
           },
-          // This is done
+          output_directory_path: this.extras.outputPath,
           input_columns: this.inputs.inputCols.map(col => ({
             column_index: col.index,
-            column_type: 'discrete'
+            column_type: 'discrete' // hardcoding 'discrete' for now
           })),
           output_columns: this.inputs.outputCols.map(col => ({
             column_index: col.index,
-            column_type: 'discrete'
+            column_type: 'discrete' // hardcoding 'discrete' for now
           })),
-        }
-      } else {
-        // Basic mode
-        const basicParameters = {}
-        this.basic.parameters.map(param => {
-          basicParameters[param.name] = param.value
-        })
-        return {
-          refresh_token: 'abc123',
-          job_id: this.basic.job_id,
+          // TODO actually get this data from somewhere.
           training_data: {
-            id: 'id1234',
-            path: this.inputs.inputFile,
-            project_name: 'project456'
-          },
-          input_columns: this.inputs.inputCols.map(col => ({
-            column_index: col.index,
-            column_type: 'discrete'
-          })),
-          output_columns: this.inputs.outputCols.map(col => ({
-            column_index: col.index,
-            column_type: 'discrete'
-          })),
-          parameters: basicParameters,
-          output_directory_path: this.extras.outputPath
+            id: 'abc123',
+            path: 'files/processed-data.csv',
+            project_name: 'project1'
+          }
         }
+      }
+      // Basic mode
+      const basicParameters = {}
+      this.basic.parameters.map(param => {
+        basicParameters[param.name] = param.value
+      })
+      return {
+        refresh_token: 'abc123', // TODO get actual token
+        job_id: this.basic.job_id,
+        training_data: {
+          id: 'id1234', // TODO is the path not enough?
+          path: this.inputs.inputFile,
+          project_name: 'project456' // TODO get project name
+        },
+        input_columns: this.inputs.inputCols.map(col => ({
+          column_index: col.index,
+          column_type: 'discrete'
+        })),
+        output_columns: this.inputs.outputCols.map(col => ({
+          column_index: col.index,
+          column_type: 'discrete'
+        })),
+        parameters: basicParameters,
+        output_directory_path: this.extras.outputPath
       }
     },
     /**
@@ -193,6 +210,13 @@ export default {
         ${(this.beConnected || this.mlConnected) ? '' : ' or '}
         ${this.mlConnected ? '' : 'machine learning server'}`
       .trim()}.`
+    },
+    /**
+     * This computed property needs to be declared so that we can set up a 
+     * watcher on it.
+     */
+    jobSubmitted() {
+      return this.extras.jobSubmitted
     },
     /**
      * Retrieves the backend and machine learning endpoints from Vuex
@@ -217,14 +241,31 @@ export default {
     },
     mlConnected() {
       this.snackbarIsOpen = !this.beConnected || !this.mlConnected
+    },
+    /**
+     * Sends a request to train a model on the machine learning server.
+     * 
+     * This function ensures that no request is made when the run job is
+     * unselected, and makes sure that the request is made in the correct form
+     * depending on whether or not the console is in basic or advanced mode.
+     */
+    jobSubmitted() {
+      if (this.jobSubmitted) {
+        console.log(this.requestData)
+        if (this.advEnabled) {
+          this.requestAdvancedJob()
+        } else {
+          this.requestBasicJob()
+        }
+      }
     }
   },
   methods: {
     /**
      * Retrieves a list of jobs available on the machine learning server.
      *
+     * The protocol is available at
      * @see https://github.com/CS3099JH2017/cs3099jh/blob/master/protocols/ML01.md#listing-available-jobs
-     * for the protocol.
      */
     getJobs() {
       axios({
@@ -266,8 +307,8 @@ export default {
      * Retrieves a list of transformer jobs available on the machine learning
      * server. This functionality is not part of the basic specifications.
      *
+     * The protocol is available at
      * @see https://app.swaggerhub.com/apis/syzroy/ML7-API/1.1#/algorithms/transformers
-     * for the protocol.
      */
     getTransformers() {
       if (!this.advEnabled) {
@@ -292,8 +333,8 @@ export default {
      * Retrieves a list of estimator jobs available on the machine learning
      * server. This functionality is not part of the basic specifications.
      *
+     * The protocol is available at
      * @see https://app.swaggerhub.com/apis/syzroy/ML7-API/1.1#/algorithms/estimators
-     * for the protocol.
      */
     getEstimators() {
       if (!this.advEnabled) {
@@ -349,6 +390,49 @@ export default {
       ]
     },
     /**
+     * Sends a request to the machine learning server for a model to be trained
+     * according to the basic machine learning protocol.
+     * (Why is this path called '/models'?)
+     */
+    requestBasicJob() {
+      axios({
+        method: 'post',
+        baseURL: this.mlEndpoint,
+        url: '/models',
+        responseType: 'json',
+        data: this.requestData
+      })
+      .then(res => {
+        console.log('Advanced ML job successfully started!')
+        console.log(res.data)
+      })
+      .catch(err => {
+        console.log('Advanced ML job could not be started.')
+        console.log(err)
+      })
+    },
+    /**
+     * Sends a request to the machine learning server for a model to be trained
+     * according to the advanced machine learning protocol.
+     */
+    requestAdvancedJob() {
+      axios({
+        method: 'post',
+        baseURL: this.mlEndpoint,
+        url: '/trainAdvanced',
+        responseType: 'json',
+        data: this.requestData
+      })
+      .then(res => {
+        console.log('Advanced ML job successfully started!')
+        console.log(res.data)
+      })
+      .catch(err => {
+        console.log('Advanced ML job could not be started.')
+        console.log(err)
+      })
+    },
+    /**
      * Removes a step from the transformers list.
      *
      * @param {number} indexToRemove - The index of the step to remove.
@@ -384,6 +468,32 @@ export default {
       if (this.advEnabled) {
         this.getTransformers()
         this.getEstimators()
+      }
+    },
+    /**
+     * This function parses the parameter values sent in by the user.
+     * It sets the value to the default value if the parameter is disabled,
+     * and it parses any integer/float values.
+     * 
+     * @param {Object} param - The parameter as passed in from panels.
+     * @returns {Object} The parsed parameter object.
+     */
+    parseParam(param) {
+      // default value is passed if the parameter is disabled.
+      let parsedValue = param.enabled ? param.value : param.default
+
+      // parameter value is parsed if it is an integer or a float
+      if (param.type) {
+        if (param.type === 'int' || param.type === 'integer') {
+          parsedValue = parseInt(param.value)
+        } else if (param.type === 'float' || param.type === 'number') {
+          parsedValue = parseFloat(param.value)
+        }
+      }
+      return {
+        name: param.name,
+        type: param.type,
+        value: parsedValue
       }
     }
   },

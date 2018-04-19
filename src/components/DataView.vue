@@ -199,14 +199,15 @@ export default {
   },
   created() {
     axios({
-      url: url.resolve(this.beEndpoint, this.$route.path),
+      baseURL: this.beEndpoint,
+      url: this.$route.path,
       responseType: 'json',
       params: {
-        view: 'headers'
+        view: 'meta'
       }
     })
     .then(res => {
-      this.columns = res.data.columns
+      this.columns = res.data.supported_views.tabular.columns
 
       this.numerical = this.columns
       .filter(col => col.type === 'number')

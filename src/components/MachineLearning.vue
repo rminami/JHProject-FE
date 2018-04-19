@@ -4,9 +4,7 @@
       <v-container fluid grid-list-md id="inner-container">
         <v-layout row>
           <input-file-panel
-            :adv-enabled="advEnabled"
             :values="inputs"
-            @adv-toggle="toggleAdvOptions"
             @change="handleInputChange"
             @error="beConnected = false"
           />
@@ -114,24 +112,28 @@ export default {
         parameters: {}
       },
       inputs: {
-        inputFile: '',
+        inputFile: 'processed-data.csv',
         inputCols: [],
-        outputCols: []
+        outputCols: [],
+        advEnabled: false
       },
       extras: {
         k: 4,
-        outputPath: '/models',
+        outputPath: 'hci_test',
         dropMissing: true,
         splitRatio: 0.7,
         jobSubmitted: false
       },
       beConnected: true,
       mlConnected: true,
-      advEnabled: false,
-      snackbarIsOpen: false
+      snackbarIsOpen: false,
+      snackbarMsg: ''
     }
   },
   computed: {
+    advEnabled() {
+      return this.inputs.advEnabled
+    },
     /**
      * mlRequest will contain an object with all of the information necessary
      * to start a machine learning job on the server.
@@ -166,11 +168,10 @@ export default {
             column_index: col.index,
             column_type: 'discrete' // hardcoding 'discrete' for now
           })),
-          // TODO actually get this data from somewhere.
           training_data: {
-            id: 'abc123',
-            path: 'files/processed-data.csv',
-            project_name: 'project1'
+            id: '1', // TODO get actual file id
+            path: this.inputs.inputFile,
+            project_name: 'project1' // TODO get project name
           }
         }
       }
@@ -183,9 +184,9 @@ export default {
         refresh_token: 'abc123', // TODO get actual token
         job_id: this.basic.job_id,
         training_data: {
-          id: 'id1234', // TODO is the path not enough?
+          id: 1, // TODO is the path not enough?
           path: this.inputs.inputFile,
-          project_name: 'project456' // TODO get project name
+          project_name: 'project1' // TODO get project name
         },
         input_columns: this.inputs.inputCols.map(col => ({
           column_index: col.index,
@@ -204,7 +205,7 @@ export default {
      * the connection to the backend server fails, the connection to the machine
      * learning server fails, or both.
      */
-    snackbarMsg() {
+    connectionErrorMsg() {
       return `${`Could not connect to
         ${this.beConnected ? '' : 'backend'}
         ${(this.beConnected || this.mlConnected) ? '' : ' or '}
@@ -237,9 +238,11 @@ export default {
      * false after the snackbar has been displayed for a certain amount of time.
      */
     beConnected() {
+      this.snackbarMsg = this.connectionErrorMsg
       this.snackbarIsOpen = !this.beConnected || !this.mlConnected
     },
     mlConnected() {
+      this.snackbarMsg = this.connectionErrorMsg
       this.snackbarIsOpen = !this.beConnected || !this.mlConnected
     },
     /**
@@ -324,8 +327,8 @@ export default {
         this.transformerJobs = res.data.data.jobs
       })
       .catch(err => {
-        this.mlConnected = false
-        console.log('Could not retrieve transformers.')
+        this.snackbarIsOpen = true
+        this.snackbarMsg = 'Could not retrieve transformers.'
         console.log(err)
       })
     },
@@ -351,8 +354,8 @@ export default {
         this.estimatorJobs = res.data.data.jobs
       })
       .catch(err => {
-        this.mlConnected = false
-        console.log('Could not retrieve estimators.')
+        this.snackbarIsOpen = true
+        this.snackbarMsg = 'Could not retrieve estimators.'
         console.log(err)
       })
     },
@@ -400,14 +403,21 @@ export default {
         baseURL: this.mlEndpoint,
         url: '/models',
         responseType: 'json',
-        data: this.requestData
+        data: this.requestData,
+        // TODO get actual bearer token
+        headers: {
+          'Authorisation': 'Bearer YES',
+          'Authorization': 'Bearer YES'
+        }
       })
       .then(res => {
         console.log('Advanced ML job successfully started!')
         console.log(res.data)
       })
       .catch(err => {
-        console.log('Advanced ML job could not be started.')
+        this.snackbarIsOpen = true
+        this.snackbarMsg = 'Machine learning job could not be started.'
+        this.extras.jobSubmitted = false
         console.log(err)
       })
     },
@@ -416,6 +426,7 @@ export default {
      * according to the advanced machine learning protocol.
      */
     requestAdvancedJob() {
+      console.log(JSON.stringify(this.requestData))
       axios({
         method: 'post',
         baseURL: this.mlEndpoint,
@@ -428,7 +439,9 @@ export default {
         console.log(res.data)
       })
       .catch(err => {
-        console.log('Advanced ML job could not be started.')
+        this.snackbarIsOpen = true
+        this.snackbarMsg = 'Machine learning job could not be started.'
+        this.extras.jobSubmitted = false
         console.log(err)
       })
     },
@@ -448,27 +461,20 @@ export default {
     handleBasicChange(newBasicJob) {
       this.basic = newBasicJob
     },
+    /**
+     * If the advanced options switch is switched on, the frontend tries to
+     * retrieve a list of available transformer and estimator jobs from the
+     * machine learning server when advanced options are enabled.
+     */
     handleInputChange(newInputs) {
       this.inputs = newInputs
-    },
-    handleNextPanelChange(newExtras) {
-      this.extras = newExtras
-    },
-    /**
-     * This function is called whenever the advanced options switch is toggled.
-     *
-     * The frontend tries to retrieve a list of available transformer and
-     * estimator jobs from the machine learning server when advanced options are
-     * enabled.
-     *
-     * @param {boolean} toggleTo - The value the switch was toggled to.
-     */
-    toggleAdvOptions(toggleTo) {
-      this.advEnabled = toggleTo
-      if (this.advEnabled) {
+      if (newInputs.advEnabled) {
         this.getTransformers()
         this.getEstimators()
       }
+    },
+    handleNextPanelChange(newExtras) {
+      this.extras = newExtras
     },
     /**
      * This function parses the parameter values sent in by the user.

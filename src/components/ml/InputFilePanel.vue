@@ -45,7 +45,7 @@
           <div class="spacing"></div>
           <v-switch
             label="Enable advanced options?"
-            v-model="advEnabledAlias"
+            v-model="localValues.advEnabled"
             color="primary"
           ></v-switch>
         </v-form>
@@ -65,12 +65,13 @@
 import { mapState } from 'vuex'
 import axios from 'axios'
 import url from 'url'
+import path from 'path'
 
 import bindMixin from '@/mixins/bindMixin'
 import InputFileDialog from '../dialogs/InputFileDialog'
 
 export default {
-  props: ['values', 'advEnabled'],
+  props: ['values'],
   mixins: [bindMixin],
   components: {
     'input-file-dialog': InputFileDialog
@@ -80,9 +81,7 @@ export default {
       inputColNames: [],
       outputColNames: [],
       cols: [],
-      inputFile: 'processed-data.csv', // Change later
       fileDialogOpen: false,
-      advEnabledAlias: false
     }
   },
   computed: {
@@ -95,9 +94,6 @@ export default {
     })
   },
   watch: {
-    advEnabledAlias() {
-      this.$emit('adv-toggle', this.advEnabledAlias)
-    },
     inputColNames() {
       this.localValues.inputCols = this.inputColNames.map(colName => ({
         header: colName,
@@ -124,7 +120,7 @@ export default {
     },
     getColumns() {
       axios({
-        url: url.resolve(this.beEndpoint, '/files/processed-data.csv'),
+        url: url.resolve(this.beEndpoint, path.join('files', this.localValues.inputFile)),
         responseType: 'json',
         params: {
           view: 'meta'

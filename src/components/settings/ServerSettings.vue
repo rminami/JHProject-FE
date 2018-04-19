@@ -1,36 +1,54 @@
 <template>
   <v-container>
-    <v-layout row justify-space-around>
-      <v-flex xs5>
-        <v-card>
-          <v-card-title>
-            <span class="headline">Sign up</span>
-          </v-card-title>
-          <v-card-text>
-            <v-form>
+    <!-- <v-layout row justify-space-around> -->
+      <v-card flat>
+        <v-card-text>
+          <v-layout row id="title-row">
+            <h2>Server settings</h2>
+          </v-layout>
+          <v-spacer></v-spacer>
+          <v-layout row>
+            <v-flex xs3>
+              <v-subheader>Backend server</v-subheader>
+            </v-flex>
+            <v-flex xs7>
               <v-text-field
                 name="backend"
                 label="Backend Server"
                 v-model="beEndpoint"
-                :placeholder="beCurrent"
                 type="url"
+                single-line
               ></v-text-field>
+            </v-flex>
+            <v-flex xs2>
+              <v-btn flat color="primary">Test</v-btn>
+            </v-flex>
+          </v-layout>
+          <v-layout row>
+            <v-flex xs3>
+              <v-subheader>Machine learning server</v-subheader>
+            </v-flex>
+            <v-flex xs7>
               <v-text-field
                 name="machineLearning"
                 label="Machine Learning Server"
                 v-model="mlEndpoint"
-                :placeholder="mlCurrent"
                 type="url"
+                single-line
               ></v-text-field>
-            </v-form>
-          </v-card-text>
-          <v-card-actions>
-            <v-btn color="primary">Update</v-btn>
-            <v-btn color="secondary" @click.stop="clear">Clear</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-flex>
-    </v-layout>
+            </v-flex>
+            <v-flex xs2>
+              <v-btn flat color="primary">Test</v-btn>
+            </v-flex>
+          </v-layout>
+        </v-card-text>
+        <v-card-actions>
+          <v-layout row>
+            <v-btn flat color="primary">Update</v-btn>
+            <v-btn flat color="secondary" @click.stop="clear">Clear</v-btn>
+          </v-layout>
+        </v-card-actions>
+      </v-card>
   </v-container>
 </template>
 
@@ -52,6 +70,10 @@ export default {
     beCurrent: s => s.beEndpoint,
     mlCurrent: s => s.mlEndpoint
   }),
+  created() {
+    this.beEndpoint = this.beCurrent
+    this.mlEndpoint = this.mlCurrent
+  },
   methods: {
     clear() {
       this.beEndpoint = ''
@@ -60,3 +82,8 @@ export default {
   }
 }
 </script>
+
+<style lang="stylus" scoped>
+#title-row
+  margin-bottom 32px
+</style>

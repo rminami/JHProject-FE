@@ -182,22 +182,15 @@ export default {
     },
     deleteFile(filePath) {
       axios({
-        method: 'delete',
+        method: 'post',
         baseURL: this.beEndpoint,
         url: filePath,
         params: {
-          view: 'raw'
+          action: 'delete'
         },
-        responseType: 'blob'
       })
       .then(res => {
-        const dlUrl = window.URL.createObjectURL(new Blob([res.data]))
-        const link = document.createElement('a')
-        link.href = dlUrl
-        link.setAttribute('download', fileName)
-        document.body.appendChild(link)
-        link.click()
-        link.remove()
+        console.log(res.data)
       })
     },
     renameFile(prevFileName, newFileName) {

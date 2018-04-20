@@ -2,7 +2,7 @@
   <div id="step-wrapper">
     <v-card id="step-card">
       <v-card-title primary-title>
-        <h3 class="headline">{{ 'Choose algorithm' }}</h3>
+        <h3 class="headline">Choose algorithm</h3>
       </v-card-title>
       <v-card-text>
         <v-form>

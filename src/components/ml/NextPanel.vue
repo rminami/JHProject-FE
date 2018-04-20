@@ -32,6 +32,7 @@
         </div>
         <div v-if="advEnabled">
           <h3 class="param-name">Split ratio</h3>
+          <p class="desc">Ratio of training rows to total rows</p>
           <v-slider
             v-model="localValues.splitRatio"
             thumb-label
@@ -50,10 +51,12 @@
         
         <div>
           <v-btn color="primary" @click.stop="localValues.jobSubmitted = true">Run Job</v-btn>
-          <v-progress-circular v-if="localValues.jobSubmitted" indeterminate :size="26" :width="3" color="primary"></v-progress-circular>
+          <v-progress-circular v-if="localValues.jobSubmitted" indeterminate :size="26" :width="3" color="primary"/>
         </div>
         <div>
-          <v-btn color="normal" :disabled="!localValues.jobSubmitted" @click.stop="localValues.jobSubmitted = false">Cancel</v-btn>
+          <v-btn color="normal" :disabled="!localValues.jobSubmitted" @click.stop="localValues.jobSubmitted = false">
+            Cancel
+          </v-btn>
         </div>
       </v-card-text>
     </v-card>

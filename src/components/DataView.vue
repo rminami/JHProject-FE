@@ -1,159 +1,177 @@
 <template>
-<v-container fluid>
-  <v-layout>
-    <v-layout row wrap>
-      <v-card id="datavis-form-card">
-        <v-card-title class="headline">Data Visualizations</v-card-title>
-        <v-container>
-          <v-form v-model="valid">
-            <v-select
-              label="Select a visualization type"
-              :items="vistypes"
-              v-model="formSelection.vistype"
-            />
+<v-container fluid id="visualization-container">
+  <div id="visualization-wrapper">
+    <svg id="svg" :width="width" :height="height"/>
+  </div>
+  <div id="control-wrapper">
+    <v-card id="datavis-form-card">
+      <v-card-title class="headline">Data Visualizations</v-card-title>
+      <v-container>
+        <v-form v-model="valid">
+          <v-select
+            label="Select a visualization type"
+            :items="vistypes"
+            v-model="form.vistype"
+          />
 
-            <v-select
-              label="x-Axis"
-              :items="numerical"
-              v-model="formSelection.xAxis"
-              autocomplete
-            />
+          <v-select
+            label="x-Axis"
+            :items="numerical"
+            v-model="form.xAxis"
+            autocomplete
+            :rules="[rules.required]"
+          />
 
-            <v-select
-            v-if="formSelection.vistype !== 'Histogram'"
-              label="y-Axis"
-              :items="numerical"
-              v-model="formSelection.yAxis"
-              autocomplete
-            />
+          <v-select
+          v-if="form.vistype !== 'Histogram'"
+            label="y-Axis"
+            :items="numerical"
+            v-model="form.yAxis"
+            autocomplete
+            :rules="[rules.required]"
+          />
 
-            <v-select
-              v-if="formSelection.vistype === '3D Scatter Plot'"
-              label="z-Axis"
-              :items="numerical"
-              v-model="formSelection.zAxis"
-              autocomplete
-            />
+          <v-select
+            v-if="form.vistype === '3D Scatter Plot'"
+            label="z-Axis"
+            :items="numerical"
+            v-model="form.zAxis"
+            autocomplete
+            :rules="[rules.required]"
+          />
 
-            <v-switch
-              label="Filter by range"
-              v-model="rangeSwitch"
-            />
+          <v-select
+            v-if="form.vistype === 'Table'"
+            label="Columns to display"
+            :items="columns.map(col => col.header)"
+            v-model="form.cols"
+            multiple
+            autocomplete
+            chips
+            deletable-chips
+            clearable
+          />
 
-            <div v-show="rangeSwitch">
-              <!-- Range for x-Axis -->
-              <v-layout row justify-center>
-                <v-flex xs5>
-                  <v-text-field
-                    type="number"
-                    label="x-Axis minimum"
-                    step="0"
-                    v-model="formSelection.xMin"
-                  />
-                </v-flex>
-                <v-flex xs2 class="text-xs-center">
-                  <span class="tilde">~</span>
-                </v-flex>
-                <v-flex xs5>
-                  <v-text-field
-                    type="number"
-                    label="x-Axis maximum"
-                    step="0"
-                    v-model="formSelection.xMax"
-                  />
-                </v-flex>
-              </v-layout>
 
-              <!-- Range for y-Axis -->
-              <v-layout row justify-center>
-                <v-flex xs5>
-                  <v-text-field
-                    type="number"
-                    label="y-Axis minimum"
-                    step="0"
-                    v-model="formSelection.yMin"
-                  />
-                </v-flex>
-                <v-flex xs2 class="text-xs-center">
-                  <span class="tilde">~</span>
-                </v-flex>
-                <v-flex xs5>
-                  <v-text-field
-                    type="number"
-                    label="y-Axis maximum"
-                    step="0"
-                    v-model="formSelection.yMax"
-                  />
-                </v-flex>
-              </v-layout>
+          <v-switch
+            label="Filter by range"
+            v-model="rangeSwitch"
+          />
 
-              <!-- Range for z-Axis -->
-              <v-layout
-                row
-                justify-center
-                v-if="formSelection.vistype === '3D Scatter Plot'"
-              >
-                <v-flex xs5>
-                  <v-text-field
-                    type="number"
-                    label="z-Axis minimum"
-                    step="0"
-                    v-model="formSelection.zMin"
-                  />
-                </v-flex>
-                <v-flex xs2 class="text-xs-center">
-                  <span class="tilde">~</span>
-                </v-flex>
-                <v-flex xs5>
-                  <v-text-field
-                    type="number"
-                    label="z-Axis maximum"
-                    step="0"
-                    v-model="formSelection.zMax"
-                  />
-                </v-flex>
-              </v-layout>
-            </div>
+          <div v-show="rangeSwitch">
+            <!-- Range for x-Axis -->
+            <v-layout row justify-center>
+              <v-flex xs5>
+                <v-text-field
+                  type="number"
+                  label="x-Axis minimum"
+                  step="0"
+                  v-model="form.xMin"
+                />
+              </v-flex>
+              <v-flex xs2 class="text-xs-center">
+                <span class="tilde">~</span>
+              </v-flex>
+              <v-flex xs5>
+                <v-text-field
+                  type="number"
+                  label="x-Axis maximum"
+                  step="0"
+                  v-model="form.xMax"
+                />
+              </v-flex>
+            </v-layout>
 
-            <v-select
-              v-if="formSelection.vistype === 'Scatter Plot'"
-              label="Categories"
-              :items="categorical"
-              v-model="formSelection.categories"
-              multiple
-              autocomplete
-              chips
-              deletable-chips
-              clearable
-            />
+            <!-- Range for y-Axis -->
+            <v-layout row justify-center>
+              <v-flex xs5>
+                <v-text-field
+                  type="number"
+                  label="y-Axis minimum"
+                  step="0"
+                  v-model="form.yMin"
+                />
+              </v-flex>
+              <v-flex xs2 class="text-xs-center">
+                <span class="tilde">~</span>
+              </v-flex>
+              <v-flex xs5>
+                <v-text-field
+                  type="number"
+                  label="y-Axis maximum"
+                  step="0"
+                  v-model="form.yMax"
+                />
+              </v-flex>
+            </v-layout>
 
-            <v-select
-              v-if="formSelection.vistype !== 'Heatmap'
-                && formSelection.vistype !== 'Histogram'
-                && formSelection.vistype !== 'Table'"
-              label="Show on tooltip"
-              :items="columns.map(col => col.header)"
-              v-model="formSelection.tooltip"
-              multiple
-              autocomplete
-              chips
-              deletable-chips
-              clearable
-            />
+            <!-- Range for z-Axis -->
+            <v-layout
+              row
+              justify-center
+              v-if="form.vistype === '3D Scatter Plot'"
+            >
+              <v-flex xs5>
+                <v-text-field
+                  type="number"
+                  label="z-Axis minimum"
+                  step="0"
+                  v-model="form.zMin"
+                />
+              </v-flex>
+              <v-flex xs2 class="text-xs-center">
+                <span class="tilde">~</span>
+              </v-flex>
+              <v-flex xs5>
+                <v-text-field
+                  type="number"
+                  label="z-Axis maximum"
+                  step="0"
+                  v-model="form.zMax"
+                />
+              </v-flex>
+            </v-layout>
+          </div>
 
-            <v-select
-              v-if="formSelection.vistype === 'k-means'"
-              label="k Value"
-              :items="kValues"
-              v-model="formSelection.k"
-            />
+          <v-select
+            v-if="form.vistype === 'Scatter Plot'"
+            label="Categories"
+            :items="categorical"
+            v-model="form.categories"
+            multiple
+            autocomplete
+            chips
+            deletable-chips
+            clearable
+          />
 
-            <v-btn color="primary" :disabled="!valid" @click="submit">Render</v-btn>
-          </v-form>
-        </v-container>
-      </v-card>
-    </v-layout>
-  </v-layout>
+          <v-select
+            v-if="form.vistype !== 'Heatmap'
+              && form.vistype !== 'Histogram'
+              && form.vistype !== 'Table'"
+            label="Show on tooltip"
+            :items="columns.map(col => col.header)"
+            v-model="form.tooltip"
+            multiple
+            autocomplete
+            chips
+            deletable-chips
+            clearable
+          />
+
+          <v-select
+            v-if="form.vistype === 'k-means'"
+            label="k Value"
+            :items="kValues"
+            v-model="form.k"
+            :rules="[rules.required]"
+          />
+
+          <v-btn color="primary" :disabled="!valid" @click="submit">Render</v-btn>
+        </v-form>
+      </v-container>
+    </v-card>
+  </div>
 </v-container>
 </template>
 
@@ -161,8 +179,20 @@
 import { mapState } from 'vuex'
 import axios from 'axios'
 import url from 'url'
+import { select } from 'd3-selection';
+
+import PCA2D from '@/components/visualizations/PCA2D'
+import ScatterPlot from '@/components/visualizations/ScatterPlot'
+// import ScatterPlot3D from '@/components/visualizations/ScatterPlot3D'
+
+import validatorMixin from '@/mixins/validatorMixin'
+import { writeFileSync } from 'fs';
 
 export default {
+  mixins: [validatorMixin],
+  components: {
+    'scatter-plot': ScatterPlot
+  },
   data() {
     return {
       vistypes: [
@@ -175,12 +205,13 @@ export default {
         'Table'
       ],
       valid: false,
-      formSelection: {
+      form: {
         vistype: '',
         xAxis: '',
         yAxis: '',
         zAxis: '',
-        categories: '',
+        cols: [],
+        categories: [],
         tooltip: [],
         xMin: '',
         xMax: '',
@@ -194,7 +225,12 @@ export default {
       rangeSwitch: false,
       columns: [],
       numerical: [],
-      categorical: []
+      categorical: [],
+      visHeaders: [],
+      visData: [],
+      visRendered: false,
+      width: 0,
+      height: 0
     }
   },
   created() {
@@ -234,22 +270,96 @@ export default {
       .map((col, index) => ({ header: col.header, index }))
       .filter(col => col.header === header)[0].index
     },
-    submit() {
-      const xAxisSelection = this.formSelection.xAxis
-      console.log(`Column selected for x-Axis is ${xAxisSelection}`)
-      console.log(`This index is ${this.getColumnIndex(xAxisSelection)}`)
+    async get2dVisualizationData() {
+      const selectedColumns = [
+        this.form.xAxis,
+        this.form.yAxis,
+        ...this.form.categories
+      ]
+      this.form.tooltip.forEach(col => {
+        if (!selectedColumns.includes(col)) {
+          selectedColumns.push(col)
+        }
+      })
+      const selectedColumnIndices = selectedColumns.map(this.getColumnIndex)
+      await axios({
+        baseURL: this.beEndpoint,
+        url: this.$route.path,
+        params: {
+          cols: selectedColumnIndices.join(',')
+        }
+      })
+      .then(res => {
+        console.log(`Selected columns: ${selectedColumns}`)
+
+        const rows = res.data.trim().split('\n')
+
+        // Each entry is parsed from a string to a number.
+        this.visData = rows.slice(1).map(row => row.split(',').map(f => +f))
+        this.visHeaders = selectedColumns
+        // this.visData = res.data
+      })
+      .catch(err => {
+        console.log('Could not retrieve CSV data.')
+        console.log(err)
+      })
+    },
+    beforeRender() {
+      this.width = document.getElementById('visualization-wrapper').clientWidth
+      this.height = document.getElementById('visualization-wrapper').clientHeight
+      const svg = select('#svg').html('') // empties all previous children
+    },
+    async submit() {
+      this.beforeRender()
+      if (this.form.vistype === 'Scatter Plot') {
+        await this.get2dVisualizationData()
+        this.$refs.scatterPlot.renderScatterPlot(this.visHeaders, this.visData)
+      }
+      if (this.form.vistype === 'k-means') {
+        await this.get2dVisualizationData()
+        import('@/components/visualizations/KMeans')
+        .then(KMeans => {
+          const k = parseInt(this.form.k, 10)
+          KMeans.render(this.visHeaders, this.visData, k, this.width, this.height)
+        })
+      }
+      if (this.form.vistype === '2D PCA') {
+        await this.get2dVisualizationData()
+        PCA2D.render(this.visHeaders, this.visData, this.width, this.height)
+      }
+      if (this.form.vistype === '3D Scatter Plot') {
+        import('@/components/visualizations/ScatterPlot3D')
+        .then(ScatterPlot3D => {
+          ScatterPlot3D.render(this.visHeaders, this.visData)
+        })
+      }
     }
   }
 }
 </script>
 
-<style scoped>
-#datavis-form-card {
-  width: 400px;
-}
-.tilde {
-  font-size: 20px;
-  line-height: 64px;
-}
-</style>
+<style lang="stylus">
+#visualization-container
+  height: 100%
 
+#visualization-wrapper
+  width: calc(100% - 400px)
+  float: left
+  height: 100%
+  overflow: hidden
+  padding-bottom: 20px
+
+#control-wrapper
+  width: 400px
+  left: calc(100% - 400px)
+  float: left
+  padding-left: 40px
+
+.tilde
+  font-size: 20px
+  line-height 64px
+
+circle, rect
+  fill: rgb(31, 119, 180)
+  stroke: none
+</style>

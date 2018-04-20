@@ -59,6 +59,11 @@ export default {
           path: '/ml'
         },
         {
+          icon: 'view_list',
+          title: 'Models',
+          path: '/models'
+        },
+        {
           icon: 'settings',
           title: 'Settings',
           path: '/settings'

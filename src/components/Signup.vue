@@ -7,7 +7,7 @@
             <v-card-title>
               <span class="headline">Sign up</span>
             </v-card-title>
-            <v-card-text>
+            <v-card-text class="card-text">
               <v-form>
                 <v-text-field
                   name="firstname"
@@ -52,8 +52,8 @@
               </v-form>
             </v-card-text>
             <v-card-actions>
-              <v-btn color="primary">Login</v-btn>
-              <v-btn color="secondary">Sign up</v-btn>
+              <v-btn color="primary" @click.prevent="signup">Sign up</v-btn>
+              <v-btn color="secondary" to="/login">Log in</v-btn>
             </v-card-actions>
           </v-card>
         </v-flex>
@@ -63,9 +63,11 @@
 </template>
 
 <script>
-/* global particlesJS */
+import particlesMixin from '@/mixins/particlesMixin'
+import validatorMixin from '@/mixins/validatorMixin'
 
 export default {
+  mixins: [particlesMixin, validatorMixin],
   data() {
     return {
       email: '',
@@ -73,100 +75,6 @@ export default {
       pwdConf: '',
       pwdHidden: true,
       pwdConfHidden: true,
-      rules: {
-        required: value => !!value || 'Required.',
-        email: value => {
-          const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-          return pattern.test(value) || 'Invalid e-mail.'
-        },
-        pwdConfMatches: pwdConf => this.pwd === pwdConf || 'Passwords do not match'
-      }
-    }
-  },
-  mounted() {
-    this.initParticleJS()
-  },
-  methods: {
-    initParticleJS() {
-      particlesJS('particles', {
-        particles: {
-          number: {
-            value: 200
-          },
-          color: {
-            value: '#191970'
-          },
-          shape: {
-            type: 'square',
-            stroke: {
-              width: 1,
-              color: '#cccccc'
-            }
-          },
-          opacity: {
-            value: 0.5,
-            random: true,
-            anim: {
-              enable: true,
-              speed: 1
-            }
-          },
-          size: {
-            value: 50
-          },
-          line_linked: {
-            enable: true,
-            distance: 100,
-            color: '#ffffff',
-            opacity: 0.4,
-            width: 2
-          },
-          move: {
-            enable: true,
-            speed: 3
-          }
-        },
-        interactivity: {
-          detect_on: 'canvas',
-          events: {
-            onhover: {
-              enable: false,
-              mode: 'repulse'
-            },
-            onclick: {
-              enable: true,
-              mode: 'push'
-            },
-            resize: true
-          },
-          modes: {
-            grab: {
-              distance: 100,
-              line_linked: {
-                opacity: 5,
-                color: '#d45b0b',
-                size: {
-                  value: 20
-                }
-              }
-            },
-            bubble: {
-              distance: 50,
-              size: 20,
-              duration: 2,
-              opacity: 8,
-              speed: 3
-            },
-            repulse: {
-              distance: 10,
-              duration: 0.4
-            },
-            push: {
-              particles_nb: 4
-            }
-          }
-        }
-      })
     }
   }
 }
@@ -192,4 +100,7 @@ export default {
   min-width: 40%
   padding: 2em 3em
 
+.card-text
+  padding-left 24px
+  padding-right 24px
 </style>

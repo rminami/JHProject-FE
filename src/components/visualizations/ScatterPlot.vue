@@ -5,11 +5,11 @@
 </template>
 
 <script>
-import { select, event } from 'd3-selection';
-import { scaleLinear } from 'd3-scale';
-import { extent } from 'd3-array';
-import { axisLeft, axisBottom } from 'd3-axis';
-import { zoom, zoomIdentity } from 'd3-zoom';
+import { select, event } from 'd3-selection'
+import { scaleLinear } from 'd3-scale'
+import { extent } from 'd3-array'
+import { axisLeft, axisBottom } from 'd3-axis'
+import { zoom, zoomIdentity } from 'd3-zoom'
 
 import { radius, zoomDur, maxZoom, tooltipLeft,
     tooltipTop, colors } from '@/assets/Constants';
@@ -21,14 +21,6 @@ export default {
       width: 640,
       height: 480
     }
-  },
-  mounted() {
-    // this.renderScatterPlot(this.headers, this.data)
-
-    // this.width = Math.max(document.getElementById('scatterplot-wrapper').clientWidth - 80, 0)
-    // this.height = Math.max(document.getElementById('scatterplot-wrapper').clientHeight - 50, 0)
-
-    // console.log(`Width: ${this.width}, Height: ${this.height}`)
   },
   methods: {
     /**

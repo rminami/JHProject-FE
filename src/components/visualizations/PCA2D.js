@@ -63,10 +63,6 @@ export default {
     .scaleExtent([1, maxZoom])
     .translateExtent([[width / 2, height / 2], [width / 2, height / 2]])
 
-    svg.call(zoomFunc.transform, zoomIdentity) // clears previous zoom level
-    .call(zoomFunc.on('zoom', zoomed)) // zoom will be handled by function 'zoomed'
-    .on('dblclick.zoom', null) // disables double click to zoom
-
     const xarr = []
     const yarr = []
 
@@ -104,7 +100,7 @@ export default {
     .map(d => [d[0], d[1]])
 
     displayData.forEach((d, i) => {
-      d.orig = data[i]
+      d.orig = data[i] // eslint-disable-line
     })
 
     const x = scaleLinear()
@@ -190,7 +186,6 @@ export default {
     .style('text-anchor', 'end')
     .text(headers[1])
 
-    /** zoom function */
     function zoomed() {
       xAxis.transition()
       .duration(zoomDur)
@@ -207,5 +202,9 @@ export default {
       circles.attr('cx', d => zoomX(d[0]))
       .attr('cy', d => zoomY(d[1]))
     }
+
+    svg.call(zoomFunc.transform, zoomIdentity) // clears previous zoom level
+    .call(zoomFunc.on('zoom', zoomed)) // zoom will be handled by function 'zoomed'
+    .on('dblclick.zoom', null) // disables double click to zoom
   }
 }

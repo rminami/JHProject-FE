@@ -36,6 +36,7 @@ module.exports = {
     'semi': ['error', 'never'],
     'comma-dangle': ['error', 'never'],
     'arrow-parens': ['warn', 'as-needed'],
+    'no-plusplus': ['off'],
     // don't require .vue extension when importing
     'import/extensions': ['error', 'never', {
       js: 'never',

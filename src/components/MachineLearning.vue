@@ -119,7 +119,7 @@ export default {
       },
       extras: {
         k: 4,
-        outputPath: 'hci_test',
+        outputPath: '/home/tom/Downloads',
         dropMissing: true,
         splitRatio: 0.7,
         jobSubmitted: false
@@ -178,14 +178,20 @@ export default {
       // Basic mode
       const basicParameters = {}
       this.basic.parameters.map(param => {
-        basicParameters[param.name] = param.value
+        if (param.type === 'int' || param.type === 'integer') {
+          basicParameters[param.name] = parseInt(param.value, 10)
+        } else if (param.type === 'float' || param.type === 'number') {
+          basicParameters[param.name] = parseFloat(param.value, 10)
+        } else {
+          basicParameters[param.name] = param.value
+        }
       })
       return {
         refresh_token: 'abc123', // TODO get actual token
         job_id: this.basic.job_id,
         training_data: {
-          id: 1, // TODO is the path not enough?
-          path: this.inputs.inputFile,
+          id: '1', // TODO is the path not enough?
+          // path: this.inputs.inputFile,
           project_name: 'project1' // TODO get project name
         },
         input_columns: this.inputs.inputCols.map(col => ({
@@ -406,9 +412,14 @@ export default {
         data: this.requestData,
         // TODO get actual bearer token
         headers: {
-          'Authorisation': 'Bearer YES',
-          'Authorization': 'Bearer YES'
+          'Authorization': 'Bearer 12345',
+          'Cache-Control': 'no-cache',
+          'Postman-Token': 'c2598d64-503b-4d2e-8f11-b38772d65dba'
         }
+        // headers: {
+        //   'Authorisation': 'Bearer YES',
+        //   'Authorization': 'Bearer YES'
+        // }
       })
       .then(res => {
         console.log('Advanced ML job successfully started!')
@@ -426,13 +437,18 @@ export default {
      * according to the advanced machine learning protocol.
      */
     requestAdvancedJob() {
-      console.log(JSON.stringify(this.requestData))
+      console.log(this.requestData)
       axios({
         method: 'post',
         baseURL: this.mlEndpoint,
         url: '/trainAdvanced',
         responseType: 'json',
-        data: this.requestData
+        data: this.requestData,
+        headers: {
+          'Authorization': 'Bearer 12345',
+          'Cache-Control': 'no-cache',
+          'Postman-Token': 'c2598d64-503b-4d2e-8f11-b38772d65dba'
+        }
       })
       .then(res => {
         console.log('Advanced ML job successfully started!')

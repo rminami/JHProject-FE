@@ -1,5 +1,5 @@
 <template>
-  
+
   <v-container xs10 offset-xs1>
     <v-card>
       <v-card-title>
@@ -53,15 +53,15 @@
             <td class="justify-center">{{ Math.round(+props.item.percent_trained * 100) + '%' }}</td>
 
             <td v-if="props.item.status === 'running'" class="justify-center layout px-0">
-              <v-btn icon class="mx-0" @click.stop="() => 0">
-                <v-icon color="grey">pause</v-icon>
-              </v-btn>
-              <v-btn icon class="mx-0" @click.stop="() => 0">
+              <v-btn icon class="mx-0" @click.stop="stopTraining(props.item.model_id)">
                 <v-icon color="grey">stop</v-icon>
+              </v-btn>
+              <v-btn icon class="mx-0" @click.stop="deleteModel(props.item.model_id, props.index)">
+                <v-icon color="grey">delete</v-icon>
               </v-btn>
             </td>
             <td v-else class="justify-center layout px-0">
-              <v-btn icon class="mx-0" @click.stop="() => 0">
+              <v-btn icon class="mx-0" @click.stop="deleteModel(props.item.model_id, props.index)">
                 <v-icon color="grey">delete</v-icon>
               </v-btn>
             </td>
@@ -71,6 +71,14 @@
           <v-card flat>
             <v-card-text>
               <p><strong>Description: </strong>{{ props.item.description }}</p>
+              <p><strong>Start time: </strong>{{ dateFormat(props.item.start_time, 'YYYY-MM-DD hh:mm:ss') }}</p>
+              <p><strong>Started by: </strong>{{ props.item.started_by }}</p>
+              <p>Use this model for
+                <router-link :to="`models/prediction/${props.item.model_id}`">
+                making predictions
+                </router-link>
+                .
+              </p>
             </v-card-text>
           </v-card>
         </template>
@@ -79,25 +87,34 @@
         </v-alert>
       </v-data-table>
     </v-card>
+    <v-snackbar
+      :timeout="3000"
+      :color="snackbar.color"
+      v-model="snackbar.isOpen"
+    >
+      {{ snackbar.text }}
+      <v-btn dark flat @click.native="snackbar.isOpen = false">Close</v-btn>
+    </v-snackbar>
   </v-container>
 </template>
 
 <script>
 import axios from 'axios'
+import { mapState } from 'vuex'
+import path from 'path'
+import { format } from 'date-fns'
+
+const randomDate = () => new Date(+(new Date()) - Math.floor(Math.random() * 10000000000))
+
 
 export default {
   data: () => ({
+    project_name: '',
     pagination: {
       sortBy: 'firstname'
     },
     search: '',
     selected: [],
-    // "percent_trained": 0.3,
-    // "status": "running",
-    // "description": "string",
-    // "job_id": "string",
-    // "model_id": "string",
-    // "start_time": "string",
     // "started_by": "string"
     headers: [
       { text: 'Job ID', value: 'job_id' },
@@ -115,7 +132,19 @@ export default {
         model_id: 'model1234',
         status: 'complete',
         description: 'This model does stuff',
-        percent_trained: 1
+        percent_trained: 1,
+        start_time: randomDate(),
+        started_by: 'admin'
+      },
+      {
+        expanded: false,
+        job_id: 'some_job',
+        model_id: 'some_model',
+        status: 'complete',
+        description: 'This model does stuff',
+        percent_trained: 1,
+        start_time: randomDate(),
+        started_by: 'rm264'
       },
       {
         expanded: false,
@@ -123,7 +152,9 @@ export default {
         model_id: 'model4567',
         status: 'running',
         description: 'This model is good',
-        percent_trained: 0.78
+        percent_trained: 0.78,
+        start_time: randomDate(),
+        started_by: 'user1'
       },
       {
         expanded: false,
@@ -131,34 +162,34 @@ export default {
         model_id: 'model09834',
         status: 'failed',
         description: 'This model is useless',
-        percent_trained: 0
+        percent_trained: 0,
+        start_time: randomDate(),
+        started_by: 'user2'
       }
     ],
+    snackbar: {
+      isOpen: false,
+      color: '',
+      text: ''
+    },
     dialog: false
   }),
   created() {
-    // axios.get('https://randomuser.me/api', {
-    //   params: { results: 42 }
-    // })
-    // .then(res => {
-    //   this.items = res.data.results.map(user => ({
-    //     firstname: this.capitalize(user.name.first),
-    //     lastname: this.capitalize(user.name.last),
-    //     email: user.email,
-    //     role: Math.random() > 0.1 ? 'User' : 'Admin'
-    //   }))
-    // })
-    // .catch(err => {
-    //   console.log('Could not get users!')
-    // })
+    // Get list of models
+  },
+  computed: {
+    ...mapState({
+      mlEndpoint: s => s.mlEndpoint
+    })
   },
 
   methods: {
     capitalize(str) {
       return str.charAt(0).toUpperCase() + str.slice(1)
     },
+    dateFormat: format,
     statusToColor(status) {
-      switch(status) {
+      switch (status) {
         case 'running':
           return 'blue accent-1'
         case 'complete':
@@ -167,7 +198,46 @@ export default {
           return 'red accent-1'
       }
     },
-    changeSort (column) {
+    stopTraining(model_id) {
+      axios({
+        baseURL: this.mlEndpoint,
+        url: path.join('models/stop', this.project_name, model_id),
+        method: 'delete'
+      })
+      .then(res => {
+        console.log(res.data)
+        this.snackbar.color = 'info'
+        this.snackbar.text = `${model_id} has been stopped.`
+        this.snackbar.isOpen = true
+      })
+      .catch(err => {
+        console.log(err)
+        this.snackbar.color = 'error'
+        this.snackbar.text = `${model_id} could not be stopped.`
+        this.snackbar.isOpen = true
+      })
+    },
+    deleteModel(model_id, index) {
+      axios({
+        baseURL: this.mlEndpoint,
+        url: path.join('models', this.project_name, model_id),
+        method: 'delete'
+      })
+      .then(res => {
+        console.log(res.data)
+        this.snackbar.color = 'info'
+        this.snackbar.text = `${model_id} has been deleted.`
+        this.snackbar.isOpen = true
+        this.items = [...this.items.slice(0, index), ...this.items.slice(index + 1)]
+      })
+      .catch(err => {
+        console.log(err)
+        this.snackbar.color = 'error'
+        this.snackbar.text = `${model_id} could not be deleted.`
+        this.snackbar.isOpen = true
+      })
+    },
+    changeSort(column) {
       if (this.pagination.sortBy === column) {
         this.pagination.descending = !this.pagination.descending
       } else {
@@ -175,17 +245,20 @@ export default {
         this.pagination.descending = false
       }
     },
-    toggleAll () {
-      if (this.selected.length) this.selected = []
-      else this.selected = this.items.slice()
+    toggleAll() {
+      if (this.selected.length) {
+        this.selected = []
+      } else {
+        this.selected = this.items.slice()
+      }
     },
-    close () {
+    close() {
       this.dialog = false
       setTimeout(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1
       }, 300)
-    },
+    }
   }
 }
 </script>

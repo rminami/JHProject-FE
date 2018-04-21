@@ -5,7 +5,7 @@
     <v-subheader inset>Projects</v-subheader>
     <v-list-tile avatar v-for="project in projects" :key="project" @click="chooseProject(project)">
       <v-list-tile-avatar>
-        <v-icon class="grey lighten-1 white--text">assignment</v-icon>
+        <v-icon class="light-blue darken-1 white--text">assignment</v-icon>
       </v-list-tile-avatar>
       <v-list-tile-content>
         <v-list-tile-title>{{ project }}</v-list-tile-title>
@@ -73,6 +73,7 @@ export default {
     .then(res => {
       console.log(res.data)
       this.projects = res.data.data.map(project => project.project_name)
+      // this.projects = res.data.map(project => project.project_name)
     })
     .catch(err => {
       console.log(err.response)

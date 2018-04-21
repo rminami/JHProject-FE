@@ -57,11 +57,12 @@
     </v-list-tile>
 
     <!-- Divider -->
-    <v-divider inset v-show="dirs.length > 0"></v-divider>
+    <v-divider inset v-show="dirs.length > 0 && files.length > 0"></v-divider>
 
     <!-- List of files in current path -->
     <v-subheader v-show="files.length > 0" inset>Files</v-subheader>
-    <v-list-tile avatar v-for="file in files" :key="file.id" @click="$router.push(file.file_path)">
+    <v-list-tile avatar v-for="file in files" :key="file.id"
+    @click="$router.push('/projects/' + $route.params.project_name + '/files/' + file.file_path)">
       <v-list-tile-avatar>
         <v-icon :class="[file.iconClass]">{{ file.icon }}</v-icon>
       </v-list-tile-avatar>
@@ -101,6 +102,10 @@
         </v-menu>
       </v-list-tile-action>
     </v-list-tile>
+
+    <v-alert :value="dirs.length === 0 && files.length === 0" color="info" icon="info" outline v-cloak>
+      No files in current directory.
+    </v-alert>
   </v-list>
 
   <v-dialog v-model="textDialog" max-width="500px">
@@ -109,6 +114,13 @@
       @submit="renameFile"
       @close="textDialog = false"
     />
+  </v-dialog>
+
+  <v-dialog>
+    <!-- <file-dialog
+      :initialPath="currentPath"
+      @close="fileDialogIsOpen = false"
+    /> -->
   </v-dialog>
 
   <!-- Snackbar is displayed when connection to backend fails -->
@@ -129,29 +141,43 @@ import axios from 'axios'
 import url from 'url'
 import path from 'path'
 
-import fileBrowserMixin from '@/mixins/fileBrowserMixin'
+import FileDialog from './dialogs/FileDialog'
 import RenameDialog from './dialogs/RenameDialog'
 
 export default {
   components: {
-    'rename-dialog': RenameDialog
+    'rename-dialog': RenameDialog,
+    'file-dialog': FileDialog
   },
-  mixins: [fileBrowserMixin],
   data() {
     return {
+      currentPath: '',
+      dirs: [],
+      files: [],
       textDialog: false,
+      fileDialogIsOpen: false,
+      fileDialogMode: '', // move or copy
       selectedFileName: '',
       backendSnackbar: false
     }
   },
   watch: {
-    $route: 'getFiles'
+    $route() {
+      this.currentPath = this.$route.path
+      this.getFiles()
+    },
   },
+
+  created() {
+    this.currentPath = this.$route.path
+    this.getFiles()
+  },
+  
   computed: {
     parentDirs() {
       const routeEls = this.$route.path.split('/').slice(3)
       return routeEls.map((routeEl, index) => ({
-        text: routeEl,
+        text: decodeURIComponent(routeEl),
         path: `/projects/${this.$route.params.project_name}/${routeEls.slice(0, index + 1).join('/')}`
       }))
     },
@@ -161,6 +187,48 @@ export default {
   },
 
   methods: {
+    getFiles() {
+      axios({
+        baseURL: this.beEndpoint,
+        url: this.currentPath + '/',
+        params: {
+          view: 'meta',
+          include_children: true
+        }
+      })
+      .then(res => {
+        const processed = this.attachIcons(res.data.data.children)
+        this.dirs = processed.filter(item => item.type === 'directory')
+        this.files = processed.filter(item => item.type !== 'directory')
+      })
+      .catch(err => {
+        console.log(err.response)
+      })
+    },
+    attachIcons(items) {
+      return items.map(item => {
+        const res = item
+        switch (res.type) {
+          case 'directory':
+            return { ...res, icon: 'folder', iconClass: 'grey lighten-1 white--text' }
+          case 'tabular':
+            return { ...res, icon: 'storage', iconClass: 'blue white--text' }
+          case 'scalable_image':
+            return { ...res, icon: 'image', iconClass: 'amber white--text' }
+          default:
+            return { ...res, icon: 'note', iconClass: 'teal white--text' }
+        }
+      })
+    },
+    startCopyFile(fileName) {
+      this.fileDialogIsOpen = true
+      this.fileDialogMode = 'copy'
+    },
+
+    startMoveFile(fileName) {
+      this.fileDialogIsOpen = true
+      this.fileDialogMode = 'move'
+    },
     downloadFile(fileName, filePath) {
       axios({
         method: 'get',
@@ -233,6 +301,7 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="stylus" scoped>
+[v-cloak]
+  display: none
 </style>

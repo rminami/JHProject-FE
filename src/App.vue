@@ -24,16 +24,32 @@
             </v-card>
           </v-expansion-panel-content>
         </v-expansion-panel>
+        <v-list-tile @click="logout">
+          <v-list-tile-action>
+            <v-icon>power_settings_new</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>Logout</v-list-tile-content>
+        </v-list-tile>
       </v-list>
     </v-navigation-drawer>
     <v-toolbar app>
       <v-toolbar-side-icon @click.stop="sidebar = !sidebar"></v-toolbar-side-icon>
       <v-toolbar-title>
-        <router-link to="/files" tag="span" style="cursor: pointer">
+        <router-link to="/projects" tag="span" style="cursor: pointer">
           {{ title }}
         </router-link>
       </v-toolbar-title>
       <v-spacer></v-spacer>
+      <v-toolbar-items>
+        <!-- <v-menu transition="slide-y-transition" bottom offset-y>
+          <v-btn flat slot="activator">{{ currentProject }}</v-btn>
+          <v-list>
+            <v-list-tile v-for="project in projects" :key="project" @click="changeProject(project)">
+              <v-list-tile-title>{{ project }}</v-list-tile-title>
+            </v-list-tile>
+          </v-list>
+        </v-menu> -->
+      </v-toolbar-items>
     </v-toolbar>
     <v-content >
       <router-view/>
@@ -42,11 +58,18 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   data() {
     return {
       sidebar: false,
       mini: false,
+      projects: [
+        'project1',
+        'project2',
+        'project3'
+      ],
       items: [
         {
           icon: 'home',
@@ -99,6 +122,20 @@ export default {
       title: 'Digital Pathology Viewer'
     }
   },
+  methods: {
+    changeProject(project) {
+      this.$store.dispatch('switchProject', { project })
+    },
+    logout() {
+      this.$store.dispatch('authLogout')
+      .then(() => {
+        this.$router.push('/login')
+      })
+    }
+  },
+  computed: mapState({
+    currentProject: s => s.currentProject
+  }),
   name: 'App'
 }
 </script>

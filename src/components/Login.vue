@@ -1,51 +1,64 @@
 <template>
-  <div id="particles">
-    <v-container class="inside">
-      <v-layout row justify-space-around>
-        <v-flex xs5>
-          <v-card>
-            <v-card-title>
-              <span class="headline">Log in</span>
-            </v-card-title>
-            <v-card-text class="card-text">
-              <v-form>
-                <v-text-field
-                  name="login"
-                  label="Username"
-                  v-model="username"
-                  type="text"
-                  autocomplete="username"
-                  :rules="[rules.required]"
-                  aria-label="Username"
-                ></v-text-field>
-                <v-text-field
-                  name="password"
-                  label="Password"
-                  v-model="password"
-                  autocomplete="current-password"
-                  :append-icon="pwdHidden ? 'visibility' : 'visibility_off'"
-                  :append-icon-cb="() => (pwdHidden = !pwdHidden)"
-                  :type="pwdHidden ? 'password' : 'text'"
-                  :rules="[rules.required]"
-                  aria-label="Password"
-                ></v-text-field>
-              </v-form>
-            </v-card-text>
-            <v-card-actions>
-              <v-btn color="primary" @click.prevent="login">Login</v-btn>
-              <v-btn color="secondary" to="/signup">Sign up</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-flex>
-      </v-layout>
-    </v-container>
+  <div>
+    <div id="particles">
+      <v-container class="inside">
+        <v-layout row justify-space-around>
+          <v-flex xs5>
+            <v-card>
+              <v-card-title>
+                <span class="headline">Log in</span>
+              </v-card-title>
+              <v-card-text class="card-text">
+                <v-form>
+                  <v-text-field
+                    name="login"
+                    label="Username"
+                    v-model="username"
+                    type="text"
+                    autocomplete="username"
+                    :rules="[rules.required]"
+                    aria-label="Username"
+                    @keyup.enter="login"
+                  ></v-text-field>
+                  <v-text-field
+                    name="password"
+                    label="Password"
+                    v-model="password"
+                    autocomplete="current-password"
+                    :append-icon="pwdHidden ? 'visibility' : 'visibility_off'"
+                    :append-icon-cb="() => (pwdHidden = !pwdHidden)"
+                    :type="pwdHidden ? 'password' : 'text'"
+                    :rules="[rules.required]"
+                    aria-label="Password"
+                    @keyup.enter="login"
+                  ></v-text-field>
+                </v-form>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn color="primary" @click.prevent="login">Login</v-btn>
+                <v-btn color="secondary" to="/signup">Sign up</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </div>
+    <v-snackbar
+      :timeout="3000"
+      color="error"
+      v-model="snackbarIsOpen"
+      top
+    >
+      Invalid username or password.
+      <v-btn dark flat @click.native="snackbarIsOpen = false">Close</v-btn>
+    </v-snackbar>
   </div>
 </template>
 
 <script>
 import particlesMixin from '@/mixins/particlesMixin'
 import validatorMixin from '@/mixins/validatorMixin'
-import { AUTH_REQUEST } from '@/store/actions';
+import { setTimeout } from 'timers';
 
 export default {
   mixins: [particlesMixin, validatorMixin],
@@ -54,14 +67,22 @@ export default {
       username: '',
       password: '',
       pwdHidden: true,
+      snackbarIsOpen: false
     }
   },
   methods: {
     login() {
       const { username, password } = this
-      this.$store.dispatch(AUTH_REQUEST, { username, password })
+      this.$store.dispatch('authRequest', { username, password })
       .then(() => {
-        this.$router.push('/')
+        setTimeout(() => {
+          this.$router.push('/')
+        }, 500)
+      })
+      .catch(err => {
+        console.log('Could not login!')
+        this.snackbarIsOpen = true
+        console.log(err)
       })
     }
   }

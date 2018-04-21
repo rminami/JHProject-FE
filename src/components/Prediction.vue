@@ -11,7 +11,7 @@
                 </div>
               </v-card-title>
               <v-card-text>
-                
+
               </v-card-text>
               <v-card-actions>
                 <v-btn flat color="primary">Preview</v-btn>
@@ -58,7 +58,7 @@ import NextPanel from './ml/NextPanel'
 export default {
   components: {
     'input-file-panel': InputFilePanel,
-    'next-panel': NextPanel,
+    'next-panel': NextPanel
   },
   data() {
     return {
@@ -88,7 +88,7 @@ export default {
       .trim()}.`
     },
     /**
-     * This computed property needs to be declared so that we can set up a 
+     * This computed property needs to be declared so that we can set up a
      * watcher on it.
      */
     jobSubmitted() {
@@ -122,7 +122,7 @@ export default {
     },
     /**
      * Sends a request to train a model on the machine learning server.
-     * 
+     *
      * This function ensures that no request is made when the run job is
      * unselected, and makes sure that the request is made in the correct form
      * depending on whether or not the console is in basic or advanced mode.
@@ -139,7 +139,7 @@ export default {
     }
   },
   methods: {
-    
+
     /**
      * Sends a request to the machine learning server for a model to be trained
      * according to the basic machine learning protocol.
@@ -154,7 +154,7 @@ export default {
         data: this.requestData,
         // TODO get actual bearer token
         headers: {
-          'Authorization': 'Bearer 12345',
+          Authorization: 'Bearer 12345',
           'Cache-Control': 'no-cache',
           'Postman-Token': 'c2598d64-503b-4d2e-8f11-b38772d65dba'
         }
@@ -174,7 +174,7 @@ export default {
         console.log(err)
       })
     },
-    
+
     /**
      * If the advanced options switch is switched on, the frontend tries to
      * retrieve a list of available transformer and estimator jobs from the

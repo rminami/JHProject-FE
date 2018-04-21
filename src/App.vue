@@ -74,7 +74,7 @@ export default {
         {
           icon: 'home',
           title: 'Files',
-          path: '/files'
+          path: `projects/${this.currentProject}/files`
         },
         {
           icon: 'assignment',
@@ -84,7 +84,7 @@ export default {
         {
           icon: 'view_list',
           title: 'Models',
-          path: '/models'
+          path: `models/${this.currentProject}`
         },
         {
           icon: 'settings',

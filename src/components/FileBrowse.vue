@@ -17,7 +17,8 @@
   <v-list two-line>
     <!-- List of directories in current path -->
     <v-subheader v-show="dirs.length > 0" inset>Folders</v-subheader>
-    <v-list-tile avatar v-for="dir in dirs" :key="dir.id" @click="$router.push(dir.file_path)">
+    <v-list-tile avatar v-for="dir in dirs" :key="dir.id"
+    @click="$router.push('/projects/' + $route.params.project_name + '/files/' + dir.file_path)">
       <v-list-tile-avatar>
         <v-icon :class="[dir.iconClass]">{{ dir.icon }}</v-icon>
       </v-list-tile-avatar>
@@ -59,7 +60,7 @@
     <v-divider inset v-show="dirs.length > 0"></v-divider>
 
     <!-- List of files in current path -->
-    <v-subheader inset>Files</v-subheader>
+    <v-subheader v-show="files.length > 0" inset>Files</v-subheader>
     <v-list-tile avatar v-for="file in files" :key="file.id" @click="$router.push(file.file_path)">
       <v-list-tile-avatar>
         <v-icon :class="[file.iconClass]">{{ file.icon }}</v-icon>
@@ -148,10 +149,10 @@ export default {
   },
   computed: {
     parentDirs() {
-      const routeEls = this.$route.path.split('/').slice(1)
+      const routeEls = this.$route.path.split('/').slice(3)
       return routeEls.map((routeEl, index) => ({
         text: routeEl,
-        path: `/${routeEls.slice(0, index + 1).join('/')}`
+        path: `/projects/${this.$route.params.project_name}/${routeEls.slice(0, index + 1).join('/')}`
       }))
     },
     ...mapState({
@@ -187,7 +188,7 @@ export default {
         url: filePath,
         params: {
           action: 'delete'
-        },
+        }
       })
       .then(res => {
         console.log(res.data)

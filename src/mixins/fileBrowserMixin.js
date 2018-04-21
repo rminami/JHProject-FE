@@ -1,11 +1,10 @@
 import { mapState } from 'vuex'
 import axios from 'axios'
-import url from 'url'
 
 export default {
   data() {
     return {
-      currentPath: '/files',
+      currentPath: '',
       dirs: [],
       files: []
     }
@@ -31,26 +30,27 @@ export default {
     }
   },
   created() {
+    this.currentPath = this.$route.path
     this.getFiles()
   },
 
   methods: {
     getFiles() {
       axios({
-        url: url.resolve(this.beEndpoint, this.currentPath),
-        responseType: 'json',
+        baseURL: this.beEndpoint,
+        url: `${this.currentPath}/`,
         params: {
           view: 'meta',
           include_children: true
         }
       })
       .then(res => {
-        const processed = this.attachIcons(res.data.children)
+        const processed = this.attachIcons(res.data.data.children)
         this.dirs = processed.filter(item => item.type === 'directory')
         this.files = processed.filter(item => item.type !== 'directory')
       })
       .catch(err => {
-        console.log(err)
+        console.log(err.response)
       })
     },
     attachIcons(items) {

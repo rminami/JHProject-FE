@@ -67,14 +67,14 @@
 </template>
 
 <script>
-import InputFileDialog from '../dialogs/InputFileDialog'
+import FileDialog from '../dialogs/FileDialog'
 import bindMixin from '@/mixins/bindMixin'
 
 export default {
   props: ['advEnabled'],
   mixins: [bindMixin],
   components: {
-    'input-file-dialog': InputFileDialog
+    'file-dialog': FileDialog
   },
   data() {
     return {

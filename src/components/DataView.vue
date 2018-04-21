@@ -242,7 +242,7 @@ export default {
       }
     })
     .then(res => {
-      this.columns = res.data.supported_views.tabular.columns
+      this.columns = res.data.data.supported_views.tabular.columns
 
       this.numerical = this.columns
       .filter(col => col.type === 'number')

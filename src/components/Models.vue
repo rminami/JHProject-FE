@@ -109,13 +109,11 @@ const randomDate = () => new Date(+(new Date()) - Math.floor(Math.random() * 100
 
 export default {
   data: () => ({
-    project_name: '',
     pagination: {
       sortBy: 'firstname'
     },
     search: '',
     selected: [],
-    // "started_by": "string"
     headers: [
       { text: 'Job ID', value: 'job_id' },
       { text: 'Model ID', value: 'model_id' },
@@ -176,10 +174,12 @@ export default {
   }),
   created() {
     // Get list of models
+    // this.getProjects()
   },
   computed: {
     ...mapState({
-      mlEndpoint: s => s.mlEndpoint
+      mlEndpoint: s => s.mlEndpoint,
+      currentProject: s => s.currentProject
     })
   },
 
@@ -198,10 +198,27 @@ export default {
           return 'red accent-1'
       }
     },
+    getProjects() {
+      axios({
+        baseURL: this.mlEndpoint,
+        url: path.join('models', this.currentProject),
+        method: 'get'
+      })
+      .then(res => {
+        console.log(res.data)
+        this.items = res.data.data
+      })
+      .catch(err => {
+        console.log(err)
+        this.snackbar.color = 'error'
+        this.snackbar.text = 'Could not retrieve list of models.'
+        this.snackbar.isOpen = true
+      })
+    },
     stopTraining(model_id) {
       axios({
         baseURL: this.mlEndpoint,
-        url: path.join('models/stop', this.project_name, model_id),
+        url: path.join('models/stop', this.currentProject, model_id),
         method: 'delete'
       })
       .then(res => {
@@ -220,7 +237,7 @@ export default {
     deleteModel(model_id, index) {
       axios({
         baseURL: this.mlEndpoint,
-        url: path.join('models', this.project_name, model_id),
+        url: path.join('models', this.currentProject, model_id),
         method: 'delete'
       })
       .then(res => {
@@ -237,6 +254,9 @@ export default {
         this.snackbar.isOpen = true
       })
     },
+    /**
+     * Changes which column the table is sorted by.
+     */
     changeSort(column) {
       if (this.pagination.sortBy === column) {
         this.pagination.descending = !this.pagination.descending
@@ -244,20 +264,6 @@ export default {
         this.pagination.sortBy = column
         this.pagination.descending = false
       }
-    },
-    toggleAll() {
-      if (this.selected.length) {
-        this.selected = []
-      } else {
-        this.selected = this.items.slice()
-      }
-    },
-    close() {
-      this.dialog = false
-      setTimeout(() => {
-        this.editedItem = Object.assign({}, this.defaultItem)
-        this.editedIndex = -1
-      }, 300)
     }
   }
 }

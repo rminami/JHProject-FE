@@ -67,6 +67,7 @@
 <script>
 import { mapState } from 'vuex'
 import axios from 'axios'
+import path from 'path'
 
 import BasicPanel from './ml/BasicPanel'
 import InputFilePanel from './ml/InputFilePanel'
@@ -230,8 +231,8 @@ export default {
      * centralized state.
      */
     ...mapState({
-      beEndpoint: s => s.beEndpoint,
-      mlEndpoint: s => s.mlEndpoint
+      mlEndpoint: s => s.mlEndpoint,
+      currentProject: s => s.currentProject
     })
   },
   watch: {
@@ -264,7 +265,7 @@ export default {
         if (this.advEnabled) {
           this.requestAdvancedJob()
         } else {
-          this.requestBasicJob()
+          this.requestJob()
         }
       }
     }
@@ -403,26 +404,19 @@ export default {
      * according to the basic machine learning protocol.
      * (Why is this path called '/models'?)
      */
-    requestBasicJob() {
+    requestJob() {
       axios({
         method: 'post',
         baseURL: this.mlEndpoint,
-        url: '/models',
+        url: path.join('projects', this.currentProject, 'models'),
         responseType: 'json',
         data: this.requestData,
-        // TODO get actual bearer token
         headers: {
-          Authorization: 'Bearer 12345',
-          'Cache-Control': 'no-cache',
-          'Postman-Token': 'c2598d64-503b-4d2e-8f11-b38772d65dba'
+          'Authorization': 'Bearer 12345',
         }
-        // headers: {
-        //   'Authorisation': 'Bearer YES',
-        //   'Authorization': 'Bearer YES'
-        // }
       })
       .then(res => {
-        console.log('Advanced ML job successfully started!')
+        console.log('Training successfully started!')
         console.log(res.data)
       })
       .catch(err => {
@@ -445,9 +439,7 @@ export default {
         responseType: 'json',
         data: this.requestData,
         headers: {
-          Authorization: 'Bearer 12345',
-          'Cache-Control': 'no-cache',
-          'Postman-Token': 'c2598d64-503b-4d2e-8f11-b38772d65dba'
+          'Authorization': 'Bearer 12345',
         }
       })
       .then(res => {

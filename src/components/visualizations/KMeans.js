@@ -26,9 +26,6 @@ export default {
 
     const zoomFunc = zoom().scaleExtent([1, maxZoom])
     const svg = select('#svg')
-    .call(zoomFunc.transform, zoomIdentity) // clears previous zoom level
-    .call(zoomFunc.on('zoom', zoomed)) // zoom will be handled by function 'zoomed'
-    .on('dblclick.zoom', null) // disables double click to zoom
 
     const margin = {
       top: 30, bottom: 80, left: 80, right: radius
@@ -224,6 +221,10 @@ export default {
       circles.attr('cx', d => zoomX(d[0]))
       .attr('cy', d => zoomY(d[1]))
     }
+
+    svg.call(zoomFunc.transform, zoomIdentity) // clears previous zoom level
+    .call(zoomFunc.on('zoom', zoomed)) // zoom will be handled by function 'zoomed'
+    .on('dblclick.zoom', null) // disables double click to zoom
   }
 }
 

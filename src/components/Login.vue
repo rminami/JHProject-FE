@@ -77,7 +77,7 @@ export default {
       .then(() => {
         setTimeout(() => {
           this.$router.push('/')
-        }, 500)
+        }, 1000)
       })
       .catch(err => {
         console.log('Could not login!')

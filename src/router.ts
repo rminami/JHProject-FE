@@ -2,12 +2,17 @@ import Vue from 'vue'
 import Router, { Route } from 'vue-router'
 import store from './store'
 
+// const isLoggedIn = (to: Route, from: Route, next: Function): void => {
+//   if (store.getters.isAuthenticated) {
+//     next()
+//     return
+//   }
+//   next('/login')
+// }
+
+// Disables login for the time being
 const isLoggedIn = (to: Route, from: Route, next: Function): void => {
-  if (store.getters.isAuthenticated) {
-    next()
-    return
-  }
-  next('/login')
+  next()
 }
 
 const isNotLoggedIn = (to: Route, from: Route, next: Function): void => {
@@ -69,7 +74,7 @@ const routerOptions = [
     beforeEnter: isLoggedIn
   },
   {
-    path: '/models',
+    path: '/models/:project_name',
     component: 'Models',
     beforeEnter: isLoggedIn
   },
@@ -90,7 +95,8 @@ const routerOptions = [
   },
   {
     path: '/settings',
-    component: 'Settings'
+    component: 'Settings',
+    beforeEnter: isLoggedIn
   }
 ]
 

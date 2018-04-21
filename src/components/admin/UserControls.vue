@@ -133,6 +133,7 @@
 
 <script>
 import axios from 'axios'
+import { mapState } from 'vuex';
 
 export default {
   data: () => ({
@@ -167,21 +168,37 @@ export default {
     },
     dialog: false
   }),
+  computed: mapState({
+    beEndpoint: s => s.beEndpoint
+  }),
   created() {
-    axios.get('https://randomuser.me/api', {
-      params: { results: 42 }
+    // axios.get('https://randomuser.me/api', {
+    //   params: { results: 42 }
+    // })
+    // .then(res => {
+    //   // const users = res.data.results
+    //   this.items = res.data.results.map(user => ({
+    //     firstname: this.capitalize(user.name.first),
+    //     lastname: this.capitalize(user.name.last),
+    //     email: user.email,
+    //     role: Math.random() > 0.1 ? 'User' : 'Admin'
+    //   }))
+    // })
+    // .catch(err => {
+    //   console.log('Could not get users!')
+    // })
+    axios({
+      baseURL: this.beEndpoint,
+      url: '/users',
     })
     .then(res => {
-      // const users = res.data.results
-      this.items = res.data.results.map(user => ({
-        firstname: this.capitalize(user.name.first),
-        lastname: this.capitalize(user.name.last),
+      console.log(res.data)
+      this.items = res.data.map(user => ({
+        firstname: user.name,
+        lastname: user.surname,
         email: user.email,
         role: Math.random() > 0.1 ? 'User' : 'Admin'
       }))
-    })
-    .catch(err => {
-      console.log('Could not get users!')
     })
   },
 

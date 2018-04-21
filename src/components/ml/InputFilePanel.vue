@@ -56,7 +56,7 @@
       </v-card-actions>
     </v-card>
     <v-dialog v-model="fileDialogOpen" max-width="500px" scrollable>
-      <input-file-dialog @close="fileDialogOpen = false"/>
+      <file-dialog @close="fileDialogOpen = false"/>
     </v-dialog>
   </div>
 </template>
@@ -64,17 +64,16 @@
 <script>
 import { mapState } from 'vuex'
 import axios from 'axios'
-import url from 'url'
 import path from 'path'
 
 import bindMixin from '@/mixins/bindMixin'
-import InputFileDialog from '../dialogs/InputFileDialog'
+import FileDialog from '../dialogs/FileDialog'
 
 export default {
   props: ['values'],
   mixins: [bindMixin],
   components: {
-    'input-file-dialog': InputFileDialog
+    'file-dialog': FileDialog
   },
   data() {
     return {
@@ -90,7 +89,8 @@ export default {
     },
     // Put other stuff here
     ...mapState({
-      beEndpoint: s => s.beEndpoint
+      beEndpoint: s => s.beEndpoint,
+      currentProject: s => s.currentProject
     })
   },
   watch: {
@@ -119,15 +119,17 @@ export default {
       return this.cols.filter(col => col.header === colName)[0].index
     },
     getColumns() {
+      console.log(`Sending request to ${this.beEndpoint}/${path.join('projects', this.currentProject, 'files', this.localValues.inputFile)}`)
       axios({
-        url: url.resolve(this.beEndpoint, path.join('files', this.localValues.inputFile)),
+        baseURL: this.beEndpoint,
+        url: path.join('projects', this.currentProject, 'files', this.localValues.inputFile),
         responseType: 'json',
         params: {
           view: 'meta'
         }
       })
       .then(res => {
-        this.cols = res.data.supported_views.tabular.columns
+        this.cols = res.data.data.supported_views.tabular.columns
         .map((col, index) => ({ ...col, index }))
       })
       .catch(err => {

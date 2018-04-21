@@ -74,7 +74,7 @@ export default {
       pwd: '',
       pwdConf: '',
       pwdHidden: true,
-      pwdConfHidden: true,
+      pwdConfHidden: true
     }
   }
 }

@@ -3,7 +3,7 @@
     <v-card id="next-card">
       <v-card-title primary-title>
         <div>
-          <h3 class="headline">Next</h3>
+          <h3 class="headline">Output</h3>
         </div>
       </v-card-title>
       <v-card-text>

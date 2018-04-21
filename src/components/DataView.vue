@@ -178,15 +178,14 @@
 <script>
 import { mapState } from 'vuex'
 import axios from 'axios'
-import url from 'url'
-import { select } from 'd3-selection';
+import { select } from 'd3-selection'
 
 import PCA2D from '@/components/visualizations/PCA2D'
+import KMeans from '@/components/visualizations/KMeans'
 import ScatterPlot from '@/components/visualizations/ScatterPlot'
 // import ScatterPlot3D from '@/components/visualizations/ScatterPlot3D'
 
 import validatorMixin from '@/mixins/validatorMixin'
-import { writeFileSync } from 'fs';
 
 export default {
   mixins: [validatorMixin],
@@ -317,11 +316,8 @@ export default {
       }
       if (this.form.vistype === 'k-means') {
         await this.get2dVisualizationData()
-        import('@/components/visualizations/KMeans')
-        .then(KMeans => {
-          const k = parseInt(this.form.k, 10)
-          KMeans.render(this.visHeaders, this.visData, k, this.width, this.height)
-        })
+        const k = parseInt(this.form.k, 10)
+        KMeans.render(this.visHeaders, this.visData, k, this.width, this.height)
       }
       if (this.form.vistype === '2D PCA') {
         await this.get2dVisualizationData()

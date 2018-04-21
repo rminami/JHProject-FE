@@ -1,6 +1,6 @@
 <template>
   <v-container xs6 offset-xs2>
-    <v-tabs centered> 
+    <v-tabs centered>
       <v-tab>User Details</v-tab>
       <v-tab-item>
         <v-card flat>

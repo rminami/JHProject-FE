@@ -94,8 +94,8 @@ export default {
       estimatorJobs: undefined,
       /**
        * basic, transformers, estimator, inputs, and extra will contain the
-       * input columns, algorithms, and parameter values that the user has 
-       * selected. 
+       * input columns, algorithms, and parameter values that the user has
+       * selected.
        */
       basic: {
         name: '',
@@ -137,7 +137,7 @@ export default {
     /**
      * mlRequest will contain an object with all of the information necessary
      * to start a machine learning job on the server.
-     * 
+     *
      * Details on how the requests should be structured are detailed at the
      * following links.
      * @see https://app.swaggerhub.com/apis/JH-Project/machine-learning-api/1.1#/model/
@@ -156,7 +156,7 @@ export default {
             parameters: this.estimator.parameters.map(this.parseParam)
           },
           extras: {
-            k: parseInt(this.extras.k),
+            k: parseInt(this.extras.k, 10),
             splitRatio: this.extras.splitRatio
           },
           output_directory_path: this.extras.outputPath,
@@ -177,7 +177,7 @@ export default {
       }
       // Basic mode
       const basicParameters = {}
-      this.basic.parameters.map(param => {
+      this.basic.parameters.forEach(param => {
         if (param.type === 'int' || param.type === 'integer') {
           basicParameters[param.name] = parseInt(param.value, 10)
         } else if (param.type === 'float' || param.type === 'number') {
@@ -219,7 +219,7 @@ export default {
       .trim()}.`
     },
     /**
-     * This computed property needs to be declared so that we can set up a 
+     * This computed property needs to be declared so that we can set up a
      * watcher on it.
      */
     jobSubmitted() {
@@ -253,7 +253,7 @@ export default {
     },
     /**
      * Sends a request to train a model on the machine learning server.
-     * 
+     *
      * This function ensures that no request is made when the run job is
      * unselected, and makes sure that the request is made in the correct form
      * depending on whether or not the console is in basic or advanced mode.
@@ -412,7 +412,7 @@ export default {
         data: this.requestData,
         // TODO get actual bearer token
         headers: {
-          'Authorization': 'Bearer 12345',
+          Authorization: 'Bearer 12345',
           'Cache-Control': 'no-cache',
           'Postman-Token': 'c2598d64-503b-4d2e-8f11-b38772d65dba'
         }
@@ -445,7 +445,7 @@ export default {
         responseType: 'json',
         data: this.requestData,
         headers: {
-          'Authorization': 'Bearer 12345',
+          Authorization: 'Bearer 12345',
           'Cache-Control': 'no-cache',
           'Postman-Token': 'c2598d64-503b-4d2e-8f11-b38772d65dba'
         }
@@ -496,7 +496,7 @@ export default {
      * This function parses the parameter values sent in by the user.
      * It sets the value to the default value if the parameter is disabled,
      * and it parses any integer/float values.
-     * 
+     *
      * @param {Object} param - The parameter as passed in from panels.
      * @returns {Object} The parsed parameter object.
      */
@@ -507,9 +507,9 @@ export default {
       // parameter value is parsed if it is an integer or a float
       if (param.type) {
         if (param.type === 'int' || param.type === 'integer') {
-          parsedValue = parseInt(param.value)
+          parsedValue = parseInt(param.value, 10)
         } else if (param.type === 'float' || param.type === 'number') {
-          parsedValue = parseFloat(param.value)
+          parsedValue = parseFloat(param.value, 10)
         }
       }
       return {

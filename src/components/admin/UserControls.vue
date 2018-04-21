@@ -189,16 +189,19 @@ export default {
     capitalize(str) {
       return str.charAt(0).toUpperCase() + str.slice(1)
     },
-    editItem (item) {
+    editItem(item) {
       this.editedIndex = this.items.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialog = true
     },
-    toggleAll () {
-      if (this.selected.length) this.selected = []
-      else this.selected = this.items.slice()
+    toggleAll() {
+      if (this.selected.length) {
+        this.selected = []
+      } else {
+        this.selected = this.items.slice()
+      }
     },
-    changeSort (column) {
+    changeSort(column) {
       if (this.pagination.sortBy === column) {
         this.pagination.descending = !this.pagination.descending
       } else {
@@ -206,7 +209,7 @@ export default {
         this.pagination.descending = false
       }
     },
-    close () {
+    close() {
       this.dialog = false
       setTimeout(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
@@ -214,7 +217,7 @@ export default {
       }, 300)
     },
 
-    save () {
+    save() {
       if (this.editedIndex > -1) {
         Object.assign(this.items[this.editedIndex], this.editedItem)
       } else {

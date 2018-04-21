@@ -12,7 +12,7 @@ import { axisLeft, axisBottom } from 'd3-axis'
 import { zoom, zoomIdentity } from 'd3-zoom'
 
 import { radius, zoomDur, maxZoom, tooltipLeft,
-    tooltipTop, colors } from '@/assets/Constants';
+  tooltipTop, colors } from '@/assets/Constants'
 
 export default {
   name: 'ScatterPlot',
@@ -37,125 +37,125 @@ export default {
 
       // console.log(`Width: ${this.width}, Height: ${this.height}`)
 
-      const zoomFunc = zoom().scaleExtent([1, maxZoom]);
+      const zoomFunc = zoom().scaleExtent([1, maxZoom])
       const svg = select('#svg')
-        .html('') // empties all previous children
-        .call(zoomFunc.transform, zoomIdentity) // clears previous zoom level
-        .call(zoomFunc.on('zoom', zoomed)) // zoom will be handled by function 'zoomed'
-        .on('dblclick.zoom', null); // disables double click to zoom
+      .html('') // empties all previous children
+      .call(zoomFunc.transform, zoomIdentity) // clears previous zoom level
+      .call(zoomFunc.on('zoom', zoomed)) // zoom will be handled by function 'zoomed'
+      .on('dblclick.zoom', null) // disables double click to zoom
 
       const margin = {
         top: 30,
         bottom: 80,
         left: 80,
         right: radius
-      };
-      const width = this.width - margin.left - margin.right;
-      const height = this.height - margin.top - margin.bottom;
+      }
+      const width = this.width - margin.left - margin.right
+      const height = this.height - margin.top - margin.bottom
       const g = svg.append('g')
-        .attr('transform', 'translate(' + margin.left + ', ' +
-          margin.top + ')');
+      .attr('transform', `translate(${margin.left}, ${
+        margin.top})`)
 
       const x = scaleLinear()
-        .range([radius, width - radius])
-        .domain(extent(data, d => d[0]));
+      .range([radius, width - radius])
+      .domain(extent(data, d => d[0]))
       const y = scaleLinear()
-        .range([height - radius, radius])
-        .domain(extent(data, d => d[1]));
+      .range([height - radius, radius])
+      .domain(extent(data, d => d[1]))
 
-      let zoomX = x;
-      let zoomY = y;
+      let zoomX = x
+      let zoomY = y
 
       const circleGroup = g.append('g')
-        .attr('class', 'circles')
-        .attr('clip-path', 'url(#clip)');
+      .attr('class', 'circles')
+      .attr('clip-path', 'url(#clip)')
 
       /* Adds clip path to hide data points outside axes */
       circleGroup.append('defs')
-        .append('clipPath')
-        .attr('id', 'clip')
-        .append('rect')
-        .attr('x', 0)
-        .attr('y', 0)
-        .attr('width', width)
-        .attr('height', height);
+      .append('clipPath')
+      .attr('id', 'clip')
+      .append('rect')
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('width', width)
+      .attr('height', height)
 
       const circles = circleGroup.selectAll('circle')
-        .data(data)
-        .enter()
-        .append('circle')
-        .attr('r', radius)
-        .attr('opacity', 0.7)
-        .attr('cx', d => x(d[0]))
-        .attr('cy', d => y(d[1]))
-        .style('fill', d => colors(d[3]))
-        .on('mouseover', d => {
-          select('#x-tooltip-value').text(d[0]);
-          select('#y-tooltip-value').text(d[1]);
-          select('#c-tooltip-value').text(d[3]);
-          for (let i = 4; i < headers.length; ++i) {
-            select('#tooltip-value-' + i).text(d[i]);
-          }
+      .data(data)
+      .enter()
+      .append('circle')
+      .attr('r', radius)
+      .attr('opacity', 0.7)
+      .attr('cx', d => x(d[0]))
+      .attr('cy', d => y(d[1]))
+      .style('fill', d => colors(d[3]))
+      .on('mouseover', d => {
+        select('#x-tooltip-value').text(d[0])
+        select('#y-tooltip-value').text(d[1])
+        select('#c-tooltip-value').text(d[3])
+        for (let i = 4; i < headers.length; ++i) {
+          select(`#tooltip-value-${i}`).text(d[i])
+        }
 
-          const xTooltipPos = zoomX(d[0]) + margin.left + radius + tooltipLeft;
-          const yTooltipPos = zoomY(d[1]) + margin.top + radius + tooltipTop;
+        const xTooltipPos = zoomX(d[0]) + margin.left + radius + tooltipLeft
+        const yTooltipPos = zoomY(d[1]) + margin.top + radius + tooltipTop
 
-          select('#tooltip')
-            .style('left', xTooltipPos + 'px')
-            .style('top', yTooltipPos + 'px')
-            .classed('invisible', false);
-
-        }).on('mouseout', () => {
-          select('#tooltip').classed('invisible', true);
-        });
+        select('#tooltip')
+        .style('left', `${xTooltipPos}px`)
+        .style('top', `${yTooltipPos}px`)
+        .classed('invisible', false)
+      })
+      .on('mouseout', () => {
+        select('#tooltip').classed('invisible', true)
+      })
 
       /* x-axis */
-      const xFunc = axisBottom(x);
+      const xFunc = axisBottom(x)
       const xAxis = g.append('g')
-        .attr('class', 'x-axis')
-        .attr('transform', 'translate(0,' + height + ')')
-        .call(xFunc);
+      .attr('class', 'x-axis')
+      .attr('transform', `translate(0,${height})`)
+      .call(xFunc)
 
       /* label for x-axis */
       g.append('text')
-        .attr('class', 'axis-label x-axis-label')
-        .attr('transform', 'translate(' + (width / 2) + ',' +
-          (height + margin.top + 10) + ')')
-        .style('text-anchor', 'middle')
-        .text(headers[0]);
+      .attr('class', 'axis-label x-axis-label')
+      .attr('transform', `translate(${width / 2},${
+        height + margin.top + 10})`)
+      .style('text-anchor', 'middle')
+      .text(headers[0])
 
       /* y-axis */
-      const yFunc = axisLeft(y);
+      const yFunc = axisLeft(y)
       const yAxis = g.append('g')
-        .attr('class', 'y-axis')
-        .call(yFunc);
+      .attr('class', 'y-axis')
+      .call(yFunc)
 
       /* label for y-axis */
       g.append('text')
-        .attr('class', 'axis-label y-axis-label')
-        .attr('transform', 'rotate(-90)')
-        .attr('y', 0 - margin.left + 10)
-        .attr('x', 0 - (height / 2))
-        .attr('dy', '1em')
-        .style('text-anchor', 'middle')
-        .text(headers[1]);
+      .attr('class', 'axis-label y-axis-label')
+      .attr('transform', 'rotate(-90)')
+      .attr('y', 0 - margin.left + 10)
+      .attr('x', 0 - (height / 2))
+      .attr('dy', '1em')
+      .style('text-anchor', 'middle')
+      .text(headers[1])
 
       /** Zoom function for the scatter plot. */
       function zoomed() {
         xAxis.transition()
-          .duration(zoomDur)
-          .call(xFunc.scale(event.transform.rescaleX(x)));
+        .duration(zoomDur)
+        .call(xFunc.scale(event.transform.rescaleX(x)))
 
         yAxis.transition()
-          .duration(zoomDur)
-          .call(yFunc.scale(event.transform.rescaleY(y)));
+        .duration(zoomDur)
+        .call(yFunc.scale(event.transform.rescaleY(y)))
 
         /* redraw circles to new scale */
-        zoomX = event.transform.rescaleX(x);
-        zoomY = event.transform.rescaleY(y);
+        zoomX = event.transform.rescaleX(x)
+        zoomY = event.transform.rescaleY(y)
 
         circles.attr('cx', d => zoomX(d[0]))
-          .attr('cy', d => zoomY(d[1]));
+        .attr('cy', d => zoomY(d[1]))
       }
     }
   }

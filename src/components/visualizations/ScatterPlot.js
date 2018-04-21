@@ -4,8 +4,10 @@ import { extent } from 'd3-array'
 import { axisLeft, axisBottom } from 'd3-axis'
 import { zoom, zoomIdentity } from 'd3-zoom'
 
-import { radius, zoomDur, maxZoom, tooltipLeft,
-  tooltipTop, colors } from '../../assets/Constants'
+import {
+  radius, zoomDur, maxZoom, tooltipLeft,
+  tooltipTop, colors
+} from '../../assets/Constants'
 
 export default {
   name: 'ScatterPlot',

@@ -58,7 +58,7 @@
 <script>
 import particlesMixin from '@/mixins/particlesMixin'
 import validatorMixin from '@/mixins/validatorMixin'
-import { setTimeout } from 'timers';
+import { setTimeout } from 'timers'
 
 export default {
   mixins: [particlesMixin, validatorMixin],
@@ -71,19 +71,17 @@ export default {
     }
   },
   methods: {
-    login() {
+    async login() {
       const { username, password } = this
-      this.$store.dispatch('authRequest', { username, password })
-      .then(() => {
+      try {
+        await this.$store.dispatch('authRequest', { username, password })
         setTimeout(() => {
-          this.$router.push('/')
+          this.$router.push('/projects')
         }, 1000)
-      })
-      .catch(err => {
-        console.log('Could not login!')
+      } catch (err) {
         this.snackbarIsOpen = true
         console.log(err)
-      })
+      }
     }
   }
 }

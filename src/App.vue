@@ -35,7 +35,7 @@
     <v-toolbar app>
       <v-toolbar-side-icon @click.stop="sidebar = !sidebar"></v-toolbar-side-icon>
       <v-toolbar-title>
-        <router-link :to="items[1].path" tag="span" style="cursor: pointer">
+        <router-link :to="titleLink" tag="span" style="cursor: pointer">
           {{ title }}
         </router-link>
       </v-toolbar-title>
@@ -59,6 +59,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { setTimeout } from 'timers';
 
 export default {
   data() {
@@ -70,7 +71,43 @@ export default {
         'project2',
         'project3'
       ],
-      items: [],
+      items: [
+        {
+          icon: 'home',
+          title: 'Projects',
+          path: '/projects'
+        },
+        // {
+        //   icon: 'folder',
+        //   title: 'Files',
+        //   path: ''
+        // },
+        {
+          icon: 'assignment',
+          title: 'Machine Learning',
+          path: '/ml'
+        },
+        {
+          icon: 'view_list',
+          title: 'Models',
+          path: '/models'
+        },
+        {
+          icon: 'donut_large',
+          title: 'Prediction',
+          path: '/prediction'
+        },
+        {
+          icon: 'settings',
+          title: 'Settings',
+          path: '/settings'
+        },
+        {
+          icon: 'verified_user',
+          title: 'Admin Console',
+          path: '/admin/console'
+        }
+      ],
       adminItems: [
         {
           icon: 'dashboard',
@@ -93,7 +130,8 @@ export default {
           path: '/admin/project-controls'
         }
       ],
-      title: 'Digital Pathology Viewer'
+      title: 'Digital Pathology Viewer',
+      titleLink: '/projects'
     }
   },
   methods: {
@@ -101,50 +139,22 @@ export default {
       this.$store.dispatch('authLogout')
       .then(() => {
         this.$router.push('/login')
+        this.sidebar = false
       })
     }
   },
   computed: mapState({
     currentProject: s => s.currentProject
   }),
-  created() {
-    this.items = ([
-      {
-        icon: 'home',
-        title: 'Projects',
-        path: '/projects'
-      },
-      {
-        icon: 'folder',
-        title: 'Files',
-        path: `/projects/${this.currentProject}/files`
-      },
-      {
-        icon: 'assignment',
-        title: 'Machine Learning',
-        path: '/ml'
-      },
-      {
-        icon: 'view_list',
-        title: 'Models',
-        path: `/models/${this.currentProject}`
-      },
-      {
-        icon: 'donut_large',
-        title: 'Prediction',
-        path: '/prediction'
-      },
-      {
-        icon: 'settings',
-        title: 'Settings',
-        path: '/settings'
-      },
-      {
-        icon: 'verified_user',
-        title: 'Admin Console',
-        path: '/admin/console'
-      }
-    ])
+  watch: {
+    currentProject() {
+      // this.titleLink = currentProject ? `/projects/${this.currentProject}/files` : '/projects'
+      // Updates path for files link
+      // this.items[1].path = `/projects/${this.currentProject}/files`
+
+      // Updates path for models link
+      // this.items[3].path = `/models/${this.currentProject}`
+    }
   },
   name: 'App'
 }

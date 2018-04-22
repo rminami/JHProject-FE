@@ -26,7 +26,7 @@
             v-model="localValues.outputPath"
             hint="*required"
             append-icon="create"
-            :append-icon-cb="() => { fileDialogOpen = !fileDialogOpen }"
+            :append-icon-cb="() => $emit('fileDialog')"
             :rules="[rules.required]"
           ></v-text-field>
         </div>
@@ -60,25 +60,17 @@
         </div>
       </v-card-text>
     </v-card>
-    <v-dialog v-model="fileDialogOpen" max-width="500px" scrollable>
-      <input-file-dialog @close="fileDialogOpen = false"/>
-    </v-dialog>
   </div>
 </template>
 
 <script>
-import FileDialog from '../dialogs/FileDialog'
 import bindMixin from '@/mixins/bindMixin'
 
 export default {
   props: ['advEnabled'],
   mixins: [bindMixin],
-  components: {
-    'file-dialog': FileDialog
-  },
   data() {
     return {
-      fileDialogOpen: false,
       rules: {
         required: value => !!value || 'Required.'
       }

@@ -53,18 +53,18 @@ export default {
   data() {
     return {
       inputColNames: [],
-      cols: [],
+      cols: []
     }
   },
   computed: {
     colNames() {
       return this.cols.map(col => col.header)
     },
-    requestColumns() {
-      return this.inputColNames.map(colName => ({
-        column_index: getColumnIndex(colName),
-        
-      }))
+    inputFile() {
+      if (!this.localValues) {
+        return ''
+      }
+      return this.localValues.inputFile
     },
     // Put other stuff here
     ...mapState({
@@ -79,6 +79,9 @@ export default {
         index: this.getColumnIndex(colName)
       }))
     },
+    inputFile() {
+      this.getColumns()
+    }
   },
   created() {
     this.getColumns()
@@ -89,7 +92,8 @@ export default {
     },
     getColumns() {
       console.log(`Sending request to${this.beEndpoint}/${path.join('projects',
-      this.currentProject, 'files', this.localValues.inputFile)}`)
+        this.currentProject, 'files', this.localValues.inputFile
+      )}`)
       axios({
         baseURL: this.beEndpoint,
         url: path.join('projects', this.currentProject, 'files', this.localValues.inputFile),

@@ -4,7 +4,7 @@
       <v-container fluid grid-list-md id="inner-container">
         <v-layout row>
           <prediction-model
-            :values="predictionModels"
+            :values="models"
             @change="handleModelChange"
             @error="mlConnected = false"
           />
@@ -16,6 +16,7 @@
           />
           <prediction-next
             :values="extras"
+            @submit="requestPrediction"
           />
         </v-layout>
       </v-container>
@@ -24,18 +25,17 @@
       <file-dialog
         :initialPath="`/projects/${this.currentProject}/files`"
         :mode="fileDialogMode"
-        @select="() => 0"
+        @select="selectInputFile"
         @close="fileDialogIsOpen = false"
       />
     </v-dialog>
-    <!-- Snackbar is displayed when connection to backend or ML fails -->
     <v-snackbar
       :timeout="3000"
-      color="error"
-      v-model="snackbarIsOpen"
+      :color="snackbar.color"
+      v-model="snackbar.isOpen"
     >
-      {{ snackbarMsg }}
-      <v-btn dark flat @click.native="snackbarIsOpen = false">Close</v-btn>
+      {{ snackbar.text }}
+      <v-btn dark flat @click.native="snackbar.isOpen = false">Close</v-btn>
     </v-snackbar>
   </v-container>
 </template>
@@ -48,17 +48,11 @@ import path from 'path'
 import PredictionModel from './prediction/PredictionModel'
 import PredictionInputFile from './prediction/PredictionInputFile'
 import PredictionNext from './prediction/PredictionNext'
-
-import InputFilePanel from './ml/InputFilePanel'
-import NextPanel from './ml/NextPanel'
-
 import FileDialog from './dialogs/FileDialog'
 
 
 export default {
   components: {
-    'input-file-panel': InputFilePanel,
-    'next-panel': NextPanel,
     'file-dialog': FileDialog,
     'prediction-model': PredictionModel,
     'prediction-input-file': PredictionInputFile,
@@ -66,70 +60,57 @@ export default {
   },
   data() {
     return {
-      predictionModels: {
-        selectedModelName: '',
-        models: [
-          {
-            expanded: false,
-            job_id: 'job123',
-            model_id: 'model1234',
-            status: 'complete',
-            description: 'This model does stuff',
-            percent_trained: 1,
-            start_time: new Date(),
-            started_by: 'admin'
-          },
-          {
-            expanded: false,
-            job_id: 'some_job',
-            model_id: 'some_model',
-            status: 'complete',
-            description: 'This model does stuff',
-            percent_trained: 1,
-            start_time: new Date(),
-            started_by: 'rm264'
-          },
-          {
-            expanded: false,
-            job_id: 'job456',
-            model_id: 'model4567',
-            status: 'running',
-            description: 'This model is good',
-            percent_trained: 0.78,
-            start_time: new Date(),
-            started_by: 'user1'
-          },
-          {
-            expanded: false,
-            job_id: 'job789',
-            model_id: 'model09834',
-            status: 'failed',
-            description: 'This model is useless',
-            percent_trained: 0,
-            start_time: new Date(),
-            started_by: 'user2'
-          }
-        ],
-      },
-      inputs: {
-        inputFile: 'processed-data.csv',
-        inputCols: [],
-        outputCols: [],
-        advEnabled: false
-      },
-      extras: {
-        jobSubmitted: false
-      },
-      beConnected: true,
-      mlConnected: true,
-      snackbarIsOpen: false,
-      snackbarMsg: '',
-      fileDialogIsOpen: false,
-      fileDialogMode: ''
-    }
+      selected: '',
+      models: [],
+      // models: [
+      //   {
+      //     expanded: false,
+      //     job_id: 'job123',
+      //     model_id: 'model1234',
+      //     status: 'complete',
+      //     description: 'This model does stuff',
+      //     percent_trained: 1,
+      //     start_time: new Date(),
+      //     started_by: 'admin'
+      //   },
+      // ]
+    inputs: {
+      inputFile: '',
+      inputCols: [],
+      outputCols: [],
+      advEnabled: false
+    },
+    extras: {
+      submitted: false
+    },
+    snackbar: {
+      text: '',
+      color: '',
+      isOpen: false
+    },
+    beConnected: true,
+    mlConnected: true,
+    snackbarIsOpen: false,
+    snackbarMsg: '',
+    fileDialogIsOpen: false,
+    fileDialogMode: 'csv'
+  }
   },
   computed: {
-    
+    requestData() {
+      return {
+        data_file: {
+          // id: 1,
+          id: this.inputs.inputFile,
+          path: this.inputs.inputFile,
+          project_name: this.currentProject
+        },
+        input_columns: this.inputs.inputCols.map(col => ({
+          column_index: col.index,
+          column_type: 'discrete' // TODO stop hardcoding this
+        }))
+      }
+    },
     /**
      * The message shown on the snackbar is changed depending on whether or not
      * the connection to the backend server fails, the connection to the machine
@@ -159,6 +140,66 @@ export default {
       currentProject: s => s.currentProject
     })
   },
+  created() {
+    axios({
+      method: 'get',
+      baseURL: this.mlEndpoint,
+      url: path.join('models', this.currentProject),
+      responseType: 'json',
+      headers: {
+        Authorization: 'Bearer YES'
+      }
+    })
+    .then(res => {
+      this.models = res.data.data
+    })
+    .catch(err => {
+      this.mlConnected = false
+      setTimeout(() => {
+        this.snackbar.text = this.connectionErrorMsg
+        this.snackbar.color = 'error'
+        this.snackbar.isOpen = true
+      }, 0)
+    })
+  },
+  methods: {
+    requestPrediction() {
+      axios({
+        method: 'post',
+        baseURL: this.mlEndpoint,
+        url: path.join('models/prediction', this.currentProject, this.models.selected),
+        data: this.requestData,
+        headers: {
+          Authorization: 'Bearer YES'
+        }
+      })
+      .then(res => {
+        this.snackbar.text = 'Prediction request successfully sent.'
+        this.snackbar.color = 'success'
+        this.snackbar.isOpen = true
+      })
+      .catch(err => {
+        this.snackbar.text = 'Prediction request could not be sent.'
+        this.snackbar.color = 'error'
+        this.snackbar.isOpen = true
+      })
+    },
+    handleModelChange(newModelValues) {
+      this.models = newModelValues
+    },
+    /**
+     * If the advanced options switch is switched on, the frontend tries to
+     * retrieve a list of available transformer and estimator jobs from the
+     * machine learning server when advanced options are enabled.
+     */
+    handleInputChange(newInputs) {
+      this.inputs = newInputs
+    },
+    selectInputFile(inputFilePath) {
+      this.inputs.inputFile = inputFilePath
+      this.fileDialogIsOpen = false
+    },
+  },
   watch: {
     /**
      * snackbarIsOpen is updated everytime beConnected or mlConnect is changed;
@@ -175,46 +216,6 @@ export default {
     mlConnected() {
       this.snackbarMsg = this.connectionErrorMsg
       this.snackbarIsOpen = !this.beConnected || !this.mlConnected
-    }
-  },
-  methods: {
-    handleModelChange() {
-
-    },
-    /**
-     * Sends a request to the machine learning server for a model to be trained
-     * according to the basic machine learning protocol.
-     * (Why is this path called '/models'?)
-     */
-    requestJob() {
-      axios({
-        method: 'post',
-        baseURL: this.mlEndpoint,
-        url: path.join('projects', this.currentProject, 'models'),
-        responseType: 'json',
-        data: this.requestData,
-        headers: {
-          'Authorization': 'Bearer 12345',
-        }
-      })
-      .then(res => {
-        console.log('Training successfully started!')
-        console.log(res.data)
-      })
-      .catch(err => {
-        this.snackbarIsOpen = true
-        this.snackbarMsg = 'Machine learning job could not be started.'
-        this.extras.jobSubmitted = false
-        console.log(err)
-      })
-    },
-   
-    /**
-     * If the advanced options switch is switched on, the frontend tries to
-     * retrieve a list of available transformer and estimator jobs from the
-     * machine learning server when advanced options are enabled.
-     */
-    handleInputChange(newInputs) {
     }
   },
 }

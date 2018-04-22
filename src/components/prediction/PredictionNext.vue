@@ -7,14 +7,16 @@
         </div>
       </v-card-title>
       <v-card-text>
-       
-        
+
+
         <div>
-          <v-btn color="primary" @click.stop="localValues.jobSubmitted = true">Run Job</v-btn>
-          <v-progress-circular v-if="localValues.jobSubmitted" indeterminate :size="26" :width="3" color="primary"/>
+          <v-btn color="primary" @click="submitted = true; $emit('submit')">Predict</v-btn>
+          <v-progress-circular v-if="submitted" indeterminate
+          :size="26" :width="3" color="primary"/>
         </div>
         <div>
-          <v-btn color="normal" :disabled="!localValues.jobSubmitted" @click.stop="localValues.jobSubmitted = false">
+          <v-btn color="normal" :disabled="!submitted"
+          @click="submitted = false">
             Cancel
           </v-btn>
         </div>
@@ -24,15 +26,10 @@
 </template>
 
 <script>
-import bindMixin from '@/mixins/bindMixin'
-
 export default {
-  mixins: [bindMixin],
   data() {
     return {
-      rules: {
-        required: value => !!value || 'Required.'
-      }
+      submitted: false
     }
   }
 }

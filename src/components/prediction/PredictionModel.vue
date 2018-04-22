@@ -11,7 +11,7 @@
           <v-select
             label="Select model"
             :items="modelIds"
-            v-model="localValues.selectedModelName"
+            v-model="localValues.selected"
             autocomplete
             color="blue"
             max-height="300"
@@ -44,10 +44,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import axios from 'axios'
-import path from 'path'
-
 import bindMixin from '@/mixins/bindMixin'
 
 export default {
@@ -56,29 +52,23 @@ export default {
     return {
       inputColNames: [],
       outputColNames: [],
-      cols: [],
+      cols: []
     }
   },
   computed: {
     modelIds() {
-      return this.localValues.models.map(model => model.model_id)
+      if (this.localValues.length === 0) {
+        return []
+      }
+      return this.localValues.map(model => model.model_id)
     },
     selectedModel() {
-      return this.localValues.models.filter(model => model.model_id === this.localValues.selectedModelName)[0]
-    },
-    // Put other stuff here
-    ...mapState({
-      beEndpoint: s => s.beEndpoint,
-      currentProject: s => s.currentProject
-    })
-  },
-  watch: {
-  
-  },
-  created() {
-  },
-  methods: {
-    
+      if (!this.localValues) {
+        return {}
+      }
+      return this.localValues
+      .filter(model => model.model_id === this.localValues.selected)[0]
+    }
   }
 }
 </script>

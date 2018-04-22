@@ -7,26 +7,28 @@
         <v-icon>close</v-icon>
       </v-btn>
     </v-toolbar>
-    <v-card-text style="min-height: 482px;">
 
+    <v-card-text style="min-height: 480px;">
       <!-- Path to current directory -->
       <v-breadcrumbs>
         <v-icon slot="divider">chevron_right</v-icon>
         <v-breadcrumbs-item
           v-for="(parentDir, index) in parentDirs"
           :key="index"
-          :to="parentDir.path"
           :exact="true"
         >
-          {{ parentDir.text }}
+          <span @click="currentPath = parentDir.path">
+            {{ parentDir.text }}
+          </span>
         </v-breadcrumbs-item>
       </v-breadcrumbs>
 
       <v-list two-line>
+
         <!-- List of directories in current path -->
         <v-subheader v-show="dirs.length > 0" inset>Folders</v-subheader>
         <v-list-tile avatar v-for="dir in dirs" :key="dir.id"
-        @click="$router.push('/projects/' + $route.params.project_name + '/files/' + dir.file_path)">
+        @click.stop="currentPath = `/projects/${currentProject}/files/${dir.file_path}`">
           <v-list-tile-avatar>
             <v-icon :class="[dir.iconClass]">{{ dir.icon }}</v-icon>
           </v-list-tile-avatar>
@@ -40,8 +42,7 @@
 
         <!-- List of files in current path -->
         <v-subheader v-show="files.length > 0" inset>Files</v-subheader>
-        <v-list-tile avatar v-for="file in files" :key="file.id"
-        @click="$router.push('/projects/' + $route.params.project_name + '/files/' + file.file_path)">
+        <v-list-tile avatar v-for="file in files" :key="file.id">
           <v-list-tile-avatar>
             <v-icon :class="[file.iconClass]">{{ file.icon }}</v-icon>
           </v-list-tile-avatar>
@@ -55,26 +56,55 @@
         </v-alert>
       </v-list>
     </v-card-text>
+
     <v-divider></v-divider>
     <v-card-actions>
       <v-btn color="secondary" flat @click="$emit('close')">Close</v-btn>
-      <v-btn color="primary" flat @click.native="dialog = false">Select</v-btn>
+      <v-btn color="primary" flat @click="$emit('select', pathInProject)">Select</v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import axios from 'axios'
+
 
 export default {
+  props: ['mode', 'initialPath'],
   name: 'FileDialog',
   data() {
     return {
-      currentPath: ''
+      currentPath: '',
+      dirs: [],
+      files: [],
     }
   },
+
+  computed: {
+    parentDirs() {
+      const routeEls = this.currentPath.split('/').slice(3)
+      return routeEls.map((routeEl, index) => ({
+        text: decodeURIComponent(routeEl),
+        path: `/projects/${this.$currentProject}/${routeEls.slice(0, index + 1).join('/')}`
+      }))
+    },
+    pathInProject() {
+      return '/' + this.currentPath.split('/').slice(3).join('/')
+    },
+    ...mapState({
+      beEndpoint: s => s.beEndpoint,
+      currentProject: s => s.currentProject
+    })
+  },
   created() {
-    // this.currentPath = this.initialPath
+    this.currentPath = this.initialPath
     this.getFiles()
+  },
+  watch: {
+    currentPath() {
+      this.getFiles()
+    }
   },
   
   methods: {
@@ -110,6 +140,9 @@ export default {
             return { ...res, icon: 'note', iconClass: 'teal white--text' }
         }
       })
+    },
+    close() {
+
     }
   }
 }

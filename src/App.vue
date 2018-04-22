@@ -35,7 +35,7 @@
     <v-toolbar app>
       <v-toolbar-side-icon @click.stop="sidebar = !sidebar"></v-toolbar-side-icon>
       <v-toolbar-title>
-        <router-link :to="items[0].path" tag="span" style="cursor: pointer">
+        <router-link :to="items[1].path" tag="span" style="cursor: pointer">
           {{ title }}
         </router-link>
       </v-toolbar-title>
@@ -111,6 +111,11 @@ export default {
     this.items = ([
       {
         icon: 'home',
+        title: 'Projects',
+        path: '/projects'
+      },
+      {
+        icon: 'folder',
         title: 'Files',
         path: `/projects/${this.currentProject}/files`
       },
@@ -123,6 +128,11 @@ export default {
         icon: 'view_list',
         title: 'Models',
         path: `/models/${this.currentProject}`
+      },
+      {
+        icon: 'donut_large',
+        title: 'Prediction',
+        path: '/prediction'
       },
       {
         icon: 'settings',

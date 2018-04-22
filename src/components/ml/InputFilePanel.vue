@@ -15,7 +15,7 @@
               type="text"
               v-model="localValues.inputFile"
               append-icon="create"
-              :append-icon-cb="() => { fileDialogOpen = !fileDialogOpen }"
+              :append-icon-cb="() => $emit('fileDialog')"
             ></v-text-field>
           </div>
           <v-select
@@ -55,9 +55,6 @@
         <v-btn flat color="primary">Edit</v-btn>
       </v-card-actions>
     </v-card>
-    <v-dialog v-model="fileDialogOpen" max-width="500px" scrollable>
-      <file-dialog @close="fileDialogOpen = false"/>
-    </v-dialog>
   </div>
 </template>
 
@@ -67,20 +64,15 @@ import axios from 'axios'
 import path from 'path'
 
 import bindMixin from '@/mixins/bindMixin'
-import FileDialog from '../dialogs/FileDialog'
 
 export default {
   props: ['values'],
   mixins: [bindMixin],
-  components: {
-    'file-dialog': FileDialog
-  },
   data() {
     return {
       inputColNames: [],
       outputColNames: [],
       cols: [],
-      fileDialogOpen: false,
     }
   },
   computed: {
@@ -112,9 +104,6 @@ export default {
     this.getColumns()
   },
   methods: {
-    toggleFileModal() {
-      this.fileDialogOpen = !this.fileDialogOpen
-    },
     getColumnIndex(colName) {
       return this.cols.filter(col => col.header === colName)[0].index
     },

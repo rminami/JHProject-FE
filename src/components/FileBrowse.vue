@@ -36,18 +36,17 @@
               <v-list-tile-title>Download</v-list-tile-title>
             </v-list-tile>
             <v-list-tile
-            >
-              <v-list-tile-title>Rename</v-list-tile-title>
-            </v-list-tile>
-            <v-list-tile
+              @click.stop="startCopyFile(file.file_name)"
             >
               <v-list-tile-title>Copy</v-list-tile-title>
             </v-list-tile>
             <v-list-tile
+              @click.stop="startMoveFile(file.file_name)"
             >
               <v-list-tile-title>Move</v-list-tile-title>
             </v-list-tile>
             <v-list-tile
+              @click.stop="deleteFile(file.file_name)"
             >
               <v-list-tile-title>Delete</v-list-tile-title>
             </v-list-tile>
@@ -81,20 +80,17 @@
               <v-list-tile-title>Download</v-list-tile-title>
             </v-list-tile>
             <v-list-tile
-              @click.stop="selectedFileName = file.file_name; textDialog = true"
-            >
-              <v-list-tile-title>Rename</v-list-tile-title>
-            </v-list-tile>
-            <v-list-tile
+              @click.stop="startCopyFile(file.file_name)"
             >
               <v-list-tile-title>Copy</v-list-tile-title>
             </v-list-tile>
             <v-list-tile
+              @click.stop="startMoveFile(file.file_name)"
             >
               <v-list-tile-title>Move</v-list-tile-title>
             </v-list-tile>
             <v-list-tile
-              @click.stop="deleteFile(file.file_path)"
+              @click.stop="deleteFile(file.file_name)"
             >
               <v-list-tile-title>Delete</v-list-tile-title>
             </v-list-tile>
@@ -108,29 +104,23 @@
     </v-alert>
   </v-list>
 
-  <v-dialog v-model="textDialog" max-width="500px">
-    <rename-dialog
-      :prevFileName="selectedFileName"
-      @submit="renameFile"
-      @close="textDialog = false"
-    />
-  </v-dialog>
-
-  <v-dialog>
-    <!-- <file-dialog
+  <v-dialog scrollable v-model="fileDialogIsOpen" max-width="500px">
+    <file-dialog
       :initialPath="currentPath"
+      mode="directory"
+      @select="handleDirectorySelect"
       @close="fileDialogIsOpen = false"
-    /> -->
+    />
   </v-dialog>
 
   <!-- Snackbar is displayed when connection to backend fails -->
   <v-snackbar
     :timeout="3000"
     color="error"
-    v-model="backendSnackbar"
+    v-model="snackbar.isOpen"
   >
-    Could not connect to backend.
-    <v-btn dark flat @click.native="backendSnackbar = false">Close</v-btn>
+    {{ snackbar.text }}
+    <v-btn dark flat @click.native="snackbar.isOpen = false">Close</v-btn>
   </v-snackbar>
 </v-container>
 </template>
@@ -142,11 +132,9 @@ import url from 'url'
 import path from 'path'
 
 import FileDialog from './dialogs/FileDialog'
-import RenameDialog from './dialogs/RenameDialog'
 
 export default {
   components: {
-    'rename-dialog': RenameDialog,
     'file-dialog': FileDialog
   },
   data() {
@@ -157,8 +145,12 @@ export default {
       textDialog: false,
       fileDialogIsOpen: false,
       fileDialogMode: '', // move or copy
-      selectedFileName: '',
-      backendSnackbar: false
+      snackbar: {
+        text: '',
+        color: '',
+        isOpen: false
+      },
+      selectedItem: ''
     }
   },
   watch: {
@@ -174,6 +166,9 @@ export default {
   },
   
   computed: {
+    pathInProject() {
+      return '/' + this.currentPath.split('/').slice(3).join('/')
+    },
     parentDirs() {
       const routeEls = this.$route.path.split('/').slice(3)
       return routeEls.map((routeEl, index) => ({
@@ -182,7 +177,8 @@ export default {
       }))
     },
     ...mapState({
-      beEndpoint: s => s.beEndpoint
+      beEndpoint: s => s.beEndpoint,
+      currentProject: s => s.currentProject
     })
   },
 
@@ -203,6 +199,9 @@ export default {
       })
       .catch(err => {
         console.log(err.response)
+        this.snackbar.text = 'Could not connect to backend server.'
+        this.snackbar.color = 'error'
+        this.snackbar.isOpen = true
       })
     },
     attachIcons(items) {
@@ -220,20 +219,79 @@ export default {
         }
       })
     },
-    startCopyFile(fileName) {
+    /**
+     * Called when the move item on the menu is clicked. This brings up a
+     * dialog where the user can select a directory to copy to. 
+     */
+    startCopyFile(item) {
       this.fileDialogIsOpen = true
+      this.selectedItem = item
       this.fileDialogMode = 'copy'
     },
-
-    startMoveFile(fileName) {
+    /**
+     * Called when the move item on the menu is clicked. This brings up a
+     * dialog where the user can select a directory to copy to. 
+     */
+    startMoveFile(item) {
       this.fileDialogIsOpen = true
+      this.selectedItem = item
       this.fileDialogMode = 'move'
     },
+    
+    /**
+     * Called when the user has selected a copy or move destination from the
+     * dialog. It closes the dialog and sends a request to the backend.
+     */
+    handleDirectorySelect(pathToCopyTo) {
+      const selectedItem = this.selectedItem
+      const requestMode = this.fileDialogMode
+      this.selectedItem = ''
+      this.fileDialogMode = ''
+      this.fileDialogIsOpen = false
+
+      if (pathToCopyTo !== this.pathInProject) {
+        axios({
+          method: 'post',
+          baseURL: this.beEndpoint,
+          url: path.join(this.currentPath, selectedItem),
+          params: {
+            action: requestMode // either 'copy' or 'move'
+          },
+          data: {
+            path: pathToCopyTo
+          }
+        })
+        .then(res => {
+          this.snackbar.text = `'${selectedItem}' has been 
+          ${requestMode === 'copy' ? 'copied' : 'moved'} to ${pathToCopyTo}.`
+          this.snackbar.color = 'success'
+          this.snackbar.isOpen = true
+
+          if (requestMode === 'move') {
+            // Updates the list of directories and files displayed
+            this.dirs = this.dirs.filter(dir => dir.file_name !== selectedItem)
+            this.files = this.files.filter(file => file.file_name !== selectedItem)
+          }
+          
+        })
+        .catch(err => {
+          this.snackbar.text = `'${selectedItem}' could not be 
+          ${requestMode === 'copy' ? 'copied' : 'moved'} to ${pathToCopyTo}.`
+          this.snackbar.color = 'error'
+          this.snackbar.isOpen = true
+        })
+      } else {
+        this.snackbar.text = 'File cannot be copied into the same directory.'
+        this.snackbar.color = 'error'
+        this.snackbar.isOpen = true
+      }
+    },
+    
     downloadFile(fileName, filePath) {
       axios({
         method: 'get',
         baseURL: this.beEndpoint,
-        url: filePath,
+        url: path.join(this.currentPath, selectedItem),
         params: {
           view: 'raw'
         },
@@ -249,49 +307,25 @@ export default {
         link.remove()
       })
     },
-    deleteFile(filePath) {
+    deleteFile(selectedItem) {
       axios({
         method: 'post',
         baseURL: this.beEndpoint,
-        url: filePath,
+        url: path.join(this.currentPath, selectedItem),
         params: {
           action: 'delete'
         }
       })
       .then(res => {
-        console.log(res.data)
-      })
-    },
-    renameFile(prevFileName, newFileName) {
-      console.log('Renaming file')
-      axios({
-        method: 'post',
-        url: url.resolve(this.beEndpoint, path.join(this.$route.path, prevFileName)),
-        data: {
-          action: 'rename',
-          newname: newFileName
-        }
-      })
-      .then(res => {
-        this.dirs = this.dirs.map(item => {
-          if (item.file_name === prevFileName) {
-            item.file_name = newFileName
-          }
-          return item
-        })
-        this.files = this.dirs.map(item => {
-          if (item.file_name === prevFileName) {
-            item.file_name = newFileName
-          }
-          return item
-        })
-        console.log('Successfully renamed file.')
+        this.snackbar.text = `'${selectedItem}' has been deleted.`
+        this.snackbar.color = 'success'
+        this.snackbar.isOpen = true
       })
       .catch(err => {
-        console.log(err)
-        console.log('Rename failed.')
+        this.snackbar.text = `'${selectedItem}' could not be deleted.`
+        this.snackbar.color = 'error'
+        this.snackbar.isOpen = true
       })
-      this.textDialog = true
     },
     toggleDialog() {
       this.textDialog = !this.textDialog

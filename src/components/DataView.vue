@@ -285,6 +285,7 @@ export default {
         baseURL: this.beEndpoint,
         url: this.$route.path,
         params: {
+          view: 'tabular',
           cols: selectedColumnIndices.join(',')
         }
       })

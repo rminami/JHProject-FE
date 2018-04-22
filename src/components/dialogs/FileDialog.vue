@@ -59,8 +59,8 @@
 
     <v-divider></v-divider>
     <v-card-actions>
-      <v-btn color="secondary" flat @click="$emit('close')">Close</v-btn>
-      <v-btn color="primary" flat @click="$emit('select', pathInProject)">Select</v-btn>
+      <v-btn color="secondary" flat @click="close">Close</v-btn>
+      <v-btn color="primary" flat @click="select">Select</v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -69,25 +69,25 @@
 import { mapState } from 'vuex'
 import axios from 'axios'
 
-
 export default {
   props: ['mode', 'initialPath'],
   name: 'FileDialog',
   data() {
     return {
-      currentPath: '',
+      currentPath: `/projects/${this.$currentProject}/files`,
       dirs: [],
       files: [],
     }
   },
-
   computed: {
     parentDirs() {
-      const routeEls = this.currentPath.split('/').slice(3)
-      return routeEls.map((routeEl, index) => ({
-        text: decodeURIComponent(routeEl),
-        path: `/projects/${this.$currentProject}/${routeEls.slice(0, index + 1).join('/')}`
-      }))
+      if (this.currentPath) {
+        const routeEls = this.currentPath.split('/').slice(3)
+        return routeEls.map((routeEl, index) => ({
+          text: decodeURIComponent(routeEl),
+          path: `/projects/${this.$currentProject}/${routeEls.slice(0, index + 1).join('/')}`
+        }))
+      }
     },
     pathInProject() {
       return '/' + this.currentPath.split('/').slice(3).join('/')
@@ -102,6 +102,9 @@ export default {
     this.getFiles()
   },
   watch: {
+    initialPath() {
+      this.currentPath = this.initialPath
+    },
     currentPath() {
       this.getFiles()
     }
@@ -142,7 +145,10 @@ export default {
       })
     },
     close() {
-
+      this.$emit('close')
+    },
+    select() {
+      this.$emit('select', this.pathInProject)
     }
   }
 }

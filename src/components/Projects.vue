@@ -31,14 +31,6 @@
     </v-list-tile>
   </v-list>
 
-  <!-- <v-dialog v-model="textDialog" max-width="500px">
-    <rename-dialog
-      :prevFileName="selectedFileName"
-      @submit="renameFile"
-      @close="textDialog = false"
-    />
-  </v-dialog> -->
-
   <!-- Snackbar is displayed when connection to backend fails -->
   <v-snackbar
     :timeout="3000"
@@ -60,7 +52,6 @@ import path from 'path'
 export default {
   data() {
     return {
-      textDialog: false,
       projects: [],
       backendSnackbar: false
     }
@@ -85,11 +76,8 @@ export default {
     })
   },
   methods: {
-    toggleDialog() {
-      this.textDialog = !this.textDialog
-    },
     chooseProject(projectName) {
-      // this.$state.dispatch()
+      this.$store.dispatch('switchProject', { project: projectName })
       this.$router.push('/projects/' + projectName + '/files')
     }
   },

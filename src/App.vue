@@ -35,7 +35,7 @@
     <v-toolbar app>
       <v-toolbar-side-icon @click.stop="sidebar = !sidebar"></v-toolbar-side-icon>
       <v-toolbar-title>
-        <router-link to="/projects" tag="span" style="cursor: pointer">
+        <router-link :to="items[0].path" tag="span" style="cursor: pointer">
           {{ title }}
         </router-link>
       </v-toolbar-title>
@@ -97,9 +97,6 @@ export default {
     }
   },
   methods: {
-    changeProject(project) {
-      this.$store.dispatch('switchProject', { project })
-    },
     logout() {
       this.$store.dispatch('authLogout')
       .then(() => {

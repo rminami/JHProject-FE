@@ -32,21 +32,22 @@
           </v-btn>
           <v-list>
             <v-list-tile
+              @click.stop="downloadFile(file.file_name)"
             >
               <v-list-tile-title>Download</v-list-tile-title>
             </v-list-tile>
             <v-list-tile
-              @click.stop="startCopyFile(file.file_name)"
+              @click.stop="startCopyFile(dir.file_name)"
             >
               <v-list-tile-title>Copy</v-list-tile-title>
             </v-list-tile>
             <v-list-tile
-              @click.stop="startMoveFile(file.file_name)"
+              @click.stop="startMoveFile(dir.file_name)"
             >
               <v-list-tile-title>Move</v-list-tile-title>
             </v-list-tile>
             <v-list-tile
-              @click.stop="deleteFile(file.file_name)"
+              @click.stop="deleteFile(dir.file_name)"
             >
               <v-list-tile-title>Delete</v-list-tile-title>
             </v-list-tile>
@@ -75,7 +76,7 @@
           </v-btn>
           <v-list>
             <v-list-tile
-              @click.stop="downloadFile(file.file_name, file.file_path)"
+              @click.stop="downloadFile(file.file_name)"
             >
               <v-list-tile-title>Download</v-list-tile-title>
             </v-list-tile>
@@ -99,7 +100,8 @@
       </v-list-tile-action>
     </v-list-tile>
 
-    <v-alert :value="dirs.length === 0 && files.length === 0" color="info" icon="info" outline v-cloak>
+    <v-alert :value="dirs.length === 0 && files.length === 0" color="info"
+    icon="info" outline v-cloak>
       No files in current directory.
     </v-alert>
   </v-list>
@@ -107,7 +109,7 @@
   <v-dialog scrollable v-model="fileDialogIsOpen" max-width="500px">
     <file-dialog
       :initialPath="currentPath"
-      mode="directory"
+      :mode="fileDialogMode"
       @select="handleDirectorySelect"
       @close="fileDialogIsOpen = false"
     />
@@ -116,7 +118,7 @@
   <!-- Snackbar is displayed when connection to backend fails -->
   <v-snackbar
     :timeout="3000"
-    color="error"
+    :color="snackbar.color"
     v-model="snackbar.isOpen"
   >
     {{ snackbar.text }}
@@ -128,10 +130,11 @@
 <script>
 import { mapState } from 'vuex'
 import axios from 'axios'
-import url from 'url'
 import path from 'path'
+import { setTimeout } from 'timers'
 
-import FileDialog from './dialogs/FileDialog'
+import FileDialog from '@/components/dialogs/FileDialog'
+
 
 export default {
   components: {
@@ -157,17 +160,17 @@ export default {
     $route() {
       this.currentPath = this.$route.path
       this.getFiles()
-    },
+    }
   },
 
   created() {
     this.currentPath = this.$route.path
     this.getFiles()
   },
-  
+
   computed: {
     pathInProject() {
-      return '/' + this.currentPath.split('/').slice(3).join('/')
+      return `/${this.currentPath.split('/').slice(4).join('/')}`
     },
     parentDirs() {
       const routeEls = this.$route.path.split('/').slice(3)
@@ -186,7 +189,7 @@ export default {
     getFiles() {
       axios({
         baseURL: this.beEndpoint,
-        url: this.currentPath + '/',
+        url: `${this.currentPath}/`,
         params: {
           view: 'meta',
           include_children: true
@@ -220,8 +223,8 @@ export default {
       })
     },
     /**
-     * Called when the move item on the menu is clicked. This brings up a
-     * dialog where the user can select a directory to copy to. 
+     * Called when the copy item on the menu is clicked. This brings up a
+     * dialog where the user can select a directory to copy to.
      */
     startCopyFile(item) {
       this.fileDialogIsOpen = true
@@ -229,15 +232,14 @@ export default {
       this.fileDialogMode = 'copy'
     },
     /**
-     * Called when the move item on the menu is clicked. This brings up a
-     * dialog where the user can select a directory to copy to. 
+     * Same thing as above but for moving files/directories.
      */
     startMoveFile(item) {
       this.fileDialogIsOpen = true
       this.selectedItem = item
       this.fileDialogMode = 'move'
     },
-    
+
     /**
      * Called when the user has selected a copy or move destination from the
      * dialog. It closes the dialog and sends a request to the backend.
@@ -245,8 +247,13 @@ export default {
     handleDirectorySelect(pathToCopyTo) {
       const selectedItem = this.selectedItem
       const requestMode = this.fileDialogMode
-      this.selectedItem = ''
-      this.fileDialogMode = ''
+
+      // Delayed so that the user does not see text on the dialog changing.
+      setTimeout(() => {
+        this.selectedItem = ''
+        this.fileDialogMode = ''
+      }, 1000)
+
       this.fileDialogIsOpen = false
 
       if (pathToCopyTo !== this.pathInProject) {
@@ -272,7 +279,6 @@ export default {
             this.dirs = this.dirs.filter(dir => dir.file_name !== selectedItem)
             this.files = this.files.filter(file => file.file_name !== selectedItem)
           }
-          
         })
         .catch(err => {
           this.snackbar.text = `'${selectedItem}' could not be 
@@ -286,8 +292,8 @@ export default {
         this.snackbar.isOpen = true
       }
     },
-    
-    downloadFile(fileName, filePath) {
+
+    downloadFile(selectedItem) {
       axios({
         method: 'get',
         baseURL: this.beEndpoint,
@@ -320,6 +326,10 @@ export default {
         this.snackbar.text = `'${selectedItem}' has been deleted.`
         this.snackbar.color = 'success'
         this.snackbar.isOpen = true
+
+        // Updates the list of directories and files displayed
+        this.dirs = this.dirs.filter(dir => dir.file_name !== selectedItem)
+        this.files = this.files.filter(file => file.file_name !== selectedItem)
       })
       .catch(err => {
         this.snackbar.text = `'${selectedItem}' could not be deleted.`

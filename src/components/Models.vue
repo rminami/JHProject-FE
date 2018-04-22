@@ -71,14 +71,8 @@
           <v-card flat>
             <v-card-text>
               <p><strong>Description: </strong>{{ props.item.description }}</p>
-              <p><strong>Start time: </strong>{{ dateFormat(props.item.start_time, 'YYYY-MM-DD hh:mm:ss') }}</p>
+              <p><strong>Start time: </strong>{{ formatDate(props.item.start_time) }}</p>
               <p><strong>Started by: </strong>{{ props.item.started_by }}</p>
-              <p>Use this model for
-                <router-link :to="`models/prediction/${props.item.model_id}`">
-                making predictions
-                </router-link>
-                .
-              </p>
             </v-card-text>
           </v-card>
         </template>
@@ -122,59 +116,17 @@ export default {
       { text: 'Actions', value: 'actions' }
     ],
     status: ['running', 'complete', 'failed'],
-    roles: ['User', 'Admin'],
-    items: [
-      {
-        expanded: false,
-        job_id: 'job123',
-        model_id: 'model1234',
-        status: 'complete',
-        description: 'This model does stuff',
-        percent_trained: 1,
-        start_time: randomDate(),
-        started_by: 'admin'
-      },
-      {
-        expanded: false,
-        job_id: 'some_job',
-        model_id: 'some_model',
-        status: 'complete',
-        description: 'This model does stuff',
-        percent_trained: 1,
-        start_time: randomDate(),
-        started_by: 'rm264'
-      },
-      {
-        expanded: false,
-        job_id: 'job456',
-        model_id: 'model4567',
-        status: 'running',
-        description: 'This model is good',
-        percent_trained: 0.78,
-        start_time: randomDate(),
-        started_by: 'user1'
-      },
-      {
-        expanded: false,
-        job_id: 'job789',
-        model_id: 'model09834',
-        status: 'failed',
-        description: 'This model is useless',
-        percent_trained: 0,
-        start_time: randomDate(),
-        started_by: 'user2'
-      }
-    ],
+    items: [],
     snackbar: {
-      isOpen: false,
+      text: '',
       color: '',
-      text: ''
+      isOpen: false
     },
     dialog: false
   }),
   created() {
     // Get list of models
-    // this.getProjects()
+    this.getProjects()
   },
   computed: {
     ...mapState({
@@ -187,7 +139,9 @@ export default {
     capitalize(str) {
       return str.charAt(0).toUpperCase() + str.slice(1)
     },
-    dateFormat: format,
+    formatDate(datetime) {
+      return format(datetime, 'YYYY-MM-DD hh:mm:ss')
+    },
     statusToColor(status) {
       switch (status) {
         case 'running':
@@ -196,13 +150,15 @@ export default {
           return 'light-green accent-1'
         case 'failed':
           return 'red accent-1'
+        default:
+          return 'black'
       }
     },
     getProjects() {
       axios({
         baseURL: this.mlEndpoint,
         url: path.join('models', this.currentProject),
-        method: 'get'
+        method: 'get',
       })
       .then(res => {
         console.log(res.data)
@@ -219,7 +175,7 @@ export default {
       axios({
         baseURL: this.mlEndpoint,
         url: path.join('models/stop', this.currentProject, model_id),
-        method: 'delete'
+        method: 'delete',
       })
       .then(res => {
         console.log(res.data)
@@ -238,7 +194,7 @@ export default {
       axios({
         baseURL: this.mlEndpoint,
         url: path.join('models', this.currentProject, model_id),
-        method: 'delete'
+        method: 'delete',
       })
       .then(res => {
         console.log(res.data)

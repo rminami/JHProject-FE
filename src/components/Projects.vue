@@ -10,24 +10,6 @@
       <v-list-tile-content>
         <v-list-tile-title>{{ project }}</v-list-tile-title>
       </v-list-tile-content>
-      <v-list-tile-action @click.stop>
-        <v-menu bottom left>
-          <v-btn icon slot="activator" dark ripple>
-            <v-icon color="grey lighten-1">more_vert</v-icon>
-          </v-btn>
-          <v-list>
-            <v-list-tile
-              @click.stop="() => 0"
-            >
-              <v-list-tile-title>Download</v-list-tile-title>
-            </v-list-tile>
-            <v-list-tile
-            >
-              <v-list-tile-title>Rename</v-list-tile-title>
-            </v-list-tile>
-          </v-list>
-        </v-menu>
-      </v-list-tile-action>
     </v-list-tile>
   </v-list>
 
@@ -46,8 +28,6 @@
 <script>
 import { mapState } from 'vuex'
 import axios from 'axios'
-import url from 'url'
-import path from 'path'
 
 export default {
   data() {
@@ -59,7 +39,7 @@ export default {
   created() {
     axios({
       baseURL: this.beEndpoint,
-      url: '/projects',
+      url: '/projects'
     })
     .then(res => {
       console.log(res.data)
@@ -77,8 +57,8 @@ export default {
   },
   methods: {
     chooseProject(projectName) {
-      this.$store.dispatch('switchProject', { project: projectName })
-      this.$router.push('/projects/' + projectName + '/files')
+      this.$store.dispatch('SWITCH_PROJECT', projectName)
+      this.$router.push(`/projects/${projectName}/files`)
     }
   },
   name: 'Projects'

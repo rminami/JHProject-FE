@@ -5,6 +5,7 @@
         <v-layout row>
           <input-file-panel
             :values="inputs"
+            @fileDialog="fileDialogIsOpen = true"
             @change="handleInputChange"
             @error="beConnected = false"
           />
@@ -52,6 +53,14 @@
         </v-layout>
       </v-container>
     </v-layout>
+    <v-dialog v-model="fileDialogIsOpen" max-width="500px" scrollable>
+      <file-dialog
+        :initialPath="`/projects/${this.currentProject}/files`"
+        :mode="fileDialogMode"
+        @select="() => 0"
+        @close="fileDialogIsOpen = false"
+      />
+    </v-dialog>
     <!-- Snackbar is displayed when connection to backend or ML fails -->
     <v-snackbar
       :timeout="3000"
@@ -75,6 +84,8 @@ import EstimatorPanel from './ml/EstimatorPanel'
 import TransformerPanel from './ml/TransformerPanel'
 import NextPanel from './ml/NextPanel'
 
+import FileDialog from './dialogs/FileDialog'
+
 
 export default {
   components: {
@@ -82,7 +93,8 @@ export default {
     'input-file-panel': InputFilePanel,
     'next-panel': NextPanel,
     'estimator-panel': EstimatorPanel,
-    'transformer-panel': TransformerPanel
+    'transformer-panel': TransformerPanel,
+    'file-dialog': FileDialog
   },
   data() {
     return {
@@ -128,7 +140,9 @@ export default {
       beConnected: true,
       mlConnected: true,
       snackbarIsOpen: false,
-      snackbarMsg: ''
+      snackbarMsg: '',
+      fileDialogIsOpen: false,
+      fileDialogMode: ''
     }
   },
   computed: {
@@ -231,6 +245,7 @@ export default {
      * centralized state.
      */
     ...mapState({
+      beEndpoint: s => s.beEndpoint,
       mlEndpoint: s => s.mlEndpoint,
       currentProject: s => s.currentProject
     })

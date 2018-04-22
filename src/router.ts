@@ -74,13 +74,13 @@ const routerOptions = [
     beforeEnter: isLoggedIn
   },
   {
-    path: '/models/:project_name',
-    component: 'Models',
+    path: '/prediction/',
+    component: 'Prediction',
     beforeEnter: isLoggedIn
   },
   {
-    path: '/models/prediction/',
-    component: 'Prediction',
+    path: '/models/:project_name',
+    component: 'Models',
     beforeEnter: isLoggedIn
   },
   {

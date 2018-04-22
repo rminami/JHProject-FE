@@ -1,0 +1,123 @@
+<template>
+  <div id="input-flex">
+    <v-card id="input-card">
+      <v-card-title primary-title>
+        <div>
+          <h3 id="input-title" class="headline">Select input file</h3>
+        </div>
+      </v-card-title>
+      <v-card-text>
+        <v-form>
+          <div>
+            <v-text-field
+              name="inputFile"
+              label="Input file"
+              type="text"
+              v-model="localValues.inputFile"
+              append-icon="create"
+              :append-icon-cb="() => $emit('fileDialog')"
+            ></v-text-field>
+          </div>
+          <v-select
+            label="Select Input Columns"
+            :items="colNames"
+            v-model="inputColNames"
+            multiple
+            autocomplete
+            chips
+            deletable-chips
+            clearable
+            color="blue"
+            max-height="300"
+          ></v-select>
+        </v-form>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn flat color="primary">Preview</v-btn>
+        <v-btn flat color="primary">Edit</v-btn>
+      </v-card-actions>
+    </v-card>
+  </div>
+</template>
+
+<script>
+import { mapState } from 'vuex'
+import axios from 'axios'
+import path from 'path'
+
+import bindMixin from '@/mixins/bindMixin'
+
+export default {
+  props: ['values'],
+  mixins: [bindMixin],
+  data() {
+    return {
+      inputColNames: [],
+      cols: [],
+    }
+  },
+  computed: {
+    colNames() {
+      return this.cols.map(col => col.header)
+    },
+    requestColumns() {
+      return this.inputColNames.map(colName => ({
+        column_index: getColumnIndex(colName),
+        
+      }))
+    },
+    // Put other stuff here
+    ...mapState({
+      beEndpoint: s => s.beEndpoint,
+      currentProject: s => s.currentProject
+    })
+  },
+  watch: {
+    inputColNames() {
+      this.localValues.inputCols = this.inputColNames.map(colName => ({
+        header: colName,
+        index: this.getColumnIndex(colName)
+      }))
+    },
+  },
+  created() {
+    this.getColumns()
+  },
+  methods: {
+    getColumnIndex(colName) {
+      return this.cols.filter(col => col.header === colName)[0].index
+    },
+    getColumns() {
+      console.log(`Sending request to${this.beEndpoint}/${path.join('projects',
+      this.currentProject, 'files', this.localValues.inputFile)}`)
+      axios({
+        baseURL: this.beEndpoint,
+        url: path.join('projects', this.currentProject, 'files', this.localValues.inputFile),
+        responseType: 'json',
+        params: {
+          view: 'meta'
+        }
+      })
+      .then(res => {
+        this.cols = res.data.data.supported_views.tabular.columns
+        .map((col, index) => ({ ...col, index }))
+      })
+      .catch(err => {
+        this.$emit('error')
+        console.log(err)
+      })
+    }
+  }
+}
+</script>
+
+<style lang="stylus" scoped>
+
+#input-flex
+  width: 328px
+  padding: 4px 4px 4px 4px
+
+#input-card
+  width: 320px
+
+</style>

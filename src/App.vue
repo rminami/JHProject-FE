@@ -70,33 +70,7 @@ export default {
         'project2',
         'project3'
       ],
-      items: [
-        {
-          icon: 'home',
-          title: 'Files',
-          path: `projects/${this.currentProject}/files`
-        },
-        {
-          icon: 'assignment',
-          title: 'Machine Learning',
-          path: '/ml'
-        },
-        {
-          icon: 'view_list',
-          title: 'Models',
-          path: `models/${this.currentProject}`
-        },
-        {
-          icon: 'settings',
-          title: 'Settings',
-          path: '/settings'
-        },
-        {
-          icon: 'verified_user',
-          title: 'Admin Console',
-          path: '/admin/console'
-        }
-      ],
+      items: [],
       adminItems: [
         {
           icon: 'dashboard',
@@ -136,6 +110,35 @@ export default {
   computed: mapState({
     currentProject: s => s.currentProject
   }),
+  created() {
+    this.items = ([
+      {
+        icon: 'home',
+        title: 'Files',
+        path: `/projects/${this.currentProject}/files`
+      },
+      {
+        icon: 'assignment',
+        title: 'Machine Learning',
+        path: '/ml'
+      },
+      {
+        icon: 'view_list',
+        title: 'Models',
+        path: `/models/${this.currentProject}`
+      },
+      {
+        icon: 'settings',
+        title: 'Settings',
+        path: '/settings'
+      },
+      {
+        icon: 'verified_user',
+        title: 'Admin Console',
+        path: '/admin/console'
+      }
+    ])
+  },
   name: 'App'
 }
 </script>

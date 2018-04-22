@@ -16,6 +16,7 @@ if (accessToken) {
   // Using both British and American spellings just in case
   axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`
   axios.defaults.headers.common.Authorisation = `Bearer ${accessToken}`
+  axios.defaults.headers.common['X-Backend-Server-Url'] = 'https://rw86.host.cs.st-andrews.ac.uk/be/__BE02__/hci1'
 }
 
 new Vue({

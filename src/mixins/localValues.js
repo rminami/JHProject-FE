@@ -29,7 +29,8 @@ export default {
         this.localValues.parameters = []
         return {}
       }
-      const newSelectedJob = this.jobs.filter(a => a.name === this.localValues.name)[0]
+      // Both transformers and estimators have
+      const newSelectedJob = this.jobs.filter(a => a.transformer_name === this.localValues.name)[0]
 
       this.localValues.job_id = newSelectedJob.job_id
       this.localValues.parameters = newSelectedJob.parameters

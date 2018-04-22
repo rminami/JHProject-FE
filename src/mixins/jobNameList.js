@@ -6,7 +6,7 @@ export default {
   computed: {
     jobNameList() {
       try {
-        return this.jobs.map(a => a.name)
+        return this.jobs.map(a => a.transformer_name)
       } catch (err) {
         return []
       }

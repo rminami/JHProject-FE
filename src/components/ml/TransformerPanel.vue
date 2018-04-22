@@ -56,11 +56,19 @@
 
 <script>
 import localValues from '@/mixins/localValues'
-import jobNameList from '@/mixins/jobNameList'
 
 export default {
   props: ['index', 'jobs', 'values'],
-  mixins: [localValues, jobNameList]
+  mixins: [localValues],
+  computed: {
+    jobNameList() {
+      try {
+        return this.jobs.map(a => a.transformer_name)
+      } catch (err) {
+        return []
+      }
+    }
+  }
 }
 </script>
 

@@ -15,7 +15,7 @@
               type="text"
               v-model="localValues.inputFile"
               append-icon="create"
-              :append-icon-cb="() => $emit('fileDialog')"
+              :append-icon-cb="() => $emit('fileDialog', 'csv')"
             ></v-text-field>
           </div>
           <v-select
@@ -79,6 +79,12 @@ export default {
     colNames() {
       return this.cols.map(col => col.header)
     },
+    inputFile() {
+      if (!this.localValues) {
+        return ''
+      }
+      return this.localValues.inputFile
+    },
     // Put other stuff here
     ...mapState({
       beEndpoint: s => s.beEndpoint,
@@ -97,6 +103,9 @@ export default {
         header: colName,
         index: this.getColumnIndex(colName)
       }))
+    },
+    inputFile() {
+      this.getColumns()
     }
   },
   created() {
@@ -108,16 +117,20 @@ export default {
       return this.cols.filter(col => col.header === colName)[0].index
     },
     getColumns() {
+      if (!this.localValues) {
+        return
+      }
       console.log(`Sending request to ${this.beEndpoint}/${path.join('projects', this.currentProject, 'files', this.localValues.inputFile)}`)
       axios({
         baseURL: this.beEndpoint,
-        url: path.join('projects', this.currentProject, 'files', this.localValues.inputFile),
+        url: path.join('projects', this.currentProject, 'files', this.localValues.inputFile) + '/',
         responseType: 'json',
         params: {
           view: 'meta'
         }
       })
       .then(res => {
+        this.localValues.inputFileId = res.data.data.id
         this.cols = res.data.data.supported_views.tabular.columns
         .map((col, index) => ({ ...col, index }))
       })

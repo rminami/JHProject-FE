@@ -26,7 +26,7 @@
             v-model="localValues.outputPath"
             hint="*required"
             append-icon="create"
-            :append-icon-cb="() => $emit('fileDialog')"
+            :append-icon-cb="() => $emit('fileDialog', 'directory')"
             :rules="[rules.required]"
           ></v-text-field>
         </div>

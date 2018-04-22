@@ -60,14 +60,75 @@
 
 <script>
 import localValues from '@/mixins/localValues'
-import jobNameList from '@/mixins/jobNameList'
 
 export default {
   props: ['jobs'],
-  mixins: [localValues, jobNameList],
+  mixins: [localValues],
   data() {
     return {
       index: 0
+    }
+  },
+  computed: {
+    selectedJob() {
+      if (!this.jobs || this.localValues.name.length === 0) {
+        this.localValues.parameters = []
+        return {}
+      }
+      // Both transformers and estimators have
+      const newSelectedJob = this.jobs.filter(a => a.name === this.localValues.name)[0]
+
+      this.localValues.job_id = newSelectedJob.job_id
+      this.localValues.parameters = newSelectedJob.parameters
+      .map(param => ({
+        /**
+         * The following fields _cannot_ be changed by the user.
+         * Fields are copied to component-specific object for easy retrival.
+         */
+        name: param.name,
+        type: param.type,
+        info: param.info,
+        default: param.value,
+
+        /**
+         * 'required' field is not in the protocol, but maybe it should be.
+         * Boolean() ensures that it is set to false if undefined.
+         */
+        required: Boolean(param.required),
+
+        /**
+         * The following fields _can_ be changed by the user.
+         * This initializes the value to default value specified by the
+         * machine learning server, but it can be freely changed since the same
+         * value is stored in the 'default' field as well.
+         */
+        value: param.value,
+
+        /**
+         * The following fields are used for generating the HTML input, and
+         * correspond to the 'type' and 'step' attributes in the <input> tag.
+         */
+        htmlType: this.paramTypeToHtmlType(param.type),
+        htmlStep: this.paramTypeToHtmlStep(param.type),
+
+        /**
+         * If set to false, the default value is sent instead of the user
+         * specified value.
+         */
+        enabled: true
+      }))
+      return newSelectedJob
+    },
+    showParams() {
+      const params = this.localValues.parameters
+      return params && params.length > 0
+    },
+    jobNameList() {
+      try {
+        return this.jobs.map(a => a.name)
+      } catch (err) {
+        return []
+      }
     }
   }
 }

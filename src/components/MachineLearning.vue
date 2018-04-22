@@ -5,7 +5,7 @@
         <v-layout row>
           <input-file-panel
             :values="inputs"
-            @fileDialog="fileDialogIsOpen = true"
+            @fileDialog="openFileDialog"
             @change="handleInputChange"
             @error="beConnected = false"
           />
@@ -48,6 +48,7 @@
           <next-panel
             :values="extras"
             :adv-enabled="advEnabled"
+            @fileDialog="openFileDialog"
             @change="handleNextPanelChange"
           />
         </v-layout>
@@ -57,7 +58,7 @@
       <file-dialog
         :initialPath="`/projects/${this.currentProject}/files`"
         :mode="fileDialogMode"
-        @select="() => 0"
+        @select="selectInputFile"
         @close="fileDialogIsOpen = false"
       />
     </v-dialog>
@@ -125,14 +126,15 @@ export default {
         parameters: {}
       },
       inputs: {
-        inputFile: 'processed-data.csv',
+        inputFile: '',
+        inputFileId: '',
         inputCols: [],
         outputCols: [],
         advEnabled: false
       },
       extras: {
         k: 4,
-        outputPath: '/home/tom/Downloads',
+        outputPath: '',
         dropMissing: true,
         splitRatio: 0.7,
         jobSubmitted: false
@@ -163,11 +165,11 @@ export default {
       if (this.advEnabled) {
         return {
           transformers: this.transformers.map(transformer => ({
-            name: transformer.name,
+            name: transformer.job_id,
             parameters: transformer.parameters.map(this.parseParam)
           })),
           estimator: {
-            name: this.estimator.name,
+            name: this.estimator.job_id,
             parameters: this.estimator.parameters.map(this.parseParam)
           },
           extras: {
@@ -185,8 +187,9 @@ export default {
           })),
           training_data: {
             id: '1', // TODO get actual file id
+            // id: this.inputs.inputFile,
             path: this.inputs.inputFile,
-            project_name: 'project1' // TODO get project name
+            project_name: this.currentProject // TODO get project name
           }
         }
       }
@@ -202,12 +205,13 @@ export default {
         }
       })
       return {
-        refresh_token: 'abc123', // TODO get actual token
+        refresh_token: this.refreshToken, // TODO get actual token
         job_id: this.basic.job_id,
         training_data: {
-          id: '1', // TODO is the path not enough?
+          // id: this.inputs.inputFileId, // TODO is the path not enough?
+          id: this.inputs.inputFile,
           // path: this.inputs.inputFile,
-          project_name: 'project1' // TODO get project name
+          project_name: this.currentProject // TODO get project name
         },
         input_columns: this.inputs.inputCols.map(col => ({
           column_index: col.index,
@@ -247,7 +251,8 @@ export default {
     ...mapState({
       beEndpoint: s => s.beEndpoint,
       mlEndpoint: s => s.mlEndpoint,
-      currentProject: s => s.currentProject
+      currentProject: s => s.currentProject,
+      refreshToken: s => s.refreshToken
     })
   },
   watch: {
@@ -286,6 +291,14 @@ export default {
     }
   },
   methods: {
+    selectInputFile(inputFilePath) {
+      this.inputs.inputFile = inputFilePath
+      this.fileDialogIsOpen = false
+    },
+    openFileDialog(mode) {
+      this.fileDialogMode = mode
+      this.fileDialogIsOpen = true
+    },
     /**
      * Retrieves a list of jobs available on the machine learning server.
      *
@@ -423,12 +436,9 @@ export default {
       axios({
         method: 'post',
         baseURL: this.mlEndpoint,
-        url: path.join('projects', this.currentProject, 'models'),
+        url: 'models',
         responseType: 'json',
         data: this.requestData,
-        headers: {
-          'Authorization': 'Bearer 12345',
-        }
       })
       .then(res => {
         console.log('Training successfully started!')
@@ -453,9 +463,6 @@ export default {
         url: '/trainAdvanced',
         responseType: 'json',
         data: this.requestData,
-        headers: {
-          'Authorization': 'Bearer 12345',
-        }
       })
       .then(res => {
         console.log('Advanced ML job successfully started!')

@@ -21,12 +21,18 @@ module.exports = {
   ],
   // check if imports actually resolve
   settings: {
-    'import/resolver': {
-      webpack: {
-        config: 'build/webpack.base.conf.js'
-      }
-    }
+    'import/resolver': 'webpack',
+    'alias': [
+      ['@', './src']
+    ]
   },
+  // settings: {
+  //   'import/resolver': {
+  //     webpack: {
+  //       config: 'build/webpack.base.conf.js'
+  //     }
+  //   }
+  // },
   // add your custom rules here
   rules: {
     'indent': ['warn', 2, {

@@ -42,7 +42,9 @@
 
         <!-- List of files in current path -->
         <v-subheader v-show="files.length > 0" inset>Files</v-subheader>
-        <v-list-tile avatar v-for="file in files" :key="file.id">
+        <v-list-tile avatar v-for="file in files" :key="file.id"
+        @click="handleFileClick(file.file_name)"
+        :color="file.file_name === selectedFile ? 'blue darken-1' : ''">
           <v-list-tile-avatar>
             <v-icon :class="[file.iconClass]">{{ file.icon }}</v-icon>
           </v-list-tile-avatar>
@@ -60,7 +62,7 @@
     <v-divider></v-divider>
     <v-card-actions>
       <v-btn color="secondary" flat @click="close">Close</v-btn>
-      <v-btn color="primary" flat @click="select">Select</v-btn>
+      <v-btn color="primary" flat @click="select">{{ buttonText }}</v-btn>
     </v-card-actions>
   </v-card>
 </template>
@@ -68,6 +70,7 @@
 <script>
 import { mapState } from 'vuex'
 import axios from 'axios'
+import path from 'path'
 
 export default {
   props: ['mode', 'initialPath'],
@@ -75,6 +78,7 @@ export default {
   data() {
     return {
       currentPath: `/projects/${this.$currentProject}/files`,
+      selectedFile: '',
       dirs: [],
       files: [],
     }
@@ -85,12 +89,21 @@ export default {
         const routeEls = this.currentPath.split('/').slice(3)
         return routeEls.map((routeEl, index) => ({
           text: decodeURIComponent(routeEl),
-          path: `/projects/${this.$currentProject}/${routeEls.slice(0, index + 1).join('/')}`
+          path: `/projects/${this.currentProject}/${routeEls.slice(0, index + 1).join('/')}`
         }))
       }
     },
     pathInProject() {
-      return '/' + this.currentPath.split('/').slice(3).join('/')
+      return this.currentPath.split('/').slice(4).join('/')
+    },
+    buttonText() {
+      if (this.mode === 'move') {
+        return 'Move'
+      } else if (this.mode === 'copy') {
+        return 'Copy'
+      } else {
+        return 'Select'
+      }
     },
     ...mapState({
       beEndpoint: s => s.beEndpoint,
@@ -144,11 +157,23 @@ export default {
         }
       })
     },
+    handleFileClick(fileName) {
+      if (this.mode === 'csv' && fileName.endsWith('.csv')) {
+        this.selectedFile = fileName
+      }
+
+    },
+
     close() {
       this.$emit('close')
     },
     select() {
-      this.$emit('select', this.pathInProject)
+      if (this.mode === 'csv') {
+        this.$emit('select', path.join(this.pathInProject, this.selectedFile))
+      } else {
+        this.$emit('select', this.pathInProject)
+      }
+      
     }
   }
 }

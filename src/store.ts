@@ -18,7 +18,7 @@ export default new Vuex.Store({
     /**
      * States used for projects.
      */
-    currentProject: 'project',
+    currentProject: 'test',
 
     /**
      * States used for connectivity.

@@ -51,8 +51,6 @@
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <v-btn flat color="primary">Preview</v-btn>
-        <v-btn flat color="primary">Edit</v-btn>
       </v-card-actions>
     </v-card>
   </div>
@@ -117,7 +115,8 @@ export default {
       return this.cols.filter(col => col.header === colName)[0].index
     },
     getColumns() {
-      if (!this.localValues) {
+      if (!this.localValues || !this.localValues.inputFile.endsWith('.csv')) {
+        console.log('Input path is not a CSV file')
         return
       }
       console.log(`Sending request to ${this.beEndpoint}/${path.join('projects', this.currentProject, 'files', this.localValues.inputFile)}`)

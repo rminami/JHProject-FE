@@ -47,8 +47,6 @@
         </v-form>
       </v-card-text>
       <v-card-actions>
-        <v-btn flat color="primary" @click="$emit('append', index)">Append</v-btn>
-        <v-btn flat color="secondary" @click="$emit('remove', index)">Close</v-btn>
       </v-card-actions>
     </v-card>
   </div>

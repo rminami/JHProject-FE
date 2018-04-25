@@ -122,7 +122,6 @@ export default {
       this.getFiles()
     }
   },
-  
   methods: {
     getFiles() {
       axios({
@@ -173,7 +172,6 @@ export default {
       } else {
         this.$emit('select', this.pathInProject)
       }
-      
     }
   }
 }

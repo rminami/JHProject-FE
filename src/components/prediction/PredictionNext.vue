@@ -7,8 +7,6 @@
         </div>
       </v-card-title>
       <v-card-text>
-
-
         <div>
           <v-btn color="primary" @click="submitted = true; $emit('submit')">Predict</v-btn>
           <v-progress-circular v-if="submitted" indeterminate

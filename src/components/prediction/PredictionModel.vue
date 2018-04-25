@@ -36,8 +36,6 @@
         </div>
       </v-card-text>
       <v-card-actions>
-        <v-btn flat color="primary">Preview</v-btn>
-        <v-btn flat color="primary">Edit</v-btn>
       </v-card-actions>
     </v-card>
   </div>
@@ -48,28 +46,21 @@ import bindMixin from '@/mixins/bindMixin'
 
 export default {
   mixins: [bindMixin],
-  data() {
-    return {
-      inputColNames: [],
-      outputColNames: [],
-      cols: []
-    }
-  },
   computed: {
     modelIds() {
-      if (this.localValues.length === 0) {
+      if (this.localValues.modelList.length === 0) {
         return []
       }
-      return this.localValues.map(model => model.model_id)
+      return this.localValues.modelList.map(model => model.model_id)
     },
     selectedModel() {
-      if (!this.localValues) {
+      if (!this.localValues.modelList) {
         return {}
       }
-      return this.localValues
-      .filter(model => model.model_id === this.localValues.selected)[0]
+      return this.localValues.modelList
+      .filter(model => model.model_id === this.localValues.selectedModel)[0]
     }
-  }
+  },
 }
 </script>
 

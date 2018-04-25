@@ -74,7 +74,7 @@ export default {
     async login() {
       const { username, password } = this
       try {
-        await this.$store.dispatch('authRequest', { username, password })
+        await this.$store.dispatch('AUTH_REQUEST', { username, password })
         setTimeout(() => {
           this.$router.push('/projects')
         }, 1000)

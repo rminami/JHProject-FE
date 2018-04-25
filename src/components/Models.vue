@@ -98,9 +98,6 @@ import { mapState } from 'vuex'
 import path from 'path'
 import { format } from 'date-fns'
 
-const randomDate = () => new Date(+(new Date()) - Math.floor(Math.random() * 10000000000))
-
-
 export default {
   data: () => ({
     pagination: {
@@ -115,8 +112,8 @@ export default {
       { text: '% trained', value: 'percent_trained' },
       { text: 'Actions', value: 'actions' }
     ],
-    status: ['running', 'complete', 'failed'],
     items: [],
+
     snackbar: {
       text: '',
       color: '',

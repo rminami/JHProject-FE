@@ -60,41 +60,31 @@ export default {
   },
   data() {
     return {
-      selected: '',
-      models: [],
-      // models: [
-      //   {
-      //     expanded: false,
-      //     job_id: 'job123',
-      //     model_id: 'model1234',
-      //     status: 'complete',
-      //     description: 'This model does stuff',
-      //     percent_trained: 1,
-      //     start_time: new Date(),
-      //     started_by: 'admin'
-      //   },
-      // ]
-    inputs: {
-      inputFile: '',
-      inputCols: [],
-      outputCols: [],
-      advEnabled: false
-    },
-    extras: {
-      submitted: false
-    },
-    snackbar: {
-      text: '',
-      color: '',
-      isOpen: false
-    },
-    beConnected: true,
-    mlConnected: true,
-    snackbarIsOpen: false,
-    snackbarMsg: '',
-    fileDialogIsOpen: false,
-    fileDialogMode: 'csv'
-  }
+      models: {
+        modelList: [],
+        selectedModel: ''
+      },
+      inputs: {
+        inputFile: '',
+        inputCols: [],
+        outputCols: [],
+        advEnabled: false
+      },
+      extras: {
+        submitted: false
+      },
+      snackbar: {
+        text: '',
+        color: '',
+        isOpen: false
+      },
+      beConnected: true,
+      mlConnected: true,
+      snackbarIsOpen: false,
+      snackbarMsg: '',
+      fileDialogIsOpen: false,
+      fileDialogMode: 'csv'
+    }
   },
   computed: {
     requestData() {
@@ -146,12 +136,9 @@ export default {
       baseURL: this.mlEndpoint,
       url: path.join('models', this.currentProject),
       responseType: 'json',
-      headers: {
-        Authorization: 'Bearer YES'
-      }
     })
     .then(res => {
-      this.models = res.data.data
+      this.models.modelList = res.data.data
     })
     .catch(err => {
       this.mlConnected = false
@@ -167,11 +154,8 @@ export default {
       axios({
         method: 'post',
         baseURL: this.mlEndpoint,
-        url: path.join('models/prediction', this.currentProject, this.models.selected),
+        url: path.join('models/prediction', this.currentProject, this.models.selectedModel),
         data: this.requestData,
-        headers: {
-          Authorization: 'Bearer YES'
-        }
       })
       .then(res => {
         this.snackbar.text = 'Prediction request successfully sent.'
@@ -184,8 +168,8 @@ export default {
         this.snackbar.isOpen = true
       })
     },
-    handleModelChange(newModelValues) {
-      this.models = newModelValues
+    handleModelChange(newModels) {
+      this.models = newModels
     },
     /**
      * If the advanced options switch is switched on, the frontend tries to

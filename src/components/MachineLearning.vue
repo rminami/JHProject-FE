@@ -27,9 +27,9 @@
           <v-btn
             v-show="advEnabled"
             id="add-step-btn"
-            color="primary white--text"
+            color="blue white--text"
             fab
-            @click="addTransformStep"
+            @click.prevent="addTransformStep"
           >
             <v-icon>add</v-icon>
           </v-btn>
@@ -561,5 +561,6 @@ export default {
 
 #add-step-btn {
   margin-top: 80px;
+  width: 56px;
 }
 </style>

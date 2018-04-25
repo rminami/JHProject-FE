@@ -5,6 +5,10 @@ import axios from 'axios'
 const CHANGE_BE = 'CHANGE_BE'
 const CHANGE_ML = 'CHANGE_ML'
 const SWITCH_PROJECT = 'SWITCH_PROJECT'
+const AUTH_REQUEST = 'AUTH_REQUEST'
+const AUTH_SUCCESS = 'AUTH_SUCCESS'
+const AUTH_ERROR = 'AUTH_ERROR'
+const AUTH_LOGOUT = 'AUTH_LOGOUT'
 
 Vue.use(Vuex)
 
@@ -41,7 +45,9 @@ export default new Vuex.Store({
     // mlEndpoint: 'http://7ad15557.ngrok.io/JH-Project/machine-learning-api/1.0' // Tom's ML, with ngrok
     // mlEndpoint: 'https://to26.host.cs.st-andrews.ac.uk/JH-Project/machine-learning-api/1.0/' // Tom's ML
     // mlEndpoint: 'https://ys51.host.cs.st-andrews.ac.uk/JH-Project/machine-learning-api/1.0/' // Roy's ML
-    mlEndpoint: 'https://rw86.host.cs.st-andrews.ac.uk/staging/ml/ML42/' // Ryan's ML server, compatible with Daphne's protocol
+
+    // Ryan's ML server, compatible with Daphne's protocol
+    mlEndpoint: 'https://rw86.host.cs.st-andrews.ac.uk/staging/ml/ML42/'
   },
   getters: {
     isAuthenticated: state => !!state.accessToken
@@ -51,18 +57,19 @@ export default new Vuex.Store({
    * they should be called by actions.
    */
   mutations: {
-    authRequest(state) {
+    [AUTH_REQUEST]: state => {
       state.status = 'loading'
     },
-    authSuccess(state, accessToken) {
-      state.accessToken = accessToken
+    [AUTH_SUCCESS]: (state, tokens) => {
+      state.accessToken = tokens.accessToken
+      state.refreshToken = tokens.refreshToken
       state.status = 'success'
     },
-    authError(state) {
+    [AUTH_ERROR]: state => {
       state.accessToken = ''
       state.status = 'error'
     },
-    authLogout(state) {
+    [AUTH_LOGOUT]: state => {
       state.accessToken = ''
     },
     [SWITCH_PROJECT]: (state, project: string) => {
@@ -92,9 +99,9 @@ export default new Vuex.Store({
         resolve()
       })
     },
-    authRequest({ commit, state }, payload) {
+    [AUTH_REQUEST]: ({ commit, state }, payload) => {
       return new Promise((resolve, reject) => {
-        commit('authRequest')
+        commit(AUTH_REQUEST)
         /**
          * Sends a request to the OAuth endpoint to get an access token.
          * Object 'payload' should have attributes 'username' and 'password'.
@@ -113,16 +120,17 @@ export default new Vuex.Store({
           console.log(res.data)
           // const accessToken = res.data.data.access_token
           const accessToken = res.data.access_token
+          const refreshToken = res.data.refresh_token
 
           // Store the token in local storage
           localStorage.setItem('access-token', accessToken)
+          localStorage.setItem('refresh-token', refreshToken)
 
-          commit('authSuccess', accessToken)
-          // dispatch('userRequest')
+          commit(AUTH_SUCCESS, { accessToken, refreshToken })
           resolve(res.data)
         })
         .catch(err => {
-          commit('authError')
+          commit(AUTH_ERROR)
           console.log(err.response.data)
           // If login fails, any existing token should also be wiped
           localStorage.removeItem('access-token')
@@ -132,14 +140,14 @@ export default new Vuex.Store({
     },
     authLogout({ commit, state }) {
       return new Promise((resolve, reject) => {
-        commit('authLogout')
+        commit(AUTH_LOGOUT)
         localStorage.removeItem('access-token')
         resolve()
       })
     },
     [SWITCH_PROJECT]: ({ commit, state }, project: string) => {
       return new Promise((resolve, reject) => {
-        commit('SWITCH_PROJECT', project)
+        commit(SWITCH_PROJECT, project)
         resolve()
       })
     }

@@ -9,6 +9,19 @@ import {
   tooltipTop, colors
 } from '../../assets/Constants'
 
+/**
+ * Returns the Euclidean distance between two points.
+ *
+ * @typedef {Object} point - An object representing a point.
+ *
+ * @param {point} pt1 - First point.
+ * @param {point} pt2 - Second point.
+ * @return {number} Distance between pt1 and pt2.
+ */
+function distance(pt1, pt2) {
+  return Math.sqrt(((pt1[0] - pt2[0]) ** 2) + ((pt1[1] - pt2[1]) ** 2))
+}
+
 export default {
   /**
    * Displays k-means clustering visualization.
@@ -69,12 +82,14 @@ export default {
       return centerArr.sort((a, b) => (a[0] + a[1]) - (b[0] + b[1]))
     }
 
+    const centerArr = initCenters()
+
     /**
-       * Returns the closest cluster centroid, given the coordinates of a point.
-       *
-       * @param {obj} d The point to find the closest cluster centroid for.
-       * @return {obj} The closest cluster centroid for d.
-       */
+     * Returns the closest cluster centroid, given the coordinates of a point.
+     *
+     * @param {obj} d The point to find the closest cluster centroid for.
+     * @return {obj} The closest cluster centroid for d.
+     */
     const findClosestCent = d => {
       let closestCent = 0
       const minimumDist = distance(d, centerArr[0])
@@ -91,9 +106,9 @@ export default {
     }
 
     /**
-       * Performs another iteration of k-means clustering by taking the mean
-       *     of each cluster and using it as the next cluster centroid.
-       */
+     * Performs another iteration of k-means clustering by taking the mean
+     *     of each cluster and using it as the next cluster centroid.
+     */
     const iterateKMeans = () => {
       for (let i = 0; i < kValue; ++i) {
         if (clusters[i].length > 0) {
@@ -104,16 +119,6 @@ export default {
         }
       }
     }
-
-    /**
-       * Updates the colors of the circles so that data points in the same
-       *     cluster have the same color.
-       */
-    const updateClusters = () => {
-      circles.style('fill', d => colors(findClosestCent(d)))
-    }
-
-    let centerArr = initCenters()
 
     const x = scaleLinear()
     .range([radius, width - radius])
@@ -168,6 +173,13 @@ export default {
       select('#tooltip').classed('invisible', true)
     })
 
+    /**
+     * Updates the colors of the circles so that data points in the same
+     *     cluster have the same color.
+     */
+    const updateClusters = () => {
+      circles.style('fill', d => colors(findClosestCent(d)))
+    }
 
     for (let i = 0; i < initIterations; ++i) {
       iterateKMeans()
@@ -226,17 +238,4 @@ export default {
     .call(zoomFunc.on('zoom', zoomed)) // zoom will be handled by function 'zoomed'
     .on('dblclick.zoom', null) // disables double click to zoom
   }
-}
-
-/**
- * Returns the Euclidean distance between two points.
- *
- * @typedef {Object} point - An object representing a point.
- *
- * @param {point} pt1 - First point.
- * @param {point} pt2 - Second point.
- * @return {number} Distance between pt1 and pt2.
- */
-function distance(pt1, pt2) {
-  return Math.sqrt(((pt1[0] - pt2[0]) ** 2) + ((pt1[1] - pt2[1]) ** 2))
 }

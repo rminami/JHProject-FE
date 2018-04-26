@@ -42,11 +42,7 @@ export default {
    * Displays 2D principal component analysis.
    *
    * @param {!Array<string>} headers - Array of header titles
-   * @param {string} headers[0] - Header for x-axis.
-   * @param {string} headers[1] - Header for y-axis.
    * @param {Object[]} data - Data points to calculate clusters from.
-   * @param {number} data[][0] - Value for x-axis.
-   * @param {number} data[][1] - Value for y-axis.
    */
   render(headers, data, svgWidth, svgHeight) {
     const svg = select('#svg')

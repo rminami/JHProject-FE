@@ -2,6 +2,8 @@
 <v-container fluid id="visualization-container">
   <div id="visualization-wrapper">
     <svg id="svg" :width="width" :height="height"/>
+    <canvas id="canvas"/>
+    <div id="plotly-div"/>
   </div>
   <div id="control-wrapper">
     <v-card id="datavis-form-card">
@@ -138,11 +140,7 @@
             label="Categories"
             :items="categorical"
             v-model="form.categories"
-            multiple
             autocomplete
-            chips
-            deletable-chips
-            clearable
           />
 
           <v-select
@@ -182,56 +180,14 @@ import { select } from 'd3-selection'
 
 import PCA2D from '@/components/visualizations/PCA2D'
 import KMeans from '@/components/visualizations/KMeans'
+import Heatmap from '@/components/visualizations/Heatmap'
 import ScatterPlot from '@/components/visualizations/ScatterPlot'
-// import ScatterPlot3D from '@/components/visualizations/ScatterPlot3D'
+import ScatterPlot3D from '@/components/visualizations/ScatterPlot3D'
 
 import validatorMixin from '@/mixins/validatorMixin'
 
 export default {
   mixins: [validatorMixin],
-  components: {
-    'scatter-plot': ScatterPlot
-  },
-  data() {
-    return {
-      vistypes: [
-        'Heatmap',
-        'k-means',
-        '2D PCA',
-        'Scatter Plot',
-        '3D Scatter Plot',
-        'Histogram',
-        'Table'
-      ],
-      valid: false,
-      form: {
-        vistype: '',
-        xAxis: '',
-        yAxis: '',
-        zAxis: '',
-        cols: [],
-        categories: [],
-        tooltip: [],
-        xMin: '',
-        xMax: '',
-        yMin: '',
-        yMax: '',
-        zMin: '',
-        zMax: '',
-        k: ''
-      },
-      kValues: ['2', '3', '4', '5'],
-      rangeSwitch: false,
-      columns: [],
-      numerical: [],
-      categorical: [],
-      visHeaders: [],
-      visData: [],
-      visRendered: false,
-      width: 0,
-      height: 0
-    }
-  },
   created() {
     axios({
       baseURL: this.beEndpoint,
@@ -244,13 +200,26 @@ export default {
     .then(res => {
       this.columns = res.data.data.supported_views.tabular.columns
 
-      this.numerical = this.columns
-      .filter(col => col.type === 'number')
-      .map(col => col.header)
+      if (this.columns[0].header) {
+        this.numerical = this.columns
+        .filter(col => col.type === 'number')
+        .map(col => col.header)
 
-      this.categorical = this.columns
-      .filter(col => col.type === 'category')
-      .map(col => col.header)
+        this.categorical = this.columns
+        .filter(col => col.type === 'category')
+        .map(col => col.header)
+
+      } else {
+        /**
+         * Preserves backward compatibility with BE01
+         */
+        this.numerical = this.columns
+        this.categorical = this.columns
+        this.columns = this.columns.map(col => ({
+          header: col,
+          type: 'number'
+        }))
+      }
     })
     .catch(err => {
       console.log(err)
@@ -290,14 +259,38 @@ export default {
         }
       })
       .then(res => {
-        console.log(`Selected columns: ${selectedColumns}`)
-
         const rows = res.data.trim().split('\n')
 
         // Each entry is parsed from a string to a number.
         this.visData = rows.slice(1).map(row => row.split(',').map(f => +f))
         this.visHeaders = selectedColumns
-        // this.visData = res.data
+      })
+      .catch(err => {
+        console.log('Could not retrieve CSV data.')
+        console.log(err)
+      })
+    },
+    async get3dVisualizationData() {
+      const selectedColumns = [
+        this.form.xAxis,
+        this.form.yAxis,
+        this.form.zAxis,
+      ]
+      const selectedColumnIndices = selectedColumns.map(this.getColumnIndex)
+      await axios({
+        baseURL: this.beEndpoint,
+        url: this.$route.path,
+        params: {
+          view: 'tabular',
+          cols: selectedColumnIndices.join(',')
+        }
+      })
+      .then(res => {
+        const rows = res.data.trim().split('\n')
+
+        // Each entry is parsed from a string to a number.
+        this.visData = rows.slice(1).map(row => row.split(',').map(f => +f))
+        this.visHeaders = selectedColumns
       })
       .catch(err => {
         console.log('Could not retrieve CSV data.')
@@ -313,23 +306,69 @@ export default {
       this.beforeRender()
       if (this.form.vistype === 'Scatter Plot') {
         await this.get2dVisualizationData()
-        this.$refs.scatterPlot.renderScatterPlot(this.visHeaders, this.visData)
+        ScatterPlot.render(this.visHeaders, this.visData, this.width, this.height)
       }
       if (this.form.vistype === 'k-means') {
         await this.get2dVisualizationData()
         const k = parseInt(this.form.k, 10)
         KMeans.render(this.visHeaders, this.visData, k, this.width, this.height)
       }
+      if (this.form.vistype === 'Heatmap') {
+        await this.get2dVisualizationData()
+        Heatmap.render(this.visHeaders, this.visData, this.width, this.height)
+      }
       if (this.form.vistype === '2D PCA') {
         await this.get2dVisualizationData()
         PCA2D.render(this.visHeaders, this.visData, this.width, this.height)
       }
       if (this.form.vistype === '3D Scatter Plot') {
-        import('@/components/visualizations/ScatterPlot3D')
-        .then(ScatterPlot3D => {
-          ScatterPlot3D.render(this.visHeaders, this.visData)
-        })
+        await this.get3dVisualizationData()
+        ScatterPlot3D.render(this.visHeaders, this.visData)
+        // import('@/components/visualizations/ScatterPlot3D')
+        // .then(ScatterPlot3D => {
+        //   ScatterPlot3D.render(this.visHeaders, this.visData)
+        // })
       }
+    }
+  },
+  data() {
+    return {
+      vistypes: [
+        'Heatmap',
+        'k-means',
+        '2D PCA',
+        'Scatter Plot',
+        '3D Scatter Plot',
+        'Histogram',
+        'Table'
+      ],
+      valid: false,
+      form: {
+        vistype: '',
+        xAxis: '',
+        yAxis: '',
+        zAxis: '',
+        cols: [],
+        categories: [],
+        tooltip: [],
+        xMin: '',
+        xMax: '',
+        yMin: '',
+        yMax: '',
+        zMin: '',
+        zMax: '',
+        k: ''
+      },
+      kValues: ['2', '3', '4', '5'],
+      rangeSwitch: false,
+      columns: [],
+      numerical: [],
+      categorical: [],
+      visHeaders: [],
+      visData: [],
+      visRendered: false,
+      width: 0,
+      height: 0
     }
   }
 }

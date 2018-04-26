@@ -41,14 +41,6 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-toolbar-items>
-        <v-menu transition="slide-y-transition" bottom offset-y>
-          <v-btn flat slot="activator">{{ currentProject }}</v-btn>
-          <v-list>
-            <v-list-tile v-for="project in projects" :key="project" @click="changeProject(project)">
-              <v-list-tile-title>{{ project }}</v-list-tile-title>
-            </v-list-tile>
-          </v-list>
-        </v-menu>
       </v-toolbar-items>
     </v-toolbar>
     <v-content >

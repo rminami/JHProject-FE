@@ -34,7 +34,7 @@ const routerOptions = [
     beforeEnter: isLoggedIn
   },
   {
-    path: '/projects/:project_name/*.csv',
+    path: '/projects/:project_name/*.(csv|ods)',
     component: 'DataView',
     beforeEnter: isLoggedIn
   },

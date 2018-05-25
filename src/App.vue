@@ -69,11 +69,6 @@ export default {
           title: 'Projects',
           path: '/projects'
         },
-        // {
-        //   icon: 'folder',
-        //   title: 'Files',
-        //   path: ''
-        // },
         {
           icon: 'assignment',
           title: 'Machine Learning',
@@ -138,16 +133,6 @@ export default {
   computed: mapState({
     currentProject: s => s.currentProject
   }),
-  watch: {
-    currentProject() {
-      // this.titleLink = currentProject ? `/projects/${this.currentProject}/files` : '/projects'
-      // Updates path for files link
-      // this.items[1].path = `/projects/${this.currentProject}/files`
-
-      // Updates path for models link
-      // this.items[3].path = `/models/${this.currentProject}`
-    }
-  },
   name: 'App'
 }
 </script>

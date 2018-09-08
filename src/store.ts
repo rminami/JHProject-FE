@@ -31,23 +31,23 @@ export default new Vuex.Store({
     /**
      * States used for connectivity.
      */
-    // beEndpoint: 'http://127.0.0.1:4000',
+    beEndpoint: 'http://127.0.0.1:4000',
     // beEndpoint: 'https://51fdd8e2.ngrok.io/',
     // beEndpoint: 'https://cs3099group-be-6.host.cs.st-andrews.ac.uk', // Alex's backend
     // beEndpoint: 'https://jm354.host.cs.st-andrews.ac.uk', // Jordan's backend
     // beEndpoint: 'https://rw86.host.cs.st-andrews.ac.uk/be/hci1', // Ryan's backend
-    beEndpoint: 'https://rw86.host.cs.st-andrews.ac.uk/be/__BE02__/hci1', // Ryan's BE02 backend
+    // beEndpoint: 'https://rw86.host.cs.st-andrews.ac.uk/be/__BE02__/hci1', // Ryan's BE02 backend
     // beEndpoint: 'http://pc2-053-l.cs.st-andrews.ac.uk:8084/', // Stacey's backend
 
     // mlEndpoint: 'http://e0248507.ngrok.io/JH-Project/machine-learning-api/1.0/' // Daphne's ML
-    // mlEndpoint: 'http://127.0.0.1:7000'
+    mlEndpoint: 'http://127.0.0.1:7000'
     // mlEndpoint: 'http://c19a58be.ngrok.io/JH-Project/machine-learning-api/1.0'
     // mlEndpoint: 'http://7ad15557.ngrok.io/JH-Project/machine-learning-api/1.0' // Tom's ML, with ngrok
     // mlEndpoint: 'https://to26.host.cs.st-andrews.ac.uk/JH-Project/machine-learning-api/1.0/' // Tom's ML
     // mlEndpoint: 'https://ys51.host.cs.st-andrews.ac.uk/JH-Project/machine-learning-api/1.0/' // Roy's ML
 
     // Ryan's ML server, compatible with Daphne's protocol
-    mlEndpoint: 'https://rw86.host.cs.st-andrews.ac.uk/staging/ml/ML42/'
+    // mlEndpoint: 'https://rw86.host.cs.st-andrews.ac.uk/staging/ml/ML42/'
   },
   getters: {
     isAuthenticated: state => !!state.accessToken

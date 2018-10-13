@@ -10,11 +10,6 @@ const isLoggedIn = (to: Route, from: Route, next: Function): void => {
   next('/login')
 }
 
-// Disables login for the time being
-// const isLoggedIn = (to: Route, from: Route, next: Function): void => {
-//   next()
-// }
-
 const isNotLoggedIn = (to: Route, from: Route, next: Function): void => {
   if (!store.getters.isAuthenticated) {
     next()

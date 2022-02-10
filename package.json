@@ -11,7 +11,7 @@
     "e2e:open": "vue-cli-service e2e:open"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.20.0",
     "d3": "^5.0.0",
     "d3-array": "^1.2.1",
     "d3-axis": "^1.0.8",

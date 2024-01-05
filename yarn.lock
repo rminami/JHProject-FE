@@ -830,22 +830,13 @@
     cssnano-preset-default "^4.0.0"
     postcss "^7.0.0"
 
-"@mapbox/geojson-area@0.2.2":
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/@mapbox/geojson-area/-/geojson-area-0.2.2.tgz#18d7814aa36bf23fbbcc379f8e26a22927debf10"
-  integrity sha1-GNeBSqNr8j+7zDefjiaiKSfevxA=
+"@mapbox/geojson-rewind@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@mapbox/geojson-rewind/-/geojson-rewind-0.5.0.tgz#91f0ad56008c120caa19414b644d741249f4f560"
+  integrity sha512-73l/qJQgj/T/zO1JXVfuVvvKDgikD/7D/rHAD28S9BG1OTstgmftrmqfCx4U+zQAmtsB6HcDA3a7ymdnJZAQgg==
   dependencies:
-    wgs84 "0.0.0"
-
-"@mapbox/geojson-rewind@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@mapbox/geojson-rewind/-/geojson-rewind-0.4.0.tgz#0d3632d4c1b4a928cf10a06ade387e1c8a8c181b"
-  integrity sha512-b+1uPWBERW4Pet/969BNu61ZPDyH2ilIxBjJDFzxyS9TyszF9UrTQyYIl/G38clux3rtpAGGFSGTCSF/qR6UjA==
-  dependencies:
-    "@mapbox/geojson-area" "0.2.2"
-    concat-stream "~1.6.0"
-    minimist "1.2.0"
-    sharkdown "^0.1.0"
+    concat-stream "~2.0.0"
+    minimist "^1.2.5"
 
 "@mapbox/geojson-types@^1.0.2":
   version "1.0.2"
@@ -857,17 +848,17 @@
   resolved "https://registry.yarnpkg.com/@mapbox/jsonlint-lines-primitives/-/jsonlint-lines-primitives-2.0.2.tgz#ce56e539f83552b58d10d672ea4d6fc9adc7b234"
   integrity sha1-zlblOfg1UrWNENZy6k1vya3HsjQ=
 
-"@mapbox/mapbox-gl-supported@^1.4.0":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@mapbox/mapbox-gl-supported/-/mapbox-gl-supported-1.4.1.tgz#c0a03cf75f8b0ad7b57849d6c7e91b0aec4b640f"
-  integrity sha512-yyKza9S6z3ELKuf6w5n6VNUB0Osu6Z93RXPfMHLIlNWohu3KqxewLOq4lMXseYJ92GwkRAxd207Pr/Z98cwmvw==
+"@mapbox/mapbox-gl-supported@^1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@mapbox/mapbox-gl-supported/-/mapbox-gl-supported-1.5.0.tgz#f60b6a55a5d8e5ee908347d2ce4250b15103dc8e"
+  integrity sha512-/PT1P6DNf7vjEEiPkVIRJkvibbqWtqnyGaBz3nfRdcxclNSnSdaLU5tfAgcD7I8Yt5i+L19s406YLl1koLnLbg==
 
 "@mapbox/point-geometry@0.1.0", "@mapbox/point-geometry@^0.1.0", "@mapbox/point-geometry@~0.1.0":
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/@mapbox/point-geometry/-/point-geometry-0.1.0.tgz#8a83f9335c7860effa2eeeca254332aa0aeed8f2"
   integrity sha1-ioP5M1x4YO/6Lu7KJUMyqgru2PI=
 
-"@mapbox/tiny-sdf@^1.1.0":
+"@mapbox/tiny-sdf@^1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@mapbox/tiny-sdf/-/tiny-sdf-1.1.1.tgz#16a20c470741bfe9191deb336f46e194da4a91ff"
   integrity sha512-Ihn1nZcGIswJ5XGbgFAvVumOgWpvIjBX9jiRlIl46uQG9vJOF51ViBYHF95rEZupuyQbEmhLaDPLQlU7fUTsBg==
@@ -974,6 +965,14 @@
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/@turf/area/-/area-6.0.1.tgz#50ed63c70ef2bdb72952384f1594319d94f3b051"
   integrity sha512-Zv+3N1ep9P5JvR0YOYagLANyapGWQBh8atdeR3bKpWcigVXFsEKNUw03U/5xnh+cKzm7yozHD6MFJkqQv55y0g==
+  dependencies:
+    "@turf/helpers" "6.x"
+    "@turf/meta" "6.x"
+
+"@turf/bbox@^6.0.1":
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/@turf/bbox/-/bbox-6.0.1.tgz#b966075771475940ee1c16be2a12cf389e6e923a"
+  integrity sha512-EGgaRLettBG25Iyx7VyUINsPpVj1x3nFQFiGS3ER8KCI1MximzNLsam3eXRabqQDjyAKyAE1bJ4EZEpGvspQxw==
   dependencies:
     "@turf/helpers" "6.x"
     "@turf/meta" "6.x"
@@ -1931,11 +1930,6 @@ ansi-styles@^3.2.0, ansi-styles@^3.2.1:
   dependencies:
     color-convert "^1.9.0"
 
-ansicolors@~0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/ansicolors/-/ansicolors-0.2.1.tgz#be089599097b74a5c9c4a84a0cdbcdb62bd87aef"
-  integrity sha1-vgiVmQl7dKXJxKhKDNvNtivYeu8=
-
 any-promise@^1.0.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/any-promise/-/any-promise-1.3.0.tgz#abc6afeedcea52e809cdc0376aed3ce39635d17f"
@@ -2041,6 +2035,13 @@ array-normalize@^1.1.3:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/array-normalize/-/array-normalize-1.1.3.tgz#73fb837f4816ec19151d3c5e8d853a4590ce01bd"
   integrity sha1-c/uDf0gW7BkVHTxejYU6RZDOAb0=
+  dependencies:
+    array-bounds "^1.0.0"
+
+array-normalize@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/array-normalize/-/array-normalize-1.1.4.tgz#d75cec57383358af38efdf6a78071aa36ae4174c"
+  integrity sha512-fCp0wKFLjvSPmCn4F5Tiw4M3lpMZoHlCjfcs7nNzuj3vqQQ1/a8cgB9DXcpDSn18c+coLnaW7rqfcYCvKbyJXg==
   dependencies:
     array-bounds "^1.0.0"
 
@@ -2920,14 +2921,6 @@ canvas-fit@^1.5.0:
   dependencies:
     element-size "^1.1.1"
 
-cardinal@~0.4.2:
-  version "0.4.4"
-  resolved "https://registry.yarnpkg.com/cardinal/-/cardinal-0.4.4.tgz#ca5bb68a5b511b90fe93b9acea49bdee5c32bfe2"
-  integrity sha1-ylu2iltRG5D+k7ms6km97lwyv+I=
-  dependencies:
-    ansicolors "~0.2.1"
-    redeyed "~0.4.0"
-
 case-sensitive-paths-webpack-plugin@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/case-sensitive-paths-webpack-plugin/-/case-sensitive-paths-webpack-plugin-2.2.0.tgz#3371ef6365ef9c25fa4b81c16ace0e9c7dc58c3e"
@@ -3462,6 +3455,16 @@ concat-stream@1.6.2, concat-stream@^1.5.0, concat-stream@^1.5.2, concat-stream@^
     readable-stream "^2.2.2"
     typedarray "^0.0.6"
 
+concat-stream@~2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/concat-stream/-/concat-stream-2.0.0.tgz#414cf5af790a48c60ab9be4527d56d5e41133cb1"
+  integrity sha512-MWufYdFw53ccGjCA+Ol7XJYpAlW6/prSMzuPOTRnJGcGzuhLn4Scrz7qf6o8bROZ514ltazcIFJZevcfbo0x7A==
+  dependencies:
+    buffer-from "^1.0.0"
+    inherits "^2.0.3"
+    readable-stream "^3.0.2"
+    typedarray "^0.0.6"
+
 connect-history-api-fallback@^1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/connect-history-api-fallback/-/connect-history-api-fallback-1.6.0.tgz#8b32089359308d111115d81cad3fceab888f97bc"
@@ -3809,7 +3812,7 @@ css-what@2.1, css-what@^2.1.2:
   resolved "https://registry.yarnpkg.com/css-what/-/css-what-2.1.3.tgz#a6d7604573365fe74686c3f311c56513d88285f2"
   integrity sha512-a+EPoD+uZiNfh+5fxw2nO9QwFa6nJe2Or35fGY6Ipw1R3R4AGz1d1TEZrCegvw2YTmZ0jXirGYlzxxpYSHwpEg==
 
-csscolorparser@~1.0.2:
+csscolorparser@~1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/csscolorparser/-/csscolorparser-1.0.3.tgz#b34f391eea4da8f3e98231e2ccd8df9c041f171b"
   integrity sha1-s085HupNqPPpgjHizNjfnAQfFxs=
@@ -3936,7 +3939,7 @@ cwise-parser@^1.0.0:
     esprima "^1.0.3"
     uniq "^1.0.0"
 
-cwise@^1.0.10, cwise@^1.0.3, cwise@^1.0.4:
+cwise@^1.0.10, cwise@^1.0.4:
   version "1.0.10"
   resolved "https://registry.yarnpkg.com/cwise/-/cwise-1.0.10.tgz#24eee6072ebdfd6b8c6f5dadb17090b649b12bef"
   integrity sha1-JO7mBy69/WuMb12tsXCQtkmxK+8=
@@ -4067,7 +4070,7 @@ d3-fetch@1:
   dependencies:
     d3-dsv "1"
 
-d3-force@1, d3-force@^1.0.6:
+d3-force@1, d3-force@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/d3-force/-/d3-force-1.2.1.tgz#fd29a5d1ff181c9e7f0669e4bd72bdb0e914ec0b"
   integrity sha512-HHvehyaiUlVo5CxBJ0yF/xny4xoaxFxDnBXNvNcfW9adORGZfyNF1dj6DGLKyk4Yh3brP/1h3rnDzdIAwL08zg==
@@ -4089,15 +4092,27 @@ d3-geo@1:
   dependencies:
     d3-array "1"
 
-d3-hierarchy@1, d3-hierarchy@^1.1.8:
+d3-hierarchy@1:
   version "1.1.8"
   resolved "https://registry.yarnpkg.com/d3-hierarchy/-/d3-hierarchy-1.1.8.tgz#7a6317bd3ed24e324641b6f1e76e978836b008cc"
   integrity sha512-L+GHMSZNwTpiq4rt9GEsNcpLa4M96lXMR8M/nMG9p5hBE0jy6C+3hWtyZMenPQdwla249iJy7Nx0uKt3n+u9+w==
+
+d3-hierarchy@^1.1.9:
+  version "1.1.9"
+  resolved "https://registry.yarnpkg.com/d3-hierarchy/-/d3-hierarchy-1.1.9.tgz#2f6bee24caaea43f8dc37545fa01628559647a83"
+  integrity sha512-j8tPxlqh1srJHAtxfvOUwKNYJkQuBFdM1+JAUfq6xqH5eAqf93L7oG1NVqDa4CpFZNvnNKtCYEUC8KY9yEn9lQ==
 
 d3-interpolate@1:
   version "1.3.2"
   resolved "https://registry.yarnpkg.com/d3-interpolate/-/d3-interpolate-1.3.2.tgz#417d3ebdeb4bc4efcc8fd4361c55e4040211fd68"
   integrity sha512-NlNKGopqaz9qM1PXh9gBF1KSCVh+jSFErrSlD/4hybwoNX/gt1d8CDbDW+3i+5UOHhjC6s6nMvRxcuoMVNgL2w==
+  dependencies:
+    d3-color "1"
+
+d3-interpolate@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/d3-interpolate/-/d3-interpolate-1.4.0.tgz#526e79e2d80daa383f9e0c1c1c7dcc0f0583e987"
+  integrity sha512-V9znK0zc3jOPV4VD2zZn0sDhZU3WAE2bmlxdIwwQPPzPjvyLkd8B3JUVdS1IDUFDkWZ72c9qnv1GK2ZagTZ8EA==
   dependencies:
     d3-color "1"
 
@@ -4198,7 +4213,7 @@ d3-zoom@1, d3-zoom@^1.7.1:
     d3-selection "1"
     d3-transition "1"
 
-d3@^3.5.12:
+d3@^3.5.17:
   version "3.5.17"
   resolved "https://registry.yarnpkg.com/d3/-/d3-3.5.17.tgz#bc46748004378b21a360c9fc7cf5231790762fb8"
   integrity sha1-vEZ0gAQ3iyGjYMn8fPUjF5B2L7g=
@@ -4673,6 +4688,11 @@ earcut@^2.1.5:
   resolved "https://registry.yarnpkg.com/earcut/-/earcut-2.1.5.tgz#829280a9a3a0f5fee0529f0a47c3e4eff09b21e4"
   integrity sha512-QFWC7ywTVLtvRAJTVp8ugsuuGQ5mVqNmJ1cRYeLrSHgP3nycr2RHTJob9OtM0v8ujuoKN0NY1a93J/omeTL1PA==
 
+earcut@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/earcut/-/earcut-2.2.2.tgz#41b0bc35f63e0fe80da7cddff28511e7e2e80d11"
+  integrity sha512-eZoZPPJcUHnfRZ0PjLvx2qBordSiO8ofC3vt+qACLM95u+4DovnbYNpQtJh0DNsWj8RnxrQytD4WA8gj5cRIaQ==
+
 easy-stack@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/easy-stack/-/easy-stack-1.0.0.tgz#12c91b3085a37f0baa336e9486eac4bf94e3e788"
@@ -4875,10 +4895,10 @@ es6-map@^0.1.3:
     es6-symbol "~3.1.1"
     event-emitter "~0.3.5"
 
-es6-promise@^3.0.2:
-  version "3.3.1"
-  resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-3.3.1.tgz#a08cdde84ccdbf34d027a1451bc91d4bcd28a613"
-  integrity sha1-oIzd6EzNvzTQJ6FFG8kdS80ophM=
+es6-promise@^4.2.8:
+  version "4.2.8"
+  resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-4.2.8.tgz#4eb21594c972bc40553d276e510539143db53e0a"
+  integrity sha512-HJDGx5daxeIvxdBxvG2cb9g4tEvwIk3i8+nhX0yGrYmZUzbkdg8QbDevheDB8gd0//uPj4c1EQua8Q+MViT0/w==
 
 es6-set@~0.1.5:
   version "0.1.5"
@@ -5123,11 +5143,6 @@ eslint@^4.19.1:
     table "4.0.2"
     text-table "~0.2.0"
 
-esm@~3.0.84:
-  version "3.0.84"
-  resolved "https://registry.yarnpkg.com/esm/-/esm-3.0.84.tgz#bb108989f4673b32d4f62406869c28eed3815a63"
-  integrity sha512-SzSGoZc17S7P+12R9cg21Bdb7eybX25RnIeRZ80xZs+VZ3kdQKzqTp2k4hZJjR7p9l0186TTXSgrxzlMDBktlw==
-
 espree@^3.5.2, espree@^3.5.4:
   version "3.5.4"
   resolved "https://registry.yarnpkg.com/espree/-/espree-3.5.4.tgz#b0f447187c8a8bed944b815a660bddf5deb5d1a7"
@@ -5151,7 +5166,7 @@ esprima@^4.0.0:
   resolved "https://registry.yarnpkg.com/esprima/-/esprima-4.0.1.tgz#13b04cdb3e6c5d19df91ab6987a8695619b0aa71"
   integrity sha512-eGuFFw7Upda+g4p+QHvnW0RyTX/SVeJBDM/gCtMARO0cLuT2HcEKnTPvhjV6aGeqrCB/sbNop0Kszm0jsaWU4A==
 
-esprima@~1.0.2, esprima@~1.0.4:
+esprima@~1.0.2:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/esprima/-/esprima-1.0.4.tgz#9f557e08fc3b4d26ece9dd34f8fbf476b62585ad"
   integrity sha1-n1V+CPw7TSbs6d00+Pv0drYlha0=
@@ -5497,10 +5512,10 @@ fast-glob@^2.2.6:
     merge2 "^1.2.3"
     micromatch "^3.1.10"
 
-fast-isnumeric@^1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/fast-isnumeric/-/fast-isnumeric-1.1.3.tgz#1898ef990c32ec4467a79b8ff5ecb6e46b3ad4be"
-  integrity sha512-MdojHkfLx8pjRNZyGjOhX4HxNPaf0l5R/v5rGZ1bGXCnRPyQIUAe4I1H7QtrlUwuuiDHKdpQTjT3lmueVH2otw==
+fast-isnumeric@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/fast-isnumeric/-/fast-isnumeric-1.1.4.tgz#e165786ff471c439e9ace2b8c8e66cceb47e2ea4"
+  integrity sha512-1mM8qOr2LYz8zGaUdmiqRDiuue00Dxjgcb1NQR7TnhLVh6sQyngP9xvLo7Sl7LZpP/sk5eb+bcyWXw530NTBZw==
   dependencies:
     is-string-blank "^1.0.1"
 
@@ -5973,10 +5988,10 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
-gl-axes3d@^1.5.2:
-  version "1.5.2"
-  resolved "https://registry.yarnpkg.com/gl-axes3d/-/gl-axes3d-1.5.2.tgz#27dacb2f246cc5802b1ecddbb2caddf75e0c708a"
-  integrity sha512-47Cfh5KhUVRFtYXgufR4lGY5cyXH7SPgAlS1FlvTGK84spIYFCBMlOGUN3AdavGLGUOcXS4ml+tMM61cY6M3gg==
+gl-axes3d@^1.5.3:
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/gl-axes3d/-/gl-axes3d-1.5.3.tgz#47e3dd6c21356a59349910ec01af58e28ea69fe9"
+  integrity sha512-KRYbguKQcDQ6PcB9g1pgqB8Ly4TY1DQODpPKiDTasyWJ8PxQk0t2Q7XoQQijNqvsguITCpVVCzNb5GVtIWiVlQ==
   dependencies:
     bit-twiddle "^1.0.2"
     dup "^1.0.0"
@@ -5992,7 +6007,7 @@ gl-axes3d@^1.5.2:
     split-polygon "^1.0.0"
     vectorize-text "^3.2.1"
 
-gl-buffer@^2.0.3, gl-buffer@^2.0.6, gl-buffer@^2.0.8, gl-buffer@^2.1.1, gl-buffer@^2.1.2:
+gl-buffer@^2.1.1, gl-buffer@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/gl-buffer/-/gl-buffer-2.1.2.tgz#2db8d9c1a5527fba0cdb91289c206e882b889cdb"
   integrity sha1-LbjZwaVSf7oM25EonCBuiCuInNs=
@@ -6001,26 +6016,33 @@ gl-buffer@^2.0.3, gl-buffer@^2.0.6, gl-buffer@^2.0.8, gl-buffer@^2.1.1, gl-buffe
     ndarray-ops "^1.1.0"
     typedarray-pool "^1.0.0"
 
-gl-cone3d@^1.3.1:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/gl-cone3d/-/gl-cone3d-1.3.1.tgz#a364641de93542dffeef5234f87c7105b0867e0d"
-  integrity sha512-ftw75smsDy5nU94susUNimXo8H40BEOVjaFrjT387vP4fJqkSVpzVK7jGrPA8/nSrFCOIQ0msWNYL9MMqQ3hjg==
+gl-cone3d@^1.5.2:
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/gl-cone3d/-/gl-cone3d-1.5.2.tgz#66af5c33b7d5174034dfa3654a88e995998d92bc"
+  integrity sha512-1JNeHH4sUtUmDA4ZK7Om8/kShwb8IZVAsnxaaB7IPRJsNGciLj1sTpODrJGeMl41RNkex5kXD2SQFrzyEAR2Rw==
   dependencies:
+    colormap "^2.3.1"
+    gl-buffer "^2.1.2"
+    gl-mat4 "^1.2.0"
     gl-shader "^4.2.1"
+    gl-texture2d "^2.1.0"
+    gl-vao "^1.3.0"
     gl-vec3 "^1.1.3"
     glsl-inverse "^1.0.0"
     glsl-out-of-range "^1.0.4"
+    glsl-specular-cook-torrance "^2.0.1"
     glslify "^7.0.0"
+    ndarray "^1.0.18"
 
 gl-constants@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/gl-constants/-/gl-constants-1.0.0.tgz#597a504e364750ff50253aa35f8dea7af4a5d233"
   integrity sha1-WXpQTjZHUP9QJTqjX43qevSl0jM=
 
-gl-contour2d@^1.1.6:
-  version "1.1.6"
-  resolved "https://registry.yarnpkg.com/gl-contour2d/-/gl-contour2d-1.1.6.tgz#2c99ac96bc4d757dd027d97c386a72c33d8ce81b"
-  integrity sha512-n8nEFb4VRYooBo3+hbAgiXGELVn7PtYyVbj/hWmTNtrkxFK39Yr8LUczcT2uOOyzqq7sO3FH8+J8PSMFh+z+5A==
+gl-contour2d@^1.1.7:
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/gl-contour2d/-/gl-contour2d-1.1.7.tgz#ca330cf8449673a9ca0b3f6726c83f8d35c7a50c"
+  integrity sha512-GdebvJ9DtT3pJDpoE+eU2q+Wo9S3MijPpPz5arZbhK85w2bARmpFpVfPaDlZqWkB644W3BlH8TVyvAo1KE4Bhw==
   dependencies:
     binary-search-bounds "^2.0.4"
     cdt2d "^1.0.0"
@@ -6032,10 +6054,10 @@ gl-contour2d@^1.1.6:
     ndarray "^1.0.18"
     surface-nets "^1.0.2"
 
-gl-error3d@^1.0.15:
-  version "1.0.15"
-  resolved "https://registry.yarnpkg.com/gl-error3d/-/gl-error3d-1.0.15.tgz#770726e691f35cbf7d213e9b8531ae94e59516dc"
-  integrity sha512-7mB1zU22Vzdvq0KzzYRzE0xvCRF9nHd1+9ElUqkvt0GMH0gVIpxKk+m3hNPM/iQHmNupcXaE1cBcOQE2agN3uA==
+gl-error3d@^1.0.16:
+  version "1.0.16"
+  resolved "https://registry.yarnpkg.com/gl-error3d/-/gl-error3d-1.0.16.tgz#88a94952f5303d9cf5cb86806789a360777c5446"
+  integrity sha512-TGJewnKSp7ZnqGgG3XCF9ldrDbxZrO+OWlx6oIet4OdOM//n8xJ5isArnIV/sdPJnFbhfoLxWrW9f5fxHFRQ1A==
   dependencies:
     gl-buffer "^2.1.2"
     gl-shader "^4.2.1"
@@ -6043,7 +6065,7 @@ gl-error3d@^1.0.15:
     glsl-out-of-range "^1.0.4"
     glslify "^7.0.0"
 
-gl-fbo@^2.0.3, gl-fbo@^2.0.5:
+gl-fbo@^2.0.5:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/gl-fbo/-/gl-fbo-2.0.5.tgz#0fa75a497cf787695530691c8f04abb6fb55fa22"
   integrity sha1-D6daSXz3h2lVMGkcjwSrtvtV+iI=
@@ -6060,32 +6082,31 @@ gl-format-compiler-error@^1.0.2:
     glsl-shader-name "^1.0.0"
     sprintf-js "^1.0.3"
 
-gl-heatmap2d@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/gl-heatmap2d/-/gl-heatmap2d-1.0.5.tgz#90364ea643fe48bd555ce84143df076344dbb398"
-  integrity sha512-nki9GIh0g4OXKNIrlnAT/gy/uXxkwrFKgI+XwRcUO6nLBM1WbI2hl8EPykNFXCqsyd08HJQbXKiqaHPW7cNpJg==
+gl-heatmap2d@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/gl-heatmap2d/-/gl-heatmap2d-1.0.6.tgz#d0a2d9e8f5975534224b3b2be2ffe683f6b7e961"
+  integrity sha512-+agzSv4R5vsaH+AGYVz5RVzBK10amqAa+Bwj205F13JjNSGS91M1L9Yb8zssCv2FIjpP+1Mp73cFBYrQFfS1Jg==
   dependencies:
-    binary-search-bounds "^2.0.3"
+    binary-search-bounds "^2.0.4"
     gl-buffer "^2.1.2"
-    gl-shader "^4.0.5"
+    gl-shader "^4.2.1"
     glslify "^7.0.0"
     iota-array "^1.0.0"
     typedarray-pool "^1.1.0"
 
-gl-line3d@^1.1.11:
-  version "1.1.11"
-  resolved "https://registry.yarnpkg.com/gl-line3d/-/gl-line3d-1.1.11.tgz#53180030ddb841097d0f8ccb1d04ea8fe2759ddc"
-  integrity sha512-EitFKPEEYdn/ivFOxJ8khSi0BzNum4sXZFLq6SQq21MX5YPCYb0o+XzjpWNuU32BoXORBC78B1JTiQqnTaWhWQ==
+gl-line3d@1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/gl-line3d/-/gl-line3d-1.2.1.tgz#632fc5b931a84a315995322b271aaf497e292609"
+  integrity sha512-eeb0+RI2ZBRqMYJK85SgsRiJK7c4aiOjcnirxv0830A3jmOc99snY3AbPcV8KvKmW0Yaf3KA4e+qNCbHiTOTnA==
   dependencies:
     binary-search-bounds "^2.0.4"
-    gl-buffer "^2.0.8"
+    gl-buffer "^2.1.2"
     gl-shader "^4.2.1"
-    gl-texture2d "^2.0.2"
-    gl-vao "^1.1.3"
+    gl-texture2d "^2.1.0"
+    gl-vao "^1.3.0"
     glsl-out-of-range "^1.0.4"
-    glsl-read-float "^1.0.0"
     glslify "^7.0.0"
-    ndarray "^1.0.16"
+    ndarray "^1.0.18"
 
 gl-mat2@^1.0.0:
   version "1.0.1"
@@ -6111,71 +6132,71 @@ gl-matrix-invert@^1.0.0:
     gl-mat3 "^1.0.0"
     gl-mat4 "^1.0.0"
 
-gl-matrix@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/gl-matrix/-/gl-matrix-3.0.0.tgz#888301ac7650e148c3865370e13ec66d08a8381f"
-  integrity sha512-PD4mVH/C/Zs64kOozeFnKY8ybhgwxXXQYGWdB4h68krAHknWJgk9uKOn6z8YElh5//vs++90pb6csrTIDWnexA==
+gl-matrix@^3.2.1:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/gl-matrix/-/gl-matrix-3.3.0.tgz#232eef60b1c8b30a28cbbe75b2caf6c48fd6358b"
+  integrity sha512-COb7LDz+SXaHtl/h4LeaFcNdJdAQSDeVqjiIihSXNrkWObZLhDI4hIkZC11Aeqp7bcE72clzB0BnDXr2SmslRA==
 
-gl-mesh3d@^2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/gl-mesh3d/-/gl-mesh3d-2.1.1.tgz#b42159654909ec1478500cbc330162d1d7e23a1c"
-  integrity sha512-UuDnuSE/xX8y9/B6EtDsBKllEmKDVmuiD9lsFoQdUq4FPSvwFOo9rKH3fsjK2pfxsTigguF6GhFjHqq+sJKQWg==
+gl-mesh3d@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/gl-mesh3d/-/gl-mesh3d-2.3.1.tgz#087a93c5431df923570ca51cfc691bab0d21a6b8"
+  integrity sha512-pXECamyGgu4/9HeAQSE5OEUuLBGS1aq9V4BCsTcxsND4fNLaajEkYKUz/WY2QSYElqKdsMBVsldGiKRKwlybqA==
   dependencies:
     barycentric "^1.0.1"
     colormap "^2.3.1"
-    gl-buffer "^2.0.8"
-    gl-mat4 "^1.0.0"
+    gl-buffer "^2.1.2"
+    gl-mat4 "^1.2.0"
     gl-shader "^4.2.1"
-    gl-texture2d "^2.0.8"
-    gl-vao "^1.1.3"
+    gl-texture2d "^2.1.0"
+    gl-vao "^1.3.0"
     glsl-out-of-range "^1.0.4"
     glsl-specular-cook-torrance "^2.0.1"
     glslify "^7.0.0"
-    ndarray "^1.0.15"
-    normals "^1.0.1"
+    ndarray "^1.0.18"
+    normals "^1.1.0"
     polytope-closest-point "^1.0.0"
-    simplicial-complex-contour "^1.0.0"
+    simplicial-complex-contour "^1.0.2"
     typedarray-pool "^1.1.0"
 
-gl-plot2d@^1.4.2:
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/gl-plot2d/-/gl-plot2d-1.4.2.tgz#9da4ec97c489d6885deb835842da7888c1a2dff9"
-  integrity sha512-YLFiu/vgDCYZ/Qnz0wn0gV60IYCtImSnx0OTMsZ5fP1XZAhFztrRb2fJfnjfEVe15yZ+G+9zJ36RlWmJsNQYjQ==
+gl-plot2d@^1.4.4:
+  version "1.4.4"
+  resolved "https://registry.yarnpkg.com/gl-plot2d/-/gl-plot2d-1.4.4.tgz#2dbe40776051436baf0947f828ee2c8c303d2bdb"
+  integrity sha512-0UhKiiqeampLtydv6NMNrKEilc0Ui5oaJtvHLbLZ5u/1ttT1XjOY5Yk8LzfqozA/No4a9omxjSKnH+tvSn+rQQ==
   dependencies:
     binary-search-bounds "^2.0.4"
     gl-buffer "^2.1.2"
-    gl-select-static "^2.0.4"
+    gl-select-static "^2.0.6"
     gl-shader "^4.2.1"
     glsl-inverse "^1.0.0"
     glslify "^7.0.0"
-    text-cache "^4.2.1"
+    text-cache "^4.2.2"
 
-gl-plot3d@^2.2.2:
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/gl-plot3d/-/gl-plot3d-2.2.2.tgz#4c84b53278801d0d8a2ccb4a5c8dfd2a5134b31c"
-  integrity sha512-is8RoDVUEbUM7kJ2qjhKJlfGLECH3ML9pTCW1V7ylUdmUACmcZ4lzJrQr/NIRkHC5WcUNOp3QJKPjBND3ngZ2A==
+gl-plot3d@^2.4.5:
+  version "2.4.5"
+  resolved "https://registry.yarnpkg.com/gl-plot3d/-/gl-plot3d-2.4.5.tgz#962e99c3e55862e0ad77e99114566eadb28bf224"
+  integrity sha512-cKAqMXFRHTCFxH8r1/ACdk5hyfnA9djfiAM8zVQrqu0qLEttUu0i1fq0pr+d5m0HPuNcK8wEc4F3VjL2hrDcGQ==
   dependencies:
     "3d-view" "^2.0.0"
     a-big-triangle "^1.0.3"
-    gl-axes3d "^1.5.2"
+    gl-axes3d "^1.5.3"
     gl-fbo "^2.0.5"
     gl-mat4 "^1.2.0"
-    gl-select-static "^2.0.4"
+    gl-select-static "^2.0.6"
     gl-shader "^4.2.1"
-    gl-spikes3d "^1.0.9"
+    gl-spikes3d "^1.0.10"
     glslify "^7.0.0"
     has-passive-events "^1.0.0"
-    is-mobile "^2.1.0"
+    is-mobile "^2.2.1"
     mouse-change "^1.4.0"
     mouse-event-offset "^3.0.2"
     mouse-wheel "^1.2.0"
     ndarray "^1.0.18"
     right-now "^1.0.0"
 
-gl-pointcloud2d@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/gl-pointcloud2d/-/gl-pointcloud2d-1.0.2.tgz#4cd692bf5a021759bdea5878e94a0f9683a8a431"
-  integrity sha512-KDfuJLg1dFWNPo6eJYgwUpNdVcIdK5y29ZiYpzzP0qh3eg0bSLMq8ZkaqvPmSJsFksUryT73IRunsuxJtTJkvA==
+gl-pointcloud2d@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/gl-pointcloud2d/-/gl-pointcloud2d-1.0.3.tgz#f37e215f21ccb2e17f0604664e99fc3d6a4e611d"
+  integrity sha512-OS2e1irvJXVRpg/GziXj10xrFJm9kkRfFoB6BLUvkjCQV7ZRNNcs2CD+YSK1r0gvMwTg2T3lfLM3UPwNtz+4Xw==
   dependencies:
     gl-buffer "^2.1.2"
     gl-shader "^4.2.1"
@@ -6191,42 +6212,42 @@ gl-quat@^1.0.0:
     gl-vec3 "^1.0.3"
     gl-vec4 "^1.0.0"
 
-gl-scatter3d@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/gl-scatter3d/-/gl-scatter3d-1.2.2.tgz#9a4d4d096b5ed3537588ccf9744afd4f8591e7ed"
-  integrity sha512-oZh3WQ0bVXnpASpZmYmiEp7eUiD0oU6J4G5C9KUOhUo5d2gucvZEILAtfWmzCT3zsOltoROn4jGuuP2tlLN88Q==
+gl-scatter3d@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/gl-scatter3d/-/gl-scatter3d-1.2.3.tgz#83d63700ec2fe4e95b3d1cd613e86de9a6b5f603"
+  integrity sha512-nXqPlT1w5Qt51dTksj+DUqrZqwWAEWg0PocsKcoDnVNv0X8sGA+LBZ0Y+zrA+KNXUL0PPCX9WR9cF2uJAZl1Sw==
   dependencies:
-    gl-buffer "^2.0.6"
-    gl-mat4 "^1.0.0"
-    gl-shader "^4.2.0"
-    gl-vao "^1.1.2"
+    gl-buffer "^2.1.2"
+    gl-mat4 "^1.2.0"
+    gl-shader "^4.2.1"
+    gl-vao "^1.3.0"
     glsl-out-of-range "^1.0.4"
     glslify "^7.0.0"
     is-string-blank "^1.0.1"
-    typedarray-pool "^1.0.2"
+    typedarray-pool "^1.1.0"
     vectorize-text "^3.2.1"
 
-gl-select-box@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/gl-select-box/-/gl-select-box-1.0.3.tgz#8c47ac6f18fa583aa32d9dfe023ac1d588fd9d67"
-  integrity sha512-sQb18g1aZ6PJAsvsC8nNYhuhc2TYXNbzVbI0bP9AH9770NjrDnd7TC8HHcfu8nJXGPG69HjqR6EzS+QSqiXPSA==
+gl-select-box@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/gl-select-box/-/gl-select-box-1.0.4.tgz#47c11caa2b84f81e8bbfde08c6e39eeebb53d3d8"
+  integrity sha512-mKsCnglraSKyBbQiGq0Ila0WF+m6Tr+EWT2yfaMn/Sh9aMHq5Wt0F/l6Cf/Ed3CdERq5jHWAY5yxLviZteYu2w==
   dependencies:
     gl-buffer "^2.1.2"
-    gl-shader "^4.0.5"
+    gl-shader "^4.2.1"
     glslify "^7.0.0"
 
-gl-select-static@^2.0.4:
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/gl-select-static/-/gl-select-static-2.0.4.tgz#c6a12ca956f898bf2f8b9eece57c89bdc1bce6a4"
-  integrity sha512-4Kqx5VjeT8nmV+j6fry3UBFNL2B7ktQU4o508QGVPKWCILlV44rTDq3mnBFThup8rMIH9kJQx6xWsg9jTmfeMw==
+gl-select-static@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/gl-select-static/-/gl-select-static-2.0.6.tgz#43194a348613a693d4097e5ab9ceb0685003f036"
+  integrity sha512-p4DmBG1DMo/47/fV3oqPcU6uTqHy0eI1vATH1fm8OVDqlzWnLv3786tdEunZWG6Br7DUdH6NgWhuy4gAlt+TAQ==
   dependencies:
     bit-twiddle "^1.0.2"
-    cwise "^1.0.3"
-    gl-fbo "^2.0.3"
-    ndarray "^1.0.15"
+    cwise "^1.0.10"
+    gl-fbo "^2.0.5"
+    ndarray "^1.0.18"
     typedarray-pool "^1.1.0"
 
-gl-shader@^4.0.5, gl-shader@^4.2.0, gl-shader@^4.2.1:
+gl-shader@^4.2.1:
   version "4.2.1"
   resolved "https://registry.yarnpkg.com/gl-shader/-/gl-shader-4.2.1.tgz#bc9b808e9293c51b668e88de615b0c113708dc2f"
   integrity sha1-vJuAjpKTxRtmjojeYVsMETcI3C8=
@@ -6239,10 +6260,10 @@ gl-spikes2d@^1.0.2:
   resolved "https://registry.yarnpkg.com/gl-spikes2d/-/gl-spikes2d-1.0.2.tgz#ef8dbcff6c7451dec2b751d7a3c593d09ad5457f"
   integrity sha512-QVeOZsi9nQuJJl7NB3132CCv5KA10BWxAY2QgJNsKqbLsG53B/TrGJpjIAohnJftdZ4fT6b3ZojWgeaXk8bOOA==
 
-gl-spikes3d@^1.0.9:
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/gl-spikes3d/-/gl-spikes3d-1.0.9.tgz#9c3967ec3c8bcbe2e376ebf3357c7c26990fe736"
-  integrity sha512-laMxydgGdnE8kvd1YD9cNWrx0uSmrPj1Oi02cHhnxWIklut97w3F7mZKnmLMEyUkxpRLkEeQ7YkYy7Y+aUEblw==
+gl-spikes3d@^1.0.10:
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/gl-spikes3d/-/gl-spikes3d-1.0.10.tgz#e3b2b677a6f51750f23c064447af4f093da79305"
+  integrity sha512-lT3xroowOFxMvlhT5Mof76B2TE02l5zt/NIWljhczV2FFHgIVhA4jMrd5dIv1so1RXMBDJIKu0uJI3QKliDVLg==
   dependencies:
     gl-buffer "^2.1.2"
     gl-shader "^4.2.1"
@@ -6256,40 +6277,43 @@ gl-state@^1.0.0:
   dependencies:
     uniq "^1.0.0"
 
-gl-streamtube3d@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/gl-streamtube3d/-/gl-streamtube3d-1.2.1.tgz#042ef09a766ab2ffc86ef34a6d4d50f7388ef110"
-  integrity sha512-1aj1noU+jJirl5IwFXk29eDx1nO7PQk4r0UZK3My56J3vDSfRR+IbMq2YBhBkjfCWsKY1nc9ESD8t9EcqZY91w==
+gl-streamtube3d@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/gl-streamtube3d/-/gl-streamtube3d-1.4.1.tgz#bd2b725e00aa96989ce34b06ebf66a76f93e35ae"
+  integrity sha512-rH02v00kgwgdpkXVo7KsSoPp38bIAYR9TE1iONjcQ4cQAlDhrGRauqT/P5sUaOIzs17A2DxWGcXM+EpNQs9pUA==
   dependencies:
-    gl-vec3 "^1.0.0"
+    gl-cone3d "^1.5.2"
+    gl-vec3 "^1.1.3"
+    gl-vec4 "^1.0.1"
     glsl-inverse "^1.0.0"
     glsl-out-of-range "^1.0.4"
+    glsl-specular-cook-torrance "^2.0.1"
     glslify "^7.0.0"
 
-gl-surface3d@^1.4.6:
-  version "1.4.6"
-  resolved "https://registry.yarnpkg.com/gl-surface3d/-/gl-surface3d-1.4.6.tgz#a426c704526b558a3fcfa878402b45a6af1ff128"
-  integrity sha512-aItWQTNUX3JJc6i2FbXX82ljPZgDV3kXzkzANcBGoAnKwRpJw12WcMKKTL4sOCs9BW+3sx6BhR0P5+2zh5Scfw==
+gl-surface3d@^1.5.2:
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/gl-surface3d/-/gl-surface3d-1.5.2.tgz#a283b98d3473fca4e8552f0f6ac40a6f0dc88b00"
+  integrity sha512-rWSQwEQDkB0T5CDEDFJwJc4VgwwJaAyFRSJ92NJlrTSwDlsEsWdzG9+APx6FWJMwkOpIoZGWqv+csswK2kMMLQ==
   dependencies:
     binary-search-bounds "^2.0.4"
     bit-twiddle "^1.0.2"
     colormap "^2.3.1"
     dup "^1.0.0"
-    gl-buffer "^2.0.3"
-    gl-mat4 "^1.0.0"
-    gl-shader "^4.2.0"
-    gl-texture2d "^2.0.0"
-    gl-vao "^1.1.1"
+    gl-buffer "^2.1.2"
+    gl-mat4 "^1.2.0"
+    gl-shader "^4.2.1"
+    gl-texture2d "^2.1.0"
+    gl-vao "^1.3.0"
     glsl-out-of-range "^1.0.4"
     glsl-specular-beckmann "^1.1.2"
     glslify "^7.0.0"
-    ndarray "^1.0.16"
+    ndarray "^1.0.18"
     ndarray-gradient "^1.0.0"
-    ndarray-ops "^1.2.1"
-    ndarray-pack "^1.0.1"
-    ndarray-scratch "^1.1.1"
+    ndarray-ops "^1.2.2"
+    ndarray-pack "^1.2.1"
+    ndarray-scratch "^1.2.0"
     surface-nets "^1.0.2"
-    typedarray-pool "^1.0.0"
+    typedarray-pool "^1.1.0"
 
 gl-text@^1.1.8:
   version "1.1.8"
@@ -6314,7 +6338,7 @@ gl-text@^1.1.8:
     to-px "^1.0.1"
     typedarray-pool "^1.1.0"
 
-gl-texture2d@^2.0.0, gl-texture2d@^2.0.2, gl-texture2d@^2.0.8:
+gl-texture2d@^2.0.0, gl-texture2d@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/gl-texture2d/-/gl-texture2d-2.1.0.tgz#ff6824e7e7c31a8ba6fdcdbe9e5c695d7e2187c7"
   integrity sha1-/2gk5+fDGoum/c2+nlxpXX4hh8c=
@@ -6336,12 +6360,12 @@ gl-util@^3.1.2:
     pick-by-alias "^1.2.0"
     weak-map "^1.0.5"
 
-gl-vao@^1.1.1, gl-vao@^1.1.2, gl-vao@^1.1.3, gl-vao@^1.2.0, gl-vao@^1.3.0:
+gl-vao@^1.2.0, gl-vao@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/gl-vao/-/gl-vao-1.3.0.tgz#e9e92aa95588cab9d5c2f04b693440c3df691923"
   integrity sha1-6ekqqVWIyrnVwvBLaTRAw99pGSM=
 
-gl-vec3@^1.0.0, gl-vec3@^1.0.2, gl-vec3@^1.0.3, gl-vec3@^1.1.3:
+gl-vec3@^1.0.2, gl-vec3@^1.0.3, gl-vec3@^1.1.3:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/gl-vec3/-/gl-vec3-1.1.3.tgz#a47c62f918774a06cbed1b65bcd0288ecbb03826"
   integrity sha512-jduKUqT0SGH02l8Yl+mV1yVsDfYgQAJyXGxkJQGyxPLHRiW25DwVIRPt6uvhrEMHftJfqhqKthRcyZqNEl9Xdw==
@@ -6506,11 +6530,6 @@ glsl-out-of-range@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/glsl-out-of-range/-/glsl-out-of-range-1.0.4.tgz#3d73d083bc9ecc73efd45dfc7063c29e92c9c873"
   integrity sha512-fCcDu2LCQ39VBvfe1FbhuazXEf0CqMZI9OYXrYlL6uUARG48CTAbL04+tZBtVM0zo1Ljx4OLu2AxNquq++lxWQ==
-
-glsl-read-float@^1.0.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/glsl-read-float/-/glsl-read-float-1.1.0.tgz#dfb088b0162dcfcc56fc4eddd2f86e18cac32f26"
-  integrity sha1-37CIsBYtz8xW/E7d0vhuGMrDLyY=
 
 glsl-resolve@0.0.1:
   version "0.0.1"
@@ -7496,10 +7515,10 @@ is-installed-globally@0.1.0:
     global-dirs "^0.1.0"
     is-path-inside "^1.0.0"
 
-is-mobile@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/is-mobile/-/is-mobile-2.1.0.tgz#4c0cab72f3358dd9986007389b30729fae80da0b"
-  integrity sha512-M5OhlZwh+aTlmRUvDg0Wq3uWVNa+w4DyZ2SjbrS+BhSLu9Po+JXHendC305ZEu+Hh7lywb19Zu4kYXu3L1Oo8A==
+is-mobile@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/is-mobile/-/is-mobile-2.2.1.tgz#10f2320012c410cc285feecb13406bd586f1b2f8"
+  integrity sha512-6zELsfVFr326eq2CI53yvqq6YBanOxKBybwDT+MbMS2laBnK6Ez8m5XHSuTQQbnKRfpDzCod1CMWW5q3wZYMvA==
 
 is-number@^2.1.0:
   version "2.1.0"
@@ -8234,34 +8253,33 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
-mapbox-gl@1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/mapbox-gl/-/mapbox-gl-1.1.1.tgz#b8e8e1dfa34edd92a7b834887831dbd1761550b8"
-  integrity sha512-i57kASg8J/U/lJzBePyqTP2ImKUcx8FkHyCjb3ssWYaBBXHUeZ4STGXXfU9u1AQU9170PjDIJLubUUB1vLLSBQ==
+mapbox-gl@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/mapbox-gl/-/mapbox-gl-1.10.0.tgz#c33e74d1f328e820e245ff8ed7b5dbbbc4be204f"
+  integrity sha512-SrJXcR9s5yEsPuW2kKKumA1KqYW9RrL8j7ZcIh6glRQ/x3lwNMfwz/UEJAJcVNgeX+fiwzuBoDIdeGB/vSkZLQ==
   dependencies:
-    "@mapbox/geojson-rewind" "^0.4.0"
+    "@mapbox/geojson-rewind" "^0.5.0"
     "@mapbox/geojson-types" "^1.0.2"
     "@mapbox/jsonlint-lines-primitives" "^2.0.2"
-    "@mapbox/mapbox-gl-supported" "^1.4.0"
+    "@mapbox/mapbox-gl-supported" "^1.5.0"
     "@mapbox/point-geometry" "^0.1.0"
-    "@mapbox/tiny-sdf" "^1.1.0"
+    "@mapbox/tiny-sdf" "^1.1.1"
     "@mapbox/unitbezier" "^0.0.0"
     "@mapbox/vector-tile" "^1.3.1"
     "@mapbox/whoots-js" "^3.1.0"
-    csscolorparser "~1.0.2"
-    earcut "^2.1.5"
-    esm "~3.0.84"
+    csscolorparser "~1.0.3"
+    earcut "^2.2.2"
     geojson-vt "^3.2.1"
-    gl-matrix "^3.0.0"
+    gl-matrix "^3.2.1"
     grid-index "^1.1.0"
-    minimist "0.0.8"
+    minimist "^1.2.5"
     murmurhash-js "^1.0.0"
-    pbf "^3.0.5"
+    pbf "^3.2.1"
     potpack "^1.0.1"
     quickselect "^2.0.0"
     rw "^1.3.3"
-    supercluster "^6.0.1"
-    tinyqueue "^2.0.0"
+    supercluster "^7.0.0"
+    tinyqueue "^2.0.3"
     vt-pbf "^3.1.1"
 
 marching-simplex-table@^1.0.0:
@@ -8509,11 +8527,6 @@ minimatch@3.0.4, minimatch@^3.0.2, minimatch@^3.0.4:
   dependencies:
     brace-expansion "^1.1.7"
 
-minimist@0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/minimist/-/minimist-0.0.5.tgz#d7aa327bcecf518f9106ac6b8f003fa3bcea8566"
-  integrity sha1-16oye87PUY+RBqxrjwA/o7zqhWY=
-
 minimist@0.0.8:
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-0.0.8.tgz#857fcabfc3397d2625b8228262e86aa7a011b05d"
@@ -8523,6 +8536,11 @@ minimist@1.2.0, minimist@^1.2.0, minimist@~1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.0.tgz#a35008b20f41383eec1fb914f4cd5df79a264284"
   integrity sha1-o1AIsg9BOD7sH7kU9M1d95omQoQ=
+
+minimist@^1.2.5:
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.5.tgz#67d66014b66a6a8aaa0c083c5fd58df4e4e97602"
+  integrity sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw==
 
 minipass@^2.2.1, minipass@^2.3.5:
   version "2.3.5"
@@ -8806,7 +8824,7 @@ ndarray-ops@^1.1.0, ndarray-ops@^1.2.1, ndarray-ops@^1.2.2:
   dependencies:
     cwise-compiler "^1.0.0"
 
-ndarray-pack@^1.0.1:
+ndarray-pack@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/ndarray-pack/-/ndarray-pack-1.2.1.tgz#8caebeaaa24d5ecf70ff86020637977da8ee585a"
   integrity sha1-jK6+qqJNXs9w/4YCBjeXfajuWFo=
@@ -8814,7 +8832,7 @@ ndarray-pack@^1.0.1:
     cwise-compiler "^1.1.2"
     ndarray "^1.0.13"
 
-ndarray-scratch@^1.1.1:
+ndarray-scratch@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/ndarray-scratch/-/ndarray-scratch-1.2.0.tgz#6304636d62eba93db4727ac13c693341dba50e01"
   integrity sha1-YwRjbWLrqT20cnrBPGkzQdulDgE=
@@ -8838,7 +8856,7 @@ ndarray-warp@^1.0.0:
     cwise "^1.0.4"
     ndarray-linear-interpolate "^1.0.0"
 
-ndarray@^1.0.11, ndarray@^1.0.13, ndarray@^1.0.14, ndarray@^1.0.15, ndarray@^1.0.16, ndarray@^1.0.18:
+ndarray@^1.0.11, ndarray@^1.0.13, ndarray@^1.0.14, ndarray@^1.0.15, ndarray@^1.0.18:
   version "1.0.18"
   resolved "https://registry.yarnpkg.com/ndarray/-/ndarray-1.0.18.tgz#b60d3a73224ec555d0faa79711e502448fd3f793"
   integrity sha1-tg06cyJOxVXQ+qeXEeUCRI/T95M=
@@ -9026,7 +9044,7 @@ normalize-url@^3.0.0:
   resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-3.3.0.tgz#b2e1c4dc4f7c6d57743df733a4f5978d18650559"
   integrity sha512-U+JJi7duF1o+u2pynbp2zXDW2/PADgC30f0GsHZtRh+HOcXHnw137TrNlyxxRvWW5fjKd3bcLHPxofWuCjaeZg==
 
-normals@^1.0.1:
+normals@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/normals/-/normals-1.1.0.tgz#325b595ed34afe467a6c55a14fd9085787ff59c0"
   integrity sha1-MltZXtNK/kZ6bFWhT9kIV4f/WcA=
@@ -9628,6 +9646,14 @@ pbf@^3.0.5:
     ieee754 "^1.1.12"
     resolve-protobuf-schema "^2.1.0"
 
+pbf@^3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/pbf/-/pbf-3.2.1.tgz#b4c1b9e72af966cd82c6531691115cc0409ffe2a"
+  integrity sha512-ClrV7pNOn7rtmoQVF4TS1vyU0WhYRnP92fzbfF75jAIwpnzdJXf8iTd4CMEqO4yUenH6NDqLiwjqlh6QgZzgLQ==
+  dependencies:
+    ieee754 "^1.1.12"
+    resolve-protobuf-schema "^2.1.0"
+
 pbkdf2@^3.0.3:
   version "3.0.17"
   resolved "https://registry.yarnpkg.com/pbkdf2/-/pbkdf2-3.0.17.tgz#976c206530617b14ebb32114239f7b09336e93a6"
@@ -9738,47 +9764,50 @@ planar-graph-to-polyline@^1.0.0:
     two-product "^1.0.0"
     uniq "^1.0.0"
 
-plotly.js@^1.36.1:
-  version "1.49.2"
-  resolved "https://registry.yarnpkg.com/plotly.js/-/plotly.js-1.49.2.tgz#e49e6f96da5f58af820b63f3a18bdb03ca3e4ada"
-  integrity sha512-TNknrrHMyJov8cqIxTIcCwyvPdCDFB06opzMHjD25BzlaimJTEkTdPveC+ndr4TNnYHPXakHGKzDRzvtxKDsMQ==
+plotly.js@^1.54.0:
+  version "1.54.0"
+  resolved "https://registry.yarnpkg.com/plotly.js/-/plotly.js-1.54.0.tgz#91929a48bc1700ada47600e61076732be3f36f74"
+  integrity sha512-WJQPkzPhOJRAowS7fd5HghxEy1TSo/F8KJiTMhC0rFTWmxQdvHSnexHJIzp/S9Y5r4CLzSX3vw+gEAhMqHomXw==
   dependencies:
     "@plotly/d3-sankey" "0.7.2"
     "@plotly/d3-sankey-circular" "0.33.1"
     "@turf/area" "^6.0.1"
+    "@turf/bbox" "^6.0.1"
     "@turf/centroid" "^6.0.2"
     alpha-shape "^1.0.0"
     canvas-fit "^1.5.0"
     color-normalize "^1.5.0"
+    color-rgba "^2.1.1"
     convex-hull "^1.0.3"
     country-regex "^1.1.0"
-    d3 "^3.5.12"
-    d3-force "^1.0.6"
-    d3-hierarchy "^1.1.8"
-    d3-interpolate "1"
+    d3 "^3.5.17"
+    d3-force "^1.2.1"
+    d3-hierarchy "^1.1.9"
+    d3-interpolate "^1.4.0"
     delaunay-triangulate "^1.1.6"
-    es6-promise "^3.0.2"
-    fast-isnumeric "^1.1.3"
-    gl-cone3d "^1.3.1"
-    gl-contour2d "^1.1.6"
-    gl-error3d "^1.0.15"
-    gl-heatmap2d "^1.0.5"
-    gl-line3d "^1.1.11"
+    es6-promise "^4.2.8"
+    fast-isnumeric "^1.1.4"
+    gl-cone3d "^1.5.2"
+    gl-contour2d "^1.1.7"
+    gl-error3d "^1.0.16"
+    gl-heatmap2d "^1.0.6"
+    gl-line3d "1.2.1"
     gl-mat4 "^1.2.0"
-    gl-mesh3d "^2.1.1"
-    gl-plot2d "^1.4.2"
-    gl-plot3d "^2.2.2"
-    gl-pointcloud2d "^1.0.2"
-    gl-scatter3d "^1.2.2"
-    gl-select-box "^1.0.3"
+    gl-mesh3d "^2.3.1"
+    gl-plot2d "^1.4.4"
+    gl-plot3d "^2.4.5"
+    gl-pointcloud2d "^1.0.3"
+    gl-scatter3d "^1.2.3"
+    gl-select-box "^1.0.4"
     gl-spikes2d "^1.0.2"
-    gl-streamtube3d "^1.2.1"
-    gl-surface3d "^1.4.6"
+    gl-streamtube3d "^1.4.1"
+    gl-surface3d "^1.5.2"
     gl-text "^1.1.8"
     glslify "^7.0.0"
     has-hover "^1.0.1"
     has-passive-events "^1.0.0"
-    mapbox-gl "1.1.1"
+    is-mobile "^2.2.1"
+    mapbox-gl "1.10.0"
     matrix-camera-controller "^2.1.3"
     mouse-change "^1.4.0"
     mouse-event-offset "^3.0.2"
@@ -9786,13 +9815,14 @@ plotly.js@^1.36.1:
     ndarray "^1.0.18"
     ndarray-fill "^1.0.2"
     ndarray-homography "^1.0.0"
-    point-cluster "^3.1.4"
+    parse-svg-path "^0.1.2"
+    point-cluster "^3.1.8"
     polybooljs "^1.2.0"
     regl "^1.3.11"
     regl-error2d "^2.0.8"
-    regl-line2d "^3.0.14"
-    regl-scatter2d "^3.1.5"
-    regl-splom "^1.0.7"
+    regl-line2d "^3.0.15"
+    regl-scatter2d "^3.1.8"
+    regl-splom "^1.0.8"
     right-now "^1.0.0"
     robust-orientation "^1.1.3"
     sane-topojson "^4.0.0"
@@ -9800,7 +9830,7 @@ plotly.js@^1.36.1:
     superscript-text "^1.0.0"
     svg-path-sdf "^1.1.3"
     tinycolor2 "^1.4.1"
-    topojson-client "^2.1.0"
+    topojson-client "^3.1.0"
     webgl-context "^2.2.0"
     world-calendars "^1.0.3"
 
@@ -9814,7 +9844,7 @@ pn@^1.1.0:
   resolved "https://registry.yarnpkg.com/pn/-/pn-1.1.0.tgz#e2f4cef0e219f463c179ab37463e4e1ecdccbafb"
   integrity sha512-2qHaIQr2VLRFoxe2nASzsV6ef4yOOH+Fi9FBOVH6cqeSgUnoyySPZkxzLuzd+RYOQTRpROA0ztTMqxROKSb/nA==
 
-point-cluster@^3.1.4, point-cluster@^3.1.5:
+point-cluster@^3.1.5:
   version "3.1.5"
   resolved "https://registry.yarnpkg.com/point-cluster/-/point-cluster-3.1.5.tgz#03a059d4491c4e7d0228e9598fc1008bd3627f84"
   integrity sha512-KpVtB1mXDlo6yzv80MA6oUq+1519CMeeUd4PPluM4ZlAQgHi/qeBrLY2G53RLy41kas7XvKol0FM98MSrjNH7Q==
@@ -9829,6 +9859,24 @@ point-cluster@^3.1.4, point-cluster@^3.1.5:
     is-obj "^1.0.1"
     math-log2 "^1.0.1"
     parse-rect "^1.2.0"
+
+point-cluster@^3.1.8:
+  version "3.1.8"
+  resolved "https://registry.yarnpkg.com/point-cluster/-/point-cluster-3.1.8.tgz#a63625fd8964f2a5b446025a1acf8bcac42500c0"
+  integrity sha512-7klIr45dpMeZuqjIK9+qBg3m2IhyZJNJkdqjJFw0Olq75FM8ojrTMjClVUrMjNYRVqtwztxCHH71Fyjhg+YwyQ==
+  dependencies:
+    array-bounds "^1.0.1"
+    array-normalize "^1.1.4"
+    binary-search-bounds "^2.0.4"
+    bubleify "^1.1.0"
+    clamp "^1.0.1"
+    defined "^1.0.0"
+    dtype "^2.0.0"
+    flatten-vertex-data "^1.0.2"
+    is-obj "^1.0.1"
+    math-log2 "^1.0.1"
+    parse-rect "^1.2.0"
+    pick-by-alias "^1.2.0"
 
 point-in-big-polygon@^2.0.0:
   version "2.0.0"
@@ -10553,6 +10601,15 @@ read-pkg@^5.0.0:
     isarray "0.0.1"
     string_decoder "~0.10.x"
 
+readable-stream@^3.0.2:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-3.6.0.tgz#337bbda3adc0706bd3e024426a286d4b4b2c9198"
+  integrity sha512-BViHy7LKeTz4oNnkcLJ+lVSL6vpiFeX6/d3oSH8zCW7UxP2onchk+vTGB143xuFjHS3deTgkKoXXymXqymiIdA==
+  dependencies:
+    inherits "^2.0.3"
+    string_decoder "^1.1.1"
+    util-deprecate "^1.0.1"
+
 readable-stream@^3.0.6, readable-stream@^3.1.1:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-3.4.0.tgz#a51c26754658e0a3c21dbf59163bd45ba6f447fc"
@@ -10580,13 +10637,6 @@ readdirp@^2.0.0, readdirp@^2.2.1:
     graceful-fs "^4.1.11"
     micromatch "^3.1.10"
     readable-stream "^2.0.2"
-
-redeyed@~0.4.0:
-  version "0.4.4"
-  resolved "https://registry.yarnpkg.com/redeyed/-/redeyed-0.4.4.tgz#37e990a6f2b21b2a11c2e6a48fd4135698cba97f"
-  integrity sha1-N+mQpvKyGyoRwuakj9QTVpjLqX8=
-  dependencies:
-    esprima "~1.0.4"
 
 reduce-simplicial-complex@^1.0.0:
   version "1.0.0"
@@ -10725,13 +10775,13 @@ regl-error2d@^2.0.8:
     to-float32 "^1.0.1"
     update-diff "^1.1.0"
 
-regl-line2d@^3.0.14:
-  version "3.0.14"
-  resolved "https://registry.yarnpkg.com/regl-line2d/-/regl-line2d-3.0.14.tgz#3815b03402b8b13bb8d2ada147cafd9a9399bf16"
-  integrity sha512-F5Ru1Bugi6Xkk2JJ4EuzAybuL99CtnAr6VIrJVJdsaFzWmI9GfPFtwbNZROeOrXXX7yElyc0HQsQDJaNpSeWmg==
+regl-line2d@^3.0.15:
+  version "3.0.15"
+  resolved "https://registry.yarnpkg.com/regl-line2d/-/regl-line2d-3.0.15.tgz#5baf2a0ed5024cec2ec038c6ada601c98ac579e3"
+  integrity sha512-RuQbg9iZ6MyuInG8izF6zjQ/2g4qL6sg1egiuFalWzaGSvuve/IWBsIcqKTlwpiEsRt9b4cHu9NYs2fLt1gYJw==
   dependencies:
     array-bounds "^1.0.1"
-    array-normalize "^1.1.3"
+    array-normalize "^1.1.4"
     bubleify "^1.2.0"
     color-normalize "^1.5.0"
     earcut "^2.1.5"
@@ -10743,7 +10793,7 @@ regl-line2d@^3.0.14:
     pick-by-alias "^1.2.0"
     to-float32 "^1.0.1"
 
-regl-scatter2d@^3.1.2, regl-scatter2d@^3.1.5:
+regl-scatter2d@^3.1.2:
   version "3.1.5"
   resolved "https://registry.yarnpkg.com/regl-scatter2d/-/regl-scatter2d-3.1.5.tgz#4d45d83ca5ab1d3d24322169a884688f21cdbb22"
   integrity sha512-VCmASgrNIQXzDxmTLpLA4MAlbi+kdjKcVR9XugmFCTnWY7zytIhuMyIoPxinpaejGXzsC0Lq5oKvOnWFMQFGng==
@@ -10765,10 +10815,32 @@ regl-scatter2d@^3.1.2, regl-scatter2d@^3.1.5:
     to-float32 "^1.0.1"
     update-diff "^1.1.0"
 
-regl-splom@^1.0.7:
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/regl-splom/-/regl-splom-1.0.7.tgz#bd0e55781b244ce73bd8cb42dcd517f5e0fb918d"
-  integrity sha512-17ltp68/pCMFOU2gSIIFRTRMmsCRpDFzPUF9jkZhT8IDimI83jkU/2nP4vAHTIfd+HZ/Ip+eFrNx2aKV9FMDwQ==
+regl-scatter2d@^3.1.8:
+  version "3.1.8"
+  resolved "https://registry.yarnpkg.com/regl-scatter2d/-/regl-scatter2d-3.1.8.tgz#5fdf77f9cee7e71497d038dc1b654dc4340b6bfb"
+  integrity sha512-Z9MYAUx9t8e3MsiHBbJAEstbIqauXxzcL9DmuKXQuRWfCMF2DBytYJtE0FpbQU6639wEMAJ54SEIlISWF8sQ2g==
+  dependencies:
+    array-range "^1.0.1"
+    array-rearrange "^2.2.2"
+    clamp "^1.0.1"
+    color-id "^1.1.0"
+    color-normalize "1.5.0"
+    color-rgba "^2.1.1"
+    flatten-vertex-data "^1.0.2"
+    glslify "^7.0.0"
+    image-palette "^2.1.0"
+    is-iexplorer "^1.0.0"
+    object-assign "^4.1.1"
+    parse-rect "^1.2.0"
+    pick-by-alias "^1.2.0"
+    point-cluster "^3.1.8"
+    to-float32 "^1.0.1"
+    update-diff "^1.1.0"
+
+regl-splom@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/regl-splom/-/regl-splom-1.0.8.tgz#05f165a6f0b8afc6b6b97fafa775282d44387db3"
+  integrity sha512-4GQTgcArCbGLsXhgalWVBxeW7OXllnu+Gvil/4SbQQmtiqLCl+xgF79pISKY9mLXTlobxiX7cVKdjGjp25559A==
   dependencies:
     array-bounds "^1.0.1"
     array-range "^1.0.1"
@@ -10779,7 +10851,7 @@ regl-splom@^1.0.7:
     left-pad "^1.3.0"
     parse-rect "^1.2.0"
     pick-by-alias "^1.2.0"
-    point-cluster "^3.1.4"
+    point-cluster "^3.1.8"
     raf "^3.4.1"
     regl-scatter2d "^3.1.2"
 
@@ -11358,15 +11430,6 @@ shallow-copy@0.0.1, shallow-copy@~0.0.1:
   resolved "https://registry.yarnpkg.com/shallow-copy/-/shallow-copy-0.0.1.tgz#415f42702d73d810330292cc5ee86eae1a11a170"
   integrity sha1-QV9CcC1z2BAzApLMXuhurhoRoXA=
 
-sharkdown@^0.1.0:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/sharkdown/-/sharkdown-0.1.1.tgz#64484bd0f08f347f8319e9ff947a670f6b48b1b2"
-  integrity sha512-exwooSpmo5s45lrexgz6Q0rFQM574wYIX3iDZ7RLLqOb7IAoQZu9nxlZODU972g19sR69OIpKP2cpHTzU+PHIg==
-  dependencies:
-    cardinal "~0.4.2"
-    minimist "0.0.5"
-    split "~0.2.10"
-
 shebang-command@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/shebang-command/-/shebang-command-1.2.0.tgz#44aac65b695b03398968c39f363fee5deafdf1ea"
@@ -11414,7 +11477,7 @@ simplicial-complex-boundary@^1.0.0:
     boundary-cells "^2.0.0"
     reduce-simplicial-complex "^1.0.0"
 
-simplicial-complex-contour@^1.0.0:
+simplicial-complex-contour@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/simplicial-complex-contour/-/simplicial-complex-contour-1.0.2.tgz#890aacac284365340110545cf2629a26e04bf9d1"
   integrity sha1-iQqsrChDZTQBEFRc8mKaJuBL+dE=
@@ -11670,13 +11733,6 @@ split-string@^3.0.1, split-string@^3.0.2:
   integrity sha512-NzNVhJDYpwceVVii8/Hu6DKfD2G+NrQHlS/V/qgv763EYudVwEcMQNxd2lh+0VrUByXN/oJkl5grOhYWvQUYiw==
   dependencies:
     extend-shallow "^3.0.0"
-
-split@~0.2.10:
-  version "0.2.10"
-  resolved "https://registry.yarnpkg.com/split/-/split-0.2.10.tgz#67097c601d697ce1368f418f06cd201cf0521a57"
-  integrity sha1-Zwl8YB1pfOE2j0GPBs0gHPBSGlc=
-  dependencies:
-    through "2"
 
 sprintf-js@^1.0.3:
   version "1.1.2"
@@ -11996,10 +12052,10 @@ stylus@^0.54.5:
     sax "0.5.x"
     source-map "0.1.x"
 
-supercluster@^6.0.1:
-  version "6.0.2"
-  resolved "https://registry.yarnpkg.com/supercluster/-/supercluster-6.0.2.tgz#aa2eaae185ef97872f388c683ec29f6991721ee3"
-  integrity sha512-aa0v2HURjBTOpbcknilcfxGDuArM8khklKSmZ/T8ZXL0BuRwb5aRw95lz+2bmWpFvCXDX/+FzqHxmg0TIaJErw==
+supercluster@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/supercluster/-/supercluster-7.0.0.tgz#75d474fafb0a055db552ed7bd7bbda583f6ab321"
+  integrity sha512-8VuHI8ynylYQj7Qf6PBMWy1PdgsnBiIxujOgc9Z83QvJ8ualIYWNx2iMKyKeC4DZI5ntD9tz/CIwwZvIelixsA==
   dependencies:
     kdbush "^3.0.0"
 
@@ -12193,10 +12249,10 @@ terser@^4.1.2:
     source-map "~0.6.1"
     source-map-support "~0.5.12"
 
-text-cache@^4.2.1:
-  version "4.2.1"
-  resolved "https://registry.yarnpkg.com/text-cache/-/text-cache-4.2.1.tgz#c89e2407827c288f668b3a3454912511c2364245"
-  integrity sha512-G52NFRYXEW9BL4E3kBPquefXql9OT3sNT4J16gcpl3/a8y/YioDOR2Iwga5rNs9tY7rH2xv6rF8fAYrbINn6Kg==
+text-cache@^4.2.2:
+  version "4.2.2"
+  resolved "https://registry.yarnpkg.com/text-cache/-/text-cache-4.2.2.tgz#d0d30ba89b7312ea1c1a31cd9a4db56c1cef7fe7"
+  integrity sha512-zky+UDYiX0a/aPw/YTBD+EzKMlCTu1chFuCMZeAkgoRiceySdROu1V2kJXhCbtEdBhiOviYnAdGiSYl58HW0ZQ==
   dependencies:
     vectorize-text "^3.2.1"
 
@@ -12257,7 +12313,7 @@ through2@~0.4.1:
     readable-stream "~1.0.17"
     xtend "~2.1.1"
 
-through@2, through@^2.3.6, through@~2.3.4, through@~2.3.8:
+through@^2.3.6, through@~2.3.4, through@~2.3.8:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
   integrity sha1-DdTJ/6q8NXlgsbckEV1+Doai4fU=
@@ -12284,7 +12340,7 @@ tinycolor2@^1.4.1:
   resolved "https://registry.yarnpkg.com/tinycolor2/-/tinycolor2-1.4.1.tgz#f4fad333447bc0b07d4dc8e9209d8f39a8ac77e8"
   integrity sha1-9PrTM0R7wLB9TcjpIJ2POaisd+g=
 
-tinyqueue@^2.0.0:
+tinyqueue@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/tinyqueue/-/tinyqueue-2.0.3.tgz#64d8492ebf39e7801d7bd34062e29b45b2035f08"
   integrity sha512-ppJZNDuKGgxzkHihX8v9v9G5f+18gzaTfrukGrq6ueg0lmH4nqVnA2IPG0AEH3jKEk2GRJCUhDoqpoiw3PHLBA==
@@ -12380,10 +12436,10 @@ toidentifier@1.0.0:
   resolved "https://registry.yarnpkg.com/toidentifier/-/toidentifier-1.0.0.tgz#7e1be3470f1e77948bc43d94a3c8f4d7752ba553"
   integrity sha512-yaOH/Pk/VEhBWWTlhI+qXxDFXlejDGcQipMlyxda9nthulaxLZUNcUqFxokp0vcYnvteJln5FNQDRrxj3YcbVw==
 
-topojson-client@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/topojson-client/-/topojson-client-2.1.0.tgz#ff9f7bf38991185e0b4284c2b06ae834f0eac6c8"
-  integrity sha1-/59784mRGF4LQoTCsGroNPDqxsg=
+topojson-client@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/topojson-client/-/topojson-client-3.1.0.tgz#22e8b1ed08a2b922feeb4af6f53b6ef09a467b99"
+  integrity sha512-605uxS6bcYxGXw9qi62XyrV6Q3xwbndjachmNxu8HWTtVPxZfEJN9fd/SZS1Q54Sn2y0TMyMxFj/cJINqGHrKw==
   dependencies:
     commander "2"
 
@@ -13317,11 +13373,6 @@ websocket-extensions@>=0.1.1:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/websocket-extensions/-/websocket-extensions-0.1.3.tgz#5d2ff22977003ec687a4b87073dfbbac146ccf29"
   integrity sha512-nqHUnMXmBzT0w570r2JpJxfiSD1IzoI+HGVdd3aZ0yNi3ngvQ4jv1dtHt5VGxfI2yj5yqImPhOK4vmIh2xMbGg==
-
-wgs84@0.0.0:
-  version "0.0.0"
-  resolved "https://registry.yarnpkg.com/wgs84/-/wgs84-0.0.0.tgz#34fdc555917b6e57cf2a282ed043710c049cdc76"
-  integrity sha1-NP3FVZF7blfPKigu0ENxDASc3HY=
 
 whatwg-encoding@^1.0.1, whatwg-encoding@^1.0.5:
   version "1.0.5"

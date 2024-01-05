@@ -11,7 +11,7 @@
     "e2e:open": "vue-cli-service e2e:open"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.3",
     "d3": "^7.0.0",
     "d3-array": "^1.2.1",
     "d3-axis": "^1.0.8",
@@ -22,12 +22,12 @@
     "date-fns": "^1.29.0",
     "heatmap.js": "^2.0.5",
     "numeric": "^1.2.6",
-    "plotly.js": "^1.36.1",
+    "plotly.js": "^1.54.0",
     "vue": "^2.5.13",
     "vue-class-component": "^6.0.0",
     "vue-property-decorator": "^6.0.0",
     "vue-router": "^3.0.1",
-    "vuetify": "^1.0.13",
+    "vuetify": "^2.1.9",
     "vuex": "^3.0.1"
   },
   "devDependencies": {

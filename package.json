@@ -23,7 +23,7 @@
     "heatmap.js": "^2.0.5",
     "numeric": "^1.2.6",
     "plotly.js": "^1.54.0",
-    "vue": "^2.5.13",
+    "vue": "^3.0.0",
     "vue-class-component": "^6.0.0",
     "vue-property-decorator": "^6.0.0",
     "vue-router": "^3.0.1",
